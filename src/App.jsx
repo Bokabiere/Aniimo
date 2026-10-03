@@ -6,6 +6,19 @@ import NIVEAUX from './data/niveaux.json';
 import GRAINES_DB from './data/graines_db.json';
 import { getLimitForStructure, getFirstUnlockLevel } from './lib/structures.js';
 import ProgressionTracker from './components/ProgressionTracker.jsx';
+import OngletsFoyer from './components/OngletsFoyer.jsx';
+import ProchaineAction from './components/ProchaineAction.jsx';
+import RecetteIcone from './components/RecetteIcone.jsx';
+import { prochaineAction } from './lib/recommandation.js';
+
+const ONGLETS = [
+  { id: 'grille', label: 'Grille', icone: '🗺️' },
+  { id: 'equipe', label: 'Équipe', icone: '🐾' },
+  { id: 'progression', label: 'Progression', icone: '📈' },
+  { id: 'niveaumax', label: 'Niveau max', icone: '⬆️' },
+  { id: 'niveaux', label: 'Montée en niveau', icone: '📊' },
+  { id: 'graines', label: 'Graines', icone: '🌱' },
+];
 
 const GRID_SIZE = 10;
 const MAX_STRUCTURES_PER_LEVEL = 5;
@@ -302,6 +315,7 @@ function App() {
   });
 
   const [showPresetModal, setShowPresetModal] = useState(false);
+  const [ongletActif, setOngletActif] = useState('grille');
   const [presetImportText, setPresetImportText] = useState('');
   const [editingPresetId, setEditingPresetId] = useState(null);
   const [editingPresetName, setEditingPresetName] = useState('');
@@ -1666,6 +1680,20 @@ function App() {
     return `${h}h ${m}min`;
   }, [missingPieces, flow.profitHoraire]);
 
+  // ----- Navigation par onglets : les 3 outils (niveau max, montée en niveau, graines) sont des onglets à part entière -----
+  const tab = showLevelModal ? 'niveaumax' : showNiveauModal ? 'niveaux' : showGrainesModal ? 'graines' : ongletActif;
+  const allerA = (id) => {
+    setShowLevelModal(false); setShowNiveauModal(false); setShowGrainesModal(false);
+    if (id === 'niveaumax') { autoOptimize('levelup'); setShowLevelModal(true); }
+    else if (id === 'niveaux') { setNiveauCible(logis.level + 1); setShowNiveauModal(true); }
+    else if (id === 'graines') { setShowGrainesModal(true); }
+    else setOngletActif(id);
+    if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  let nbStructures = 0;
+  grid.forEach((row, rr) => row.forEach((cell, cc) => { if (cell && cell.originR === rr && cell.originC === cc) nbStructures++; }));
+  const prochaine = prochaineAction({ level: logis.level, pieces: logis.pieces || 0, niveaux: NIVEAUX, graines: GRAINES_DB, nbStructures, profitHoraire: flow.profitHoraire });
+
   return (
     <div className="min-h-screen p-2 sm:p-4 lg:p-6 w-full flex flex-col items-center">
       <div className="w-full max-w-[1920px] space-y-4">
@@ -1700,6 +1728,11 @@ function App() {
           </div>
         </header>
 
+        <ProchaineAction action={prochaine} onAller={allerA} ongletActif={tab} />
+        <OngletsFoyer onglets={ONGLETS} actif={tab} onSelect={allerA} />
+        <div id="panneau-principal" className="space-y-4">
+
+        <div role="tabpanel" aria-labelledby="onglet-grille" className={tab === 'grille' ? '' : 'hidden'}>
         <section className="bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-700">
           
           <div className="flex flex-col md:flex-row justify-between items-end mb-6 gap-4 border-b border-slate-700 pb-4">
@@ -1711,7 +1744,7 @@ function App() {
             </div>
             
             <div className="flex flex-wrap items-center gap-3">
-              <div className="bg-slate-900 border border-indigo-500/50 p-2 rounded-lg flex items-center gap-2 shadow-inner">
+              <div className="bg-slate-900 border border-indigo-500/50 p-2 rounded-lg flex flex-wrap items-center gap-2 shadow-inner max-w-full">
                 <span className="text-xs uppercase font-bold text-indigo-400">Auto ({maxStructuresAllowed} max) :</span>
                 <button onClick={() => autoOptimize('money')} className="bg-indigo-600 hover:bg-indigo-500 px-3 py-1 text-sm rounded font-semibold transition">Max Argent</button>
                 <button onClick={() => autoOptimize('optimal')} className="bg-amber-500 text-black hover:bg-amber-400 px-3 py-1 text-sm rounded font-bold transition">Plan Optimal (Meta)</button>
@@ -1894,7 +1927,7 @@ function App() {
                       : 'bg-slate-800 border-slate-600 hover:bg-slate-750'
                   } ${isLocked ? 'opacity-40 grayscale-[40%]' : isFull ? 'opacity-60' : ''}`}
                 >
-                  <div className={`w-6 h-6 rounded border border-white/20 flex-shrink-0 ${r.color}`}></div>
+                  <RecetteIcone nom={r.nom} structure={r.structure} color={r.color} size="md" />
                   <div className="flex-1 min-w-0">
                     <div className="font-bold text-sm leading-tight truncate">{r.nom}</div>
                     <div className="text-[10px] text-slate-400">{r.structure} ({r.w||1}x{r.h||1})</div>
@@ -2932,6 +2965,7 @@ function App() {
             
           </div>
         </section>
+        </div>
 
         {showRecipeModal && (
           <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -3029,6 +3063,7 @@ function App() {
         )}
 
 {/* ===== SUIVI DE PROGRESSION ===== */}
+        <div role="tabpanel" aria-labelledby="onglet-progression" className={tab === 'progression' ? '' : 'hidden'}>
         <ProgressionTracker
           niveaux={NIVEAUX}
           level={logis.level}
@@ -3038,8 +3073,10 @@ function App() {
           rates={flow.net}
           profitHoraire={flow.profitHoraire}
         />
+        </div>
 
 {/* ===== MON ÉQUIPE ANIIMO ===== */}
+        <div role="tabpanel" aria-labelledby="onglet-equipe" className={tab === 'equipe' ? '' : 'hidden'}>
         <section className="bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-700">
           <details>
             <summary className="cursor-pointer flex items-center justify-between select-none">
@@ -3178,7 +3215,9 @@ function App() {
 
           </details>
         </section>
+        </div>
 
+        </div>
         {/* ===== MODAL MAX NIVEAU ===== */}
         {showLevelModal && (() => {
           // Calculer les stats de la grille actuelle pour le niveau
@@ -3209,8 +3248,8 @@ function App() {
           }));
 
           return (
-            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowLevelModal(false)}>
-              <div className="bg-slate-800 rounded-2xl border border-slate-600 shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="w-full flex justify-center">
+              <div className="bg-slate-800 rounded-2xl border border-slate-600 shadow-2xl w-full max-w-4xl" onClick={e => e.stopPropagation()}>
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-6">
                     <div>
@@ -3248,7 +3287,7 @@ function App() {
                           <div className="flex items-center justify-between mb-1">
                             <div className="flex items-center gap-2">
                               <span className={`text-xs font-black w-5 text-center ${i === 0 ? 'text-yellow-400' : i < 3 ? 'text-slate-300' : 'text-slate-500'}`}>#{i+1}</span>
-                              <div className={`w-3 h-3 rounded ${r.color || 'bg-slate-600'}`}></div>
+                              <RecetteIcone nom={r.nom} structure={r.structure} color={r.color || 'bg-slate-600'} size="sm" />
                               <span className="font-bold text-sm">{r.nom}</span>
                               <span className="text-xs text-slate-500">{r.structure}</span>
                             </div>
@@ -3316,8 +3355,8 @@ function App() {
           };
 
           return (
-            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowNiveauModal(false)}>
-              <div className="bg-slate-800 rounded-2xl border border-teal-700/50 shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+            <div className="w-full flex justify-center">
+              <div className="bg-slate-800 rounded-2xl border border-teal-700/50 shadow-2xl w-full max-w-4xl" onClick={e => e.stopPropagation()}>
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div>
@@ -3418,7 +3457,7 @@ function App() {
                       return (
                         <div key={r.id} className="bg-slate-900 rounded-lg p-3 flex items-center gap-3">
                           <span className={`text-sm font-black w-5 text-center ${i === 0 ? 'text-yellow-400' : i < 3 ? 'text-slate-300' : 'text-slate-500'}`}>#{i+1}</span>
-                          <div className={`w-3 h-3 rounded flex-shrink-0 ${r.color || 'bg-slate-600'}`}></div>
+                          <RecetteIcone nom={r.nom} structure={r.structure} color={r.color || 'bg-slate-600'} size="sm" />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between">
                               <span className="font-bold text-sm truncate">{r.nom}</span>
@@ -3476,8 +3515,8 @@ function App() {
           };
 
           return (
-            <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4" onClick={() => setShowGrainesModal(false)}>
-              <div className="bg-slate-800 rounded-2xl border border-lime-500/50 shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden" onClick={e => e.stopPropagation()}>
+            <div className="w-full flex justify-center">
+              <div className="bg-slate-800 rounded-2xl border border-lime-500/50 shadow-2xl w-full max-w-4xl flex flex-col overflow-hidden" onClick={e => e.stopPropagation()}>
                 {/* Header */}
                 <div className="p-5 border-b border-slate-700 bg-slate-900/80 flex justify-between items-start">
                   <div>
@@ -3613,7 +3652,8 @@ function App() {
 
                           <div className="min-w-0">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <span className="font-bold text-white text-sm">🌱 {g.graine}</span>
+                              <RecetteIcone nom={g.culture} structure={g.structure} size="sm" />
+                              <span className="font-bold text-white text-sm">{g.graine}</span>
                               <span className="text-xs text-slate-400">➔ récolte : <strong className="text-slate-200">{g.culture}</strong></span>
                               <span className="text-[10px] bg-slate-900 px-2 py-0.5 rounded border border-slate-700 text-slate-300 font-semibold">
                                 {g.structure}
