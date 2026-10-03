@@ -33,3 +33,9 @@ Restent non vérifiés : les dimensions `w`/`h` de toutes les recettes, et les i
 
 `.github/workflows/ci.yml` lance à chaque push / pull request : `npm run lint`, `npm test`, `npm run data:check` et `npm run build`.
 Les ingrédients des 149 recettes de transformation sont comparés au relevé `scripts/reference/recettes_ingredients_site.txt` (test `data.test.js`).
+
+## Mise en ligne (GitHub Pages)
+
+`.github/workflows/deploy.yml` construit l'app et la publie à chaque push sur `main`
+(adresse : `https://<compte>.github.io/<dépôt>/`). Activation unique : sur GitHub, **Settings → Pages → Source : GitHub Actions**.
+Le sous-chemin est fourni par la variable `VITE_BASE` (vide en local).
