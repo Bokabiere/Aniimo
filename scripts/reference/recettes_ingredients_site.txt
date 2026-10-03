@@ -1,0 +1,164 @@
+# Relevé aniimotools.dev (2026-10-03) : station ## puis « produit | ingrédient×qté, … »
+## Établi artisanal
+Sculpture en bois | Bois de saule×19
+Plateau des moissons | Piment de lune croissante rôti×1, Tranches de radis de rosée lunaire×1
+Vaisselle en bambou | Bambou×10
+Pierres polies de rivière | Roche×18, Eau de puits×5
+Pierres polies de rivière premium | Roche×18, Eau de puits×5
+Désodorisant à la rose | Encens à la rose×1, Bambou×13
+Poterie | Argile×15, Eau de puits×8
+Désodorisant à la rose premium | Encens à la rose×1, Bambou×13
+Bouquet de fleurs | Rose×8, Lavande×7
+Coquillage décoratif | Coquillage×6, Fil de coton×1
+Sachet de lavande | Poudre de lavande×1, Tissu en coton×1
+Carillon à vent | Minerai de cuivre×5, Pelote de laine×1, Étoile×2
+Lanterne à vœu stellaire | Minerai de cuivre×5, Étoile×2
+Attrape-rêve | Fil de coton×1, Pelote de laine×1
+Canard en caoutchouc | Caoutchouc naturel×3
+Collier de perles | Perle×2, Corde de palmier×1
+Jouet tressé | Corde de palmier×1
+Porcelaine | Minerai de quartz×4, Eau de source des profondeurs rocheuses×6
+Teinture | Pétales×6, Écailles×8
+Poussière de gemme | Gemme×2, Écailles×8
+Fleurs en bouteille | Fleurs séchées×1, Porcelaine×1
+Poupée | Tissu en coton teint×1, Tissu en laine×1
+## Séchoir jukebox
+Chips de pomme de terre | Pomme de terre×8
+Tranches de citron séché | Citron×8
+Fleur de cerisier séchée | Fleur de cerisier×7
+Tofu séché | Tofu×1
+Tranches de pomme séchée | Pomme×8
+Fraises séchées | Fraise×8
+Ginseng séché | Ginseng×3
+Raisins secs | Raisins×9
+Noix de coco râpée | Noix de coco×5
+Canneberges séchées | Canneberge×7
+Fleurs séchées | Pétales×6
+## Attrape-popote
+Pain premium | Farine complète×2, Eau de puits×5
+Piment de lune croissante rôti | Piment de lune croissante×8, Sel de mer×23
+Graines de soja grillées | Germe de soja×16, Sel de mer×10
+Pommes de terre rôties au bonbon à l'érable | Pomme de terre×8, Sirop d'érable×9, Sel de mer×10
+Tarte aux pommes | Farine complète×1, Pomme×8
+Sablé à la rose | Concentré de rose×1, Farine complète×1
+Biscuits à la lavande | Poudre de lavande×1, Farine complète×1
+Bonbon à la pomme | Pomme×8, Bille de sucre×1
+Bonbon au raisin | Raisins×9, Bille de sucre×1
+Chips de noix au caramel | Noix×1, Sirop d'érable×9
+Bonbon en étoile à l'érable | Morceau de sucre d'érable×1, Étoile×2
+Cookies à la noix de coco | Noix de coco râpée×1, Farine raffinée×1
+Pain aux fleurs | Farine raffinée×1, Fleurs séchées×1
+Pudding chococo à la fraise | Pâte à tartiner au cacao×1, Fraise×16, Lait de coco×1
+Pudding chococo à la fraise premium | Pâte à tartiner au cacao×1, Fraise×16, Lait de coco×1
+## Grande roue à tisser
+Fil de coton | Coton×7
+Pelote de laine | Laine×4
+Tissu en coton | Fil de coton×1
+Tissu en laine | Pelote de laine×1
+Corde de palmier | Écorce de palmier×6
+Tissu en coton teint | Tissu en coton×1, Teinture×1
+## Établi phonolfactif
+Bâton d'encens au bambou | Bambou×15, Aromathyste×2
+Encens à la rose | Rose×12, Aromathyste×2
+Encens à la cerise | Fleur de cerisier séchée×1, Aromathyste×4
+Encens à la lavande | Lavande×11, Aromathyste×2
+Encens au citron | Citron×12, Aromathyste×2
+Arôme herbacé de ginseng | Poudre de ginseng×1, Aromathyste×8
+Savon | Huile de coco×1, Pétales×6, Eau de source des profondeurs rocheuses×6
+Savon premium | Huile de coco×1, Pétales×6, Eau de source des profondeurs rocheuses×6
+Parfum composite | Fleurs séchées×1, Eau minérale naturelle×6
+Encens à la fleur d'oranger | Fleur d'oranger×8, Aromathyste×8
+Lotion | Fleur d'oranger×8, Huile de coco×2
+Parfum composite premium | Fleurs séchées×1, Eau minérale naturelle×6
+## Trempo-barils
+Thé vert au riz grillé | Riz décortiqué×2, Eau de puits×8
+Thé au blé | Blé×50, Eau de puits×10
+Jus de fraise | Fraise×8, Eau fraîche×8
+Jus de canne à sucre | Canne à sucre×6
+Jus de pomme | Pomme×8, Eau fraîche×8
+Kvass de pomme de terre | Pomme de terre×15, Bille de sucre×1, Eau fraîche×8
+Jus de raisin | Raisins×9, Eau de source des profondeurs rocheuses×6
+Eau de ginseng | Ginseng séché×1, Eau de source des profondeurs rocheuses×6
+Boisson au raisin citronnée | Raisins×9, Citron×16, Eau de source des profondeurs rocheuses×6
+Lait de noix | Noix×6, Eau de source des profondeurs rocheuses×6
+Jus de canneberge | Canneberge×7, Eau minérale naturelle×6
+Boisson fraîche à la noix de coco | Noix de coco×5
+Lait de coco au cacao | Noix de coco×5, Poudre de cacao×1
+Chocolat chaud | Poudre de cacao×1, Eau minérale naturelle×6
+Rosée de fleur d'oranger | Fleur d'oranger×8, Eau minérale naturelle×6
+Boisson à l'agave | Sirop d'agave×1, Eau minérale naturelle×6
+## Marmite à mijoter
+Bouillie de riz nature | Riz décortiqué×2, Eau de puits×5
+Sauce sucrée-épicée ombrale | Radis de rosée lunaire×8, Piment de lune croissante×8, Sel de mer×23
+Concentré de rose | Rose×12, Eau de puits×8
+Bille de sucre | Canne à sucre×6, Eau fraîche×8
+Confiture de fraise | Fraise×8
+Confiture de pomme au bonbon à l'érable | Sirop d'érable×9, Pomme×8
+Purée de châtaignes | Châtaigne×7
+Confiture de raisin | Raisins×9
+Bouillie de ginseng | Ginseng séché×1, Riz décortiqué×2
+Morceau de sucre d'érable | Sirop d'érable×18
+Sucre de malt | Blé premium×15, Riz décortiqué×2, Eau de source des profondeurs rocheuses×6
+Pâte à tartiner au cacao | Poudre de cacao×1, Sucre de malt×1
+Confiture de canneberge | Canneberge×7, Sucre de malt×1
+Sirop d'agave | Agave×6, Eau fraîche×9
+## Cuisinière flamboyante
+Boule de riz à la fleur de cerisier | Fleur de cerisier salée×1, Riz décortiqué×1
+Soupe onctueuse de pomme de terre | Pomme de terre×15, Eau fraîche×8
+Riz frit à la sauce soja | Riz décortiqué×1, Sauce soja×1
+Soupe de pommes de terre premium | Pomme de terre×15, Eau fraîche×8
+Ragoût ombral | Radis de rosée lunaire×8, Piment de lune croissante×8, Eau fraîche×8
+Tranches de radis de rosée lunaire | Radis de rosée lunaire×8, Bille de sucre×1
+Tofu à la sauce soja | Tofu×1, Sauce soja×1
+Châtaignes grillées au sucre | Châtaigne×7, Bille de sucre×1
+Tanghulu | Fraise×8, Bille de sucre×1
+Gâteau aux noix | Noix×6, Boisson au riz×1
+Gâteau au ginseng et à la châtaigne | Poudre de ginseng×1, Châtaigne×7
+Rouleau de vermicelles à la vapeur | Boisson au riz×1
+Gelée | Pétales×6, Morceau de sucre d'érable×1, Eau de source des profondeurs rocheuses×6
+Compote de raisin gourmande | Jus de raisin×1, Raisins secs×1
+Bonbon à la fraise | Fraise×8, Sucre de malt×1
+Gelée premium | Pétales×6, Morceau de sucre d'érable×1, Eau de source des profondeurs rocheuses×6
+Chou à la crème à la fraise | Farine raffinée×1, Fraise×16, Huile de coco×1
+Chocolat à la canneberge | Pâte à tartiner au cacao×1, Canneberges séchées×1
+## Moulin-carrousel
+Farine complète | Blé×50
+Tofu | Germe de soja×16
+Riz décortiqué | Riz×18
+Poudre de lavande | Lavande×7
+Boisson au riz | Riz décortiqué×2, Eau fraîche×16
+Poudre de ginseng | Ginseng×3
+Farine raffinée | Blé premium×15
+Huile de coco | Noix de coco×5
+Poudre de cacao | Cacao×6
+Lait de coco | Noix de coco×5, Eau minérale naturelle×6
+## Bocal à pickles
+Fleur de cerisier salée | Fleur de cerisier×7, Sel de mer×13
+Sauce soja | Germe de soja×16, Sel de mer×13
+Pickles ombral | Radis de rosée lunaire×8, Piment de lune croissante×8, Vinaigre de cidre×1
+Boisson de riz sucrée | Riz décortiqué×1, Eau fraîche×8, Bille de sucre×1
+Vinaigre de cidre | Pomme×8
+Vin de riz sucré premium | Riz décortiqué×1, Eau fraîche×8, Bille de sucre×1
+Vinaigre de riz | Boisson au riz×1
+Citron salé | Citron×16, Sel de mer×13
+Citron salé premium | Citron×16, Sel de mer×13
+Fraises confites | Sirop d'érable×18, Fraise×8
+Fleur d'oranger confite | Sirop d'agave×1, Fleur d'oranger×8
+## Établi de menuiserie
+Bois brut | Bloc de bois×8
+Planches standard | Bois brut×8
+Poutres lamellées | Planches standard×8
+Élément en bois densifié | Poutres lamellées×4
+## Four de cheminée
+Minerai grossièrement tamisé | Sable minéral×8
+Brique de minerai frittée | Minerai grossièrement tamisé×8
+Minerai raffiné | Brique de minerai frittée×8
+Plaque de minerai microcristallin | Minerai raffiné×4
+## Machine à Aniipod
+Aniipod | Roche×12
+Aniipod pro | Argile×10
+Aniipod méga | Coquillage×6
+## Polissoir dansant
+Bourgeon de croissance | Pomme de terre×23
+Fleur de croissance | Germe de soja×16
+Fruit de croissance | Rose×8

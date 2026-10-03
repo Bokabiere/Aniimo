@@ -1,0 +1,247 @@
+{
+  "_source": "aniofrance.com/aniimos.html, recoupé avec aniimotools.dev/creatures et aniipedia.com",
+  "_verifie": "2026-10-03",
+  "_note": "« Roche » du site = « Terre » dans l'app ; « Ténèbres » = « Obscurité ». Premier élément = élément retenu si l'actuel n'est pas dans la liste.",
+  "elements": {
+    "Loufeuteau": [
+      "Feu"
+    ],
+    "Jappardent": [
+      "Feu"
+    ],
+    "Hurlebrasier": [
+      "Feu"
+    ],
+    "Inferlupin": [
+      "Feu",
+      "Obscurité"
+    ],
+    "Célestia": [
+      "Obscurité"
+    ],
+    "Stellaria": [
+      "Obscurité"
+    ],
+    "Iris": [
+      "Plante"
+    ],
+    "Valsiris": [
+      "Plante"
+    ],
+    "Tilotus": [
+      "Eau"
+    ],
+    "Filoutus": [
+      "Eau"
+    ],
+    "Givrotus": [
+      "Eau",
+      "Glace"
+    ],
+    "Voilotus": [
+      "Plante",
+      "Eau"
+    ],
+    "Cumulaine": [
+      "Vent"
+    ],
+    "Turbulaine": [
+      "Vent"
+    ],
+    "Lainirique": [
+      "Obscurité"
+    ],
+    "Sorcelonde": [
+      "Obscurité",
+      "Plante"
+    ],
+    "Nutrion": [
+      "Plante"
+    ],
+    "Crabourgeon": [
+      "Terre",
+      "Plante"
+    ],
+    "Crabiflore": [
+      "Terre",
+      "Plante"
+    ],
+    "Cristocrabe": [
+      "Glace"
+    ],
+    "Fluoretti": [
+      "Vent"
+    ],
+    "Voletti": [
+      "Vent"
+    ],
+    "Eko": [
+      "Vent"
+    ],
+    "Ekolombo": [
+      "Vent"
+    ],
+    "Bourgeonnet": [
+      "Plante"
+    ],
+    "Rapiéronce": [
+      "Plante"
+    ],
+    "Méliflore": [
+      "Plante"
+    ],
+    "Pomœuf": [
+      "Plante"
+    ],
+    "Pomawk": [
+      "Plante"
+    ],
+    "Plumiel": [
+      "Obscurité"
+    ],
+    "Fragrancier": [
+      "Obscurité"
+    ],
+    "Flammi": [
+      "Obscurité"
+    ],
+    "Igniti": [
+      "Obscurité"
+    ],
+    "Osky": [
+      "Glace"
+    ],
+    "Glaivrier": [
+      "Glace"
+    ],
+    "Molosabre": [
+      "Glace"
+    ],
+    "Voltige": [
+      "Foudre"
+    ],
+    "Voltignasse": [
+      "Foudre"
+    ],
+    "Écurixe": [
+      "Feu"
+    ],
+    "Écurouste": [
+      "Feu"
+    ],
+    "Louloutre": [
+      "Eau"
+    ],
+    "Bulloutre": [
+      "Eau"
+    ],
+    "Ondeloutre": [
+      "Eau"
+    ],
+    "Terriloutre": [
+      "Eau"
+    ],
+    "Astrid": [
+      "Eau"
+    ],
+    "Astor": [
+      "Eau"
+    ],
+    "Astrophel": [
+      "Eau"
+    ],
+    "Balabée": [
+      "Terre"
+    ],
+    "Coléobée": [
+      "Terre"
+    ],
+    "Boulabée": [
+      "Terre"
+    ],
+    "Touffu": [
+      "Foudre"
+    ],
+    "Fulgucrin": [
+      "Foudre"
+    ],
+    "Casquimou": [
+      "Obscurité"
+    ],
+    "Casquipreux": [
+      "Obscurité"
+    ],
+    "Casquillon": [
+      "Obscurité"
+    ],
+    "Casquimord": [
+      "Vent"
+    ],
+    "Cuiragon": [
+      "Vent"
+    ],
+    "Infergon": [
+      "Feu"
+    ],
+    "Ourso": [
+      "Terre"
+    ],
+    "Grizzo": [
+      "Terre"
+    ],
+    "Silexodon": [
+      "Terre"
+    ],
+    "Lavasaure": [
+      "Feu",
+      "Terre"
+    ],
+    "Magmarex": [
+      "Feu",
+      "Terre"
+    ],
+    "Géodosaure": [
+      "Terre"
+    ],
+    "Cristorex": [
+      "Terre"
+    ],
+    "Cabaroc": [
+      "Terre"
+    ],
+    "Bastiroc": [
+      "Terre"
+    ],
+    "Bulbi": [
+      "Foudre"
+    ],
+    "Voilueur": [
+      "Foudre"
+    ],
+    "Luminelle": [
+      "Foudre"
+    ],
+    "Pulsato": [
+      "Foudre"
+    ],
+    "Lumiris": [
+      "Plante"
+    ],
+    "Vitti": [
+      "Vent",
+      "Plante"
+    ],
+    "Danzard": [
+      "Foudre"
+    ],
+    "Fulmi": [
+      "Foudre"
+    ],
+    "Lunara": [
+      "Lumière"
+    ],
+    "Hélion": [
+      "Lumière"
+    ]
+  }
+}

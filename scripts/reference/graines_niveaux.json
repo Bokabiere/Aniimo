@@ -1,0 +1,23 @@
+{
+  "_source": "wikily.gg/fr/aniimo/homeland-food/{strawberry,rice,wheat,potato}",
+  "_verifie": "2026-10-03",
+  "_note": "Niveau de camping-car requis pour les paliers à haut rendement. 4 cultures vérifiées sur 38.",
+  "niveaux": [
+    {
+      "match": "Fraise×26",
+      "niveau_requis": 17
+    },
+    {
+      "match": "Riz×79",
+      "niveau_requis": 12
+    },
+    {
+      "match": "Pomme de terre×46",
+      "niveau_requis": 8
+    },
+    {
+      "match": "Blé×42",
+      "niveau_requis": 3
+    }
+  ]
+}

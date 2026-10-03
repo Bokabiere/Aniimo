@@ -1,0 +1,3147 @@
+[
+  {
+    "id": "r100",
+    "nom": "Capitaine Patate",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Capitaine Patate": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r101",
+    "nom": "Radis de rosée lunaire",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Radis de rosée lunaire": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r102",
+    "nom": "Piment de lune croissante",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Piment de lune croissante": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r103",
+    "nom": "Blé",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Blé": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r104",
+    "nom": "Pomme de terre",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Pomme de terre": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r105",
+    "nom": "Riz",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Riz": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r106",
+    "nom": "Germe de soja",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Germe de soja": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r107",
+    "nom": "Coton",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Coton": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r108",
+    "nom": "Recette rapide : pomme de terre",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Recette rapide : pomme de terre": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r109",
+    "nom": "Rose",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Rose": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r110",
+    "nom": "Lavande",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Lavande": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r111",
+    "nom": "Fraise",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Fraise": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r112",
+    "nom": "Canne à sucre",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Canne à sucre": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r113",
+    "nom": "Ginseng",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Ginseng": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r114",
+    "nom": "Raisins",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Raisins": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r115",
+    "nom": "Blé premium",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Blé premium": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r116",
+    "nom": "Recette rapide : riz",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Recette rapide : riz": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r117",
+    "nom": "Agave",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Agave": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r118",
+    "nom": "Canneberge",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Canneberge": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r119",
+    "nom": "Recette rapide : fraise",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Recette rapide : fraise": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r120",
+    "nom": "Bois de saule",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Bois de saule": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r121",
+    "nom": "Bambou",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Bambou": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r122",
+    "nom": "Citron",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Citron": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r123",
+    "nom": "Pomme",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Pomme": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r124",
+    "nom": "Fleur de cerisier",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Fleur de cerisier": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r125",
+    "nom": "Sirop d'érable",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Sirop d'érable": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r126",
+    "nom": "Châtaigne",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Châtaigne": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r127",
+    "nom": "Écorce de palmier",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Écorce de palmier": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r128",
+    "nom": "Noix",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Noix": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r129",
+    "nom": "Noix de coco",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Noix de coco": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r130",
+    "nom": "Caoutchouc naturel",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Caoutchouc naturel": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r131",
+    "nom": "Recette rapide : sirop d'érable",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Recette rapide : sirop d'érable": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r132",
+    "nom": "Cacao",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Cacao": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r133",
+    "nom": "Fleur d'oranger",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Fleur d'oranger": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r134",
+    "nom": "Plateau des moissons",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Plateau des moissons": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r135",
+    "nom": "Sculpture en bois",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 19
+    },
+    "output": {
+      "Sculpture en bois": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r136",
+    "nom": "Vaisselle en bambou",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 10
+    },
+    "output": {
+      "Vaisselle en bambou": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r137",
+    "nom": "Pierres polies de rivière premium",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 5
+    },
+    "output": {
+      "Pierres polies de rivière premium": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r138",
+    "nom": "Pierres polies de rivière",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 5
+    },
+    "output": {
+      "Pierres polies de rivière": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r139",
+    "nom": "Poterie",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Poterie": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r140",
+    "nom": "Désodorisant à la rose premium",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 13
+    },
+    "output": {
+      "Désodorisant à la rose premium": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r141",
+    "nom": "Désodorisant à la rose",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 13
+    },
+    "output": {
+      "Désodorisant à la rose": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r142",
+    "nom": "Bouquet de fleurs",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 7
+    },
+    "output": {
+      "Bouquet de fleurs": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r143",
+    "nom": "Sachet de lavande",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Sachet de lavande": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r144",
+    "nom": "Coquillage décoratif",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Coquillage décoratif": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r145",
+    "nom": "Attrape-rêve",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Attrape-rêve": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r146",
+    "nom": "Lanterne à vœu stellaire",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 2
+    },
+    "output": {
+      "Lanterne à vœu stellaire": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r147",
+    "nom": "Carillon à vent",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 2
+    },
+    "output": {
+      "Carillon à vent": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r148",
+    "nom": "Collier de perles",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Collier de perles": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r149",
+    "nom": "Porcelaine",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Porcelaine": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r150",
+    "nom": "Canard en caoutchouc",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 3
+    },
+    "output": {
+      "Canard en caoutchouc": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r151",
+    "nom": "Jouet tressé",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Jouet tressé": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r152",
+    "nom": "Teinture",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Teinture": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r153",
+    "nom": "Fleurs en bouteille",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Fleurs en bouteille": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r154",
+    "nom": "Poussière de gemme",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Poussière de gemme": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r155",
+    "nom": "Poupée",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Poupée": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r156",
+    "nom": "Boule de riz à la fleur de cerisier",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Boule de riz à la fleur de cerisier": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r157",
+    "nom": "Soupe onctueuse de pomme de terre",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Soupe onctueuse de pomme de terre": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r158",
+    "nom": "Tranches de radis de rosée lunaire",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Tranches de radis de rosée lunaire": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r159",
+    "nom": "Soupe de pommes de terre premium",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Soupe de pommes de terre premium": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r160",
+    "nom": "Riz frit à la sauce soja",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Riz frit à la sauce soja": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r161",
+    "nom": "Ragoût ombral",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Ragoût ombral": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r162",
+    "nom": "Tofu à la sauce soja",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Tofu à la sauce soja": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r163",
+    "nom": "Châtaignes grillées au sucre",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Châtaignes grillées au sucre": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r164",
+    "nom": "Tanghulu",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Tanghulu": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r165",
+    "nom": "Gâteau au ginseng et à la châtaigne",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 7
+    },
+    "output": {
+      "Gâteau au ginseng et à la châtaigne": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r166",
+    "nom": "Rouleau de vermicelles à la vapeur",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Rouleau de vermicelles à la vapeur": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r167",
+    "nom": "Gâteau aux noix",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Gâteau aux noix": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r168",
+    "nom": "Gelée",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Gelée": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r169",
+    "nom": "Gelée premium",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Gelée premium": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r170",
+    "nom": "Compote de raisin gourmande",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Compote de raisin gourmande": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r171",
+    "nom": "Bonbon à la fraise",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Bonbon à la fraise": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r172",
+    "nom": "Chocolat à la canneberge",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Chocolat à la canneberge": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r173",
+    "nom": "Chou à la crème à la fraise",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Chou à la crème à la fraise": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r174",
+    "nom": "Thé vert au riz grillé",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Thé vert au riz grillé": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r175",
+    "nom": "Thé au blé",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 10
+    },
+    "output": {
+      "Thé au blé": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r176",
+    "nom": "Jus de pomme",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Jus de pomme": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r177",
+    "nom": "Kvass de pomme de terre",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Kvass de pomme de terre": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r178",
+    "nom": "Jus de fraise",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Jus de fraise": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r179",
+    "nom": "Jus de canne à sucre",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Jus de canne à sucre": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r180",
+    "nom": "Eau de ginseng",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Eau de ginseng": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r181",
+    "nom": "Jus de raisin",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Jus de raisin": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r182",
+    "nom": "Boisson au raisin citronnée",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Boisson au raisin citronnée": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r183",
+    "nom": "Lait de noix",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Lait de noix": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r184",
+    "nom": "Boisson fraîche à la noix de coco",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 5
+    },
+    "output": {
+      "Boisson fraîche à la noix de coco": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r185",
+    "nom": "Jus de canneberge",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Jus de canneberge": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r186",
+    "nom": "Boisson à l'agave",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Boisson à l'agave": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r187",
+    "nom": "Lait de coco au cacao",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Lait de coco au cacao": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r188",
+    "nom": "Chocolat chaud",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Chocolat chaud": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r189",
+    "nom": "Rosée de fleur d'oranger",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Rosée de fleur d'oranger": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r190",
+    "nom": "Pain",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 5
+    },
+    "output": {
+      "Pain": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r191",
+    "nom": "Pain premium",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 5
+    },
+    "output": {
+      "Pain premium": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r192",
+    "nom": "Piment de lune croissante rôti",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 23
+    },
+    "output": {
+      "Piment de lune croissante rôti": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r193",
+    "nom": "Graines de soja grillées",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 10
+    },
+    "output": {
+      "Graines de soja grillées": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r194",
+    "nom": "Tarte aux pommes",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Tarte aux pommes": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r195",
+    "nom": "Pommes de terre rôties au bonbon à l'érable",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 10
+    },
+    "output": {
+      "Pommes de terre rôties au bonbon à l'érable": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r196",
+    "nom": "Sablé à la rose",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Sablé à la rose": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r197",
+    "nom": "Bonbon à la pomme",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Bonbon à la pomme": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r198",
+    "nom": "Biscuits à la lavande",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Biscuits à la lavande": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r199",
+    "nom": "Chips de noix au caramel",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 9
+    },
+    "output": {
+      "Chips de noix au caramel": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r200",
+    "nom": "Bonbon au raisin",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Bonbon au raisin": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r201",
+    "nom": "Cookies à la noix de coco",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Cookies à la noix de coco": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r202",
+    "nom": "Bonbon en étoile à l'érable",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 2
+    },
+    "output": {
+      "Bonbon en étoile à l'érable": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r203",
+    "nom": "Pudding chococo à la fraise",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Pudding chococo à la fraise": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r204",
+    "nom": "Pain aux fleurs",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Pain aux fleurs": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r205",
+    "nom": "Pudding chococo à la fraise premium",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Pudding chococo à la fraise premium": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r206",
+    "nom": "Bouillie de riz nature",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 5
+    },
+    "output": {
+      "Bouillie de riz nature": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r207",
+    "nom": "Sauce sucrée-épicée ombrale",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 23
+    },
+    "output": {
+      "Sauce sucrée-épicée ombrale": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r208",
+    "nom": "Concentré de rose",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Concentré de rose": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r209",
+    "nom": "Confiture de pomme au bonbon à l'érable",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Confiture de pomme au bonbon à l'érable": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r210",
+    "nom": "Bille de sucre",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Bille de sucre": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r211",
+    "nom": "Confiture de fraise",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Confiture de fraise": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r212",
+    "nom": "Purée de châtaignes",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 7
+    },
+    "output": {
+      "Purée de châtaignes": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r213",
+    "nom": "Bouillie de ginseng",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 2
+    },
+    "output": {
+      "Bouillie de ginseng": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r214",
+    "nom": "Confiture de raisin",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 9
+    },
+    "output": {
+      "Confiture de raisin": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r215",
+    "nom": "Sucre de malt",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Sucre de malt": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r216",
+    "nom": "Morceau de sucre d'érable",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 18
+    },
+    "output": {
+      "Morceau de sucre d'érable": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r217",
+    "nom": "Sirop d'agave",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 9
+    },
+    "output": {
+      "Sirop d'agave": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r218",
+    "nom": "Pâte à tartiner au cacao",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Pâte à tartiner au cacao": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r219",
+    "nom": "Confiture de canneberge",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Confiture de canneberge": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r220",
+    "nom": "Chips de pomme de terre",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Chips de pomme de terre": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r221",
+    "nom": "Tranches de citron séché",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Tranches de citron séché": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r222",
+    "nom": "Tofu séché",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Tofu séché": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r223",
+    "nom": "Fleur de cerisier séchée",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 7
+    },
+    "output": {
+      "Fleur de cerisier séchée": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r224",
+    "nom": "Tranches de pomme séchée",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Tranches de pomme séchée": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r225",
+    "nom": "Fraises séchées",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Fraises séchées": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r226",
+    "nom": "Ginseng séché",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 3
+    },
+    "output": {
+      "Ginseng séché": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r227",
+    "nom": "Noix",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Noix": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r228",
+    "nom": "Raisins secs",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 9
+    },
+    "output": {
+      "Raisins secs": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r229",
+    "nom": "Noix de coco râpée",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 5
+    },
+    "output": {
+      "Noix de coco râpée": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r230",
+    "nom": "Canneberges séchées",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 7
+    },
+    "output": {
+      "Canneberges séchées": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r231",
+    "nom": "Fleurs séchées",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Fleurs séchées": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r232",
+    "nom": "Bâton d'encens au bambou",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 2
+    },
+    "output": {
+      "Bâton d'encens au bambou": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r233",
+    "nom": "Encens à la cerise",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 4
+    },
+    "output": {
+      "Encens à la cerise": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r234",
+    "nom": "Encens à la rose",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 2
+    },
+    "output": {
+      "Encens à la rose": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r235",
+    "nom": "Encens à la lavande",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 2
+    },
+    "output": {
+      "Encens à la lavande": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r236",
+    "nom": "Encens au citron",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 2
+    },
+    "output": {
+      "Encens au citron": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r237",
+    "nom": "Arôme herbacé de ginseng",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Arôme herbacé de ginseng": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r238",
+    "nom": "Savon premium",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Savon premium": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r239",
+    "nom": "Savon",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Savon": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r240",
+    "nom": "Lotion",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 2
+    },
+    "output": {
+      "Lotion": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r241",
+    "nom": "Parfum composite",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Parfum composite": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r242",
+    "nom": "Encens à la fleur d'oranger",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Encens à la fleur d'oranger": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r243",
+    "nom": "Parfum composite premium",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Parfum composite premium": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r244",
+    "nom": "Fleur de cerisier salée",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 13
+    },
+    "output": {
+      "Fleur de cerisier salée": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r245",
+    "nom": "Sauce soja",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 13
+    },
+    "output": {
+      "Sauce soja": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r246",
+    "nom": "Pickles ombral",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Pickles ombral": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r247",
+    "nom": "Vinaigre de cidre",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Vinaigre de cidre": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r248",
+    "nom": "Vin de riz sucré premium",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Vin de riz sucré premium": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r249",
+    "nom": "Boisson de riz sucrée",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Boisson de riz sucrée": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r250",
+    "nom": "Citron salé premium",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 13
+    },
+    "output": {
+      "Citron salé premium": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r251",
+    "nom": "Vinaigre de riz",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Vinaigre de riz": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r252",
+    "nom": "Citron salé",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 13
+    },
+    "output": {
+      "Citron salé": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r253",
+    "nom": "Fraises confites",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Fraises confites": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r254",
+    "nom": "Fleur d'oranger confite",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Fleur d'oranger confite": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r255",
+    "nom": "Farine complète",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 50
+    },
+    "output": {
+      "Farine complète": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r256",
+    "nom": "Riz décortiqué",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 18
+    },
+    "output": {
+      "Riz décortiqué": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r257",
+    "nom": "Tofu",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 16
+    },
+    "output": {
+      "Tofu": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r258",
+    "nom": "Poudre de lavande",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 7
+    },
+    "output": {
+      "Poudre de lavande": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r259",
+    "nom": "Poudre de ginseng",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 3
+    },
+    "output": {
+      "Poudre de ginseng": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r260",
+    "nom": "Boisson au riz",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 16
+    },
+    "output": {
+      "Boisson au riz": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r261",
+    "nom": "Huile de coco",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 5
+    },
+    "output": {
+      "Huile de coco": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r262",
+    "nom": "Farine raffinée",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 15
+    },
+    "output": {
+      "Farine raffinée": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r263",
+    "nom": "Poudre de cacao",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Poudre de cacao": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r264",
+    "nom": "Lait de coco",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Lait de coco": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r265",
+    "nom": "Fil de coton",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 7
+    },
+    "output": {
+      "Fil de coton": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r266",
+    "nom": "Tissu en coton",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Tissu en coton": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r267",
+    "nom": "Pelote de laine",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 4
+    },
+    "output": {
+      "Pelote de laine": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r268",
+    "nom": "Corde de palmier",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Corde de palmier": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r269",
+    "nom": "Tissu en laine",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Tissu en laine": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r270",
+    "nom": "Tissu en coton teint",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 1
+    },
+    "output": {
+      "Tissu en coton teint": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r271",
+    "nom": "Minerai grossièrement tamisé",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Minerai grossièrement tamisé": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r272",
+    "nom": "Brique de minerai frittée",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Brique de minerai frittée": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r273",
+    "nom": "Minerai raffiné",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Minerai raffiné": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r274",
+    "nom": "Plaque de minerai microcristallin",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 4
+    },
+    "output": {
+      "Plaque de minerai microcristallin": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r275",
+    "nom": "Bois brut",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Bois brut": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r276",
+    "nom": "Planches standard",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Planches standard": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r277",
+    "nom": "Poutres lamellées",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Poutres lamellées": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r278",
+    "nom": "Élément en bois densifié",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 4
+    },
+    "output": {
+      "Élément en bois densifié": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r279",
+    "nom": "Aniipod",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 12
+    },
+    "output": {
+      "Aniipod": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r280",
+    "nom": "Aniipod pro",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 10
+    },
+    "output": {
+      "Aniipod pro": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r281",
+    "nom": "Aniipod méga",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 6
+    },
+    "output": {
+      "Aniipod méga": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r282",
+    "nom": "Bourgeon de croissance",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 23
+    },
+    "output": {
+      "Bourgeon de croissance": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r283",
+    "nom": "Fleur de croissance",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 16
+    },
+    "output": {
+      "Fleur de croissance": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r284",
+    "nom": "Fruit de croissance",
+    "structure": "Installation de niveau 1",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "": 8
+    },
+    "output": {
+      "Fruit de croissance": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  }
+]

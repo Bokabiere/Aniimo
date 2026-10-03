@@ -1,0 +1,21 @@
+[
+  { "niveau": 2,  "aniimo": 8,  "dureeMin": 0.5,   "pieces": 140,      "bois": 3,    "sable": 0,    "argile": 0 },
+  { "niveau": 3,  "aniimo": 11, "dureeMin": 5,     "pieces": 800,      "bois": 25,   "sable": 0,    "argile": 0 },
+  { "niveau": 4,  "aniimo": 14, "dureeMin": 15,    "pieces": 2900,     "bois": 100,  "sable": 120,  "argile": 0 },
+  { "niveau": 5,  "aniimo": 17, "dureeMin": 45,    "pieces": 7300,     "bois": 550,  "sable": 250,  "argile": 0 },
+  { "niveau": 6,  "aniimo": 20, "dureeMin": 90,    "pieces": 32000,    "bois": 1300, "sable": 700,  "argile": 0 },
+  { "niveau": 7,  "aniimo": 22, "dureeMin": 120,   "pieces": 69000,    "bois": 0,    "sable": 0,    "argile": 0, "materiaux": [{ "nom": "Bois brut", "qte": 290 }, { "nom": "Minerai grossièrement tamisé", "qte": 360 }] },
+  { "niveau": 8,  "aniimo": 24, "dureeMin": 150,   "pieces": 180000,   "bois": 0,    "sable": 0,    "argile": 0, "materiaux": [{ "nom": "Bois brut", "qte": 1100 }, { "nom": "Minerai grossièrement tamisé", "qte": 640 }] },
+  { "niveau": 9,  "aniimo": 26, "dureeMin": 180,   "pieces": 260000,   "bois": 0,    "sable": 0,    "argile": 0, "materiaux": [{ "nom": "Bois brut", "qte": 1520 }, { "nom": "Minerai grossièrement tamisé", "qte": 800 }] },
+  { "niveau": 10, "aniimo": 28, "dureeMin": 210,   "pieces": 510000,   "bois": 0,    "sable": 0,    "argile": 0, "materiaux": [{ "nom": "Bois brut", "qte": 2000 }, { "nom": "Minerai grossièrement tamisé", "qte": 2400 }] },
+  { "niveau": 11, "aniimo": 30, "dureeMin": 240,   "pieces": 680000,   "bois": 0,    "sable": 0,    "argile": 0, "materiaux": [{ "nom": "Planches standard", "qte": 320 }, { "nom": "Brique de minerai frittée", "qte": 350 }] },
+  { "niveau": 12, "aniimo": 32, "dureeMin": 270,   "pieces": 1060000,  "bois": 0,    "sable": 0,    "argile": 0, "materiaux": [{ "nom": "Planches standard", "qte": 910 }, { "nom": "Brique de minerai frittée", "qte": 480 }] },
+  { "niveau": 13, "aniimo": 34, "dureeMin": 300,   "pieces": 1930000,  "bois": 0,    "sable": 0,    "argile": 0, "materiaux": [{ "nom": "Planches standard", "qte": 1230 }, { "nom": "Brique de minerai frittée", "qte": 760 }] },
+  { "niveau": 14, "aniimo": 36, "dureeMin": 360,   "pieces": 2620000,  "bois": 0,    "sable": 0,    "argile": 0, "materiaux": [{ "nom": "Planches standard", "qte": 1590 }, { "nom": "Brique de minerai frittée", "qte": 1060 }] },
+  { "niveau": 15, "aniimo": 38, "dureeMin": 420,   "pieces": 3760000,  "bois": 0,    "sable": 0,    "argile": 0, "materiaux": [{ "nom": "Poutres lamellées", "qte": 390 }, { "nom": "Minerai raffiné", "qte": 150 }] },
+  { "niveau": 16, "aniimo": 40, "dureeMin": 480,   "pieces": 4900000,  "bois": 0,    "sable": 0,    "argile": 0, "materiaux": [{ "nom": "Poutres lamellées", "qte": 480 }, { "nom": "Minerai raffiné", "qte": 310 }] },
+  { "niveau": 17, "aniimo": 42, "dureeMin": 540,   "pieces": 8630000,  "bois": 0,    "sable": 0,    "argile": 0, "materiaux": [{ "nom": "Poutres lamellées", "qte": 630 }, { "nom": "Minerai raffiné", "qte": 380 }] },
+  { "niveau": 18, "aniimo": 43, "dureeMin": 600,   "pieces": 11600000, "bois": 0,    "sable": 0,    "argile": 0, "materiaux": [{ "nom": "Poutres lamellées", "qte": 800 }, { "nom": "Minerai raffiné", "qte": 520 }] },
+  { "niveau": 19, "aniimo": 44, "dureeMin": 660,   "pieces": 17100000, "bois": 0,    "sable": 0,    "argile": 0, "materiaux": [{ "nom": "Élément en bois densifié", "qte": 400 }, { "nom": "Plaque de minerai microcristallin", "qte": 220 }] },
+  { "niveau": 20, "aniimo": 45, "dureeMin": 720,   "pieces": 20800000, "bois": 0,    "sable": 0,    "argile": 0, "materiaux": [{ "nom": "Élément en bois densifié", "qte": 490 }, { "nom": "Plaque de minerai microcristallin", "qte": 270 }] }
+]

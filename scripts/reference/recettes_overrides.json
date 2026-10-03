@@ -1,0 +1,1335 @@
+{
+  "_source": "wikily.gg + aniimotools.dev (stations, travail/60 = minutes, rachat = profit) + graines_db.json",
+  "_verifie": "2026-10-03",
+  "_note": "r1/r2/r4 + r100–r281 vérifiés/dérivés le 2026-10-03. w/h non modifiés (non vérifiés). Recettes rapides = paliers « module ». Régénérer avec build_gabarits_overrides.py.",
+  "recettes": {
+    "r1": {
+      "tempsMin": 20,
+      "output": {
+        "Blé": 42
+      }
+    },
+    "r2": {
+      "tempsMin": 40,
+      "output": {
+        "Fraise": 26
+      }
+    },
+    "r4": {
+      "tempsMin": 40,
+      "output": {
+        "Pomme de terre": 46
+      }
+    },
+    "r100": {
+      "tempsMin": 13,
+      "output": {
+        "Capitaine Patate": 5
+      },
+      "profit": 15,
+      "capacite": "Culture"
+    },
+    "r101": {
+      "tempsMin": 40,
+      "output": {
+        "Radis de rosée lunaire": 8
+      },
+      "profit": 592,
+      "capacite": "Culture"
+    },
+    "r102": {
+      "tempsMin": 40,
+      "output": {
+        "Piment de lune croissante": 8
+      },
+      "profit": 592,
+      "capacite": "Culture"
+    },
+    "r103": {
+      "tempsMin": 4,
+      "output": {
+        "Blé": 5
+      },
+      "profit": 5,
+      "capacite": "Culture"
+    },
+    "r104": {
+      "tempsMin": 40,
+      "output": {
+        "Riz": 18
+      },
+      "profit": 180,
+      "capacite": "Culture"
+    },
+    "r105": {
+      "tempsMin": 40,
+      "output": {
+        "Germe de soja": 16
+      },
+      "profit": 176,
+      "capacite": "Culture"
+    },
+    "r106": {
+      "tempsMin": 40,
+      "output": {
+        "Coton": 7
+      },
+      "profit": 308,
+      "capacite": "Culture"
+    },
+    "r107": {
+      "tempsMin": 40,
+      "output": {
+        "Pomme de terre": 46
+      },
+      "profit": 368,
+      "capacite": "Culture",
+      "needsAura": "Frais"
+    },
+    "r108": {
+      "tempsMin": 40,
+      "output": {
+        "Rose": 8
+      },
+      "profit": 312,
+      "capacite": "Culture"
+    },
+    "r109": {
+      "tempsMin": 40,
+      "output": {
+        "Lavande": 7
+      },
+      "profit": 483,
+      "capacite": "Culture"
+    },
+    "r110": {
+      "tempsMin": 40,
+      "output": {
+        "Fraise": 8
+      },
+      "profit": 488,
+      "capacite": "Culture",
+      "needsAura": "Frais"
+    },
+    "r111": {
+      "tempsMin": 40,
+      "output": {
+        "Canne à sucre": 6
+      },
+      "profit": 486,
+      "capacite": "Culture"
+    },
+    "r112": {
+      "tempsMin": 40,
+      "output": {
+        "Ginseng": 3
+      },
+      "profit": 840,
+      "capacite": "Culture"
+    },
+    "r113": {
+      "tempsMin": 40,
+      "output": {
+        "Raisins": 9
+      },
+      "profit": 837,
+      "capacite": "Culture"
+    },
+    "r114": {
+      "tempsMin": 40,
+      "output": {
+        "Blé premium": 15
+      },
+      "profit": 780,
+      "capacite": "Culture"
+    },
+    "r115": {
+      "tempsMin": 40,
+      "output": {
+        "Riz": 79
+      },
+      "profit": 790,
+      "capacite": "Culture"
+    },
+    "r116": {
+      "tempsMin": 40,
+      "output": {
+        "Agave": 6
+      },
+      "profit": 1440,
+      "capacite": "Culture"
+    },
+    "r117": {
+      "tempsMin": 40,
+      "output": {
+        "Canneberge": 7
+      },
+      "profit": 1470,
+      "capacite": "Culture"
+    },
+    "r118": {
+      "tempsMin": 40,
+      "output": {
+        "Fraise": 26
+      },
+      "profit": 1586,
+      "capacite": "Culture",
+      "needsAura": "Frais"
+    },
+    "r119": {
+      "tempsMin": 11,
+      "output": {
+        "Bois de saule": 5
+      },
+      "profit": 15,
+      "capacite": "Culture"
+    },
+    "r120": {
+      "tempsMin": 40,
+      "output": {
+        "Bambou": 10
+      },
+      "profit": 130,
+      "capacite": "Culture"
+    },
+    "r121": {
+      "tempsMin": 40,
+      "output": {
+        "Citron": 8
+      },
+      "profit": 128,
+      "capacite": "Culture"
+    },
+    "r122": {
+      "tempsMin": 40,
+      "output": {
+        "Pomme": 8
+      },
+      "profit": 312,
+      "capacite": "Culture"
+    },
+    "r123": {
+      "tempsMin": 40,
+      "output": {
+        "Fleur de cerisier": 7
+      },
+      "profit": 308,
+      "capacite": "Culture"
+    },
+    "r124": {
+      "tempsMin": 40,
+      "output": {
+        "Sirop d'érable": 9
+      },
+      "profit": 315,
+      "capacite": "Culture"
+    },
+    "r125": {
+      "tempsMin": 40,
+      "output": {
+        "Châtaigne": 7
+      },
+      "profit": 700,
+      "capacite": "Culture"
+    },
+    "r126": {
+      "tempsMin": 40,
+      "output": {
+        "Écorce de palmier": 6
+      },
+      "profit": 720,
+      "capacite": "Culture"
+    },
+    "r127": {
+      "tempsMin": 40,
+      "output": {
+        "Noix": 6
+      },
+      "profit": 720,
+      "capacite": "Culture"
+    },
+    "r128": {
+      "tempsMin": 40,
+      "output": {
+        "Noix de coco": 5
+      },
+      "profit": 1100,
+      "capacite": "Culture"
+    },
+    "r129": {
+      "tempsMin": 40,
+      "output": {
+        "Caoutchouc naturel": 3
+      },
+      "profit": 1110,
+      "capacite": "Culture"
+    },
+    "r130": {
+      "tempsMin": 40,
+      "output": {
+        "Sirop d'érable": 30
+      },
+      "profit": 1050,
+      "capacite": "Culture"
+    },
+    "r131": {
+      "tempsMin": 40,
+      "output": {
+        "Cacao": 6
+      },
+      "profit": 1860,
+      "capacite": "Culture"
+    },
+    "r132": {
+      "tempsMin": 40,
+      "output": {
+        "Fleur d'oranger": 8
+      },
+      "profit": 1840,
+      "capacite": "Culture"
+    },
+    "r133": {
+      "tempsMin": 6.75,
+      "output": {
+        "Plateau des moissons": 1
+      },
+      "profit": 5290
+    },
+    "r134": {
+      "tempsMin": 0.9,
+      "output": {
+        "Sculpture en bois": 1
+      },
+      "profit": 90
+    },
+    "r135": {
+      "tempsMin": 0.9,
+      "output": {
+        "Vaisselle en bambou": 1
+      },
+      "profit": 190
+    },
+    "r136": {
+      "tempsMin": 1.8,
+      "output": {
+        "Pierres polies de rivière premium": 1
+      },
+      "profit": 360
+    },
+    "r137": {
+      "tempsMin": 1.8,
+      "output": {
+        "Pierres polies de rivière": 1
+      },
+      "profit": 300
+    },
+    "r138": {
+      "tempsMin": 2.25,
+      "output": {
+        "Poterie": 1
+      },
+      "profit": 630
+    },
+    "r139": {
+      "tempsMin": 3.38,
+      "output": {
+        "Désodorisant à la rose premium": 1
+      },
+      "profit": 1420
+    },
+    "r140": {
+      "tempsMin": 3.38,
+      "output": {
+        "Désodorisant à la rose": 1
+      },
+      "profit": 1270
+    },
+    "r141": {
+      "tempsMin": 2.25,
+      "output": {
+        "Bouquet de fleurs": 1
+      },
+      "profit": 1120
+    },
+    "r142": {
+      "tempsMin": 2.25,
+      "output": {
+        "Sachet de lavande": 1
+      },
+      "profit": 1580
+    },
+    "r143": {
+      "tempsMin": 2.25,
+      "output": {
+        "Coquillage décoratif": 1
+      },
+      "profit": 1190
+    },
+    "r144": {
+      "tempsMin": 2.7,
+      "output": {
+        "Attrape-rêve": 1
+      },
+      "profit": 1730
+    },
+    "r145": {
+      "tempsMin": 2.7,
+      "output": {
+        "Lanterne à vœu stellaire": 1
+      },
+      "profit": 2140
+    },
+    "r146": {
+      "tempsMin": 4.05,
+      "output": {
+        "Carillon à vent": 1
+      },
+      "profit": 3180
+    },
+    "r147": {
+      "tempsMin": 2.7,
+      "output": {
+        "Collier de perles": 1
+      },
+      "profit": 3210
+    },
+    "r148": {
+      "tempsMin": 2.7,
+      "output": {
+        "Porcelaine": 1
+      },
+      "profit": 2960
+    },
+    "r149": {
+      "tempsMin": 1.35,
+      "output": {
+        "Canard en caoutchouc": 1
+      },
+      "profit": 1540
+    },
+    "r150": {
+      "tempsMin": 1.35,
+      "output": {
+        "Jouet tressé": 1
+      },
+      "profit": 1580
+    },
+    "r151": {
+      "tempsMin": 2.7,
+      "output": {
+        "Teinture": 1
+      },
+      "profit": 4280
+    },
+    "r152": {
+      "tempsMin": 4.05,
+      "output": {
+        "Fleurs en bouteille": 1
+      },
+      "profit": 7700
+    },
+    "r153": {
+      "tempsMin": 2.7,
+      "output": {
+        "Poussière de gemme": 1
+      },
+      "profit": 4600
+    },
+    "r154": {
+      "tempsMin": 5.4,
+      "output": {
+        "Poupée": 1
+      },
+      "profit": 11110
+    },
+    "r155": {
+      "tempsMin": 3.38,
+      "output": {
+        "Boule de riz à la fleur de cerisier": 1
+      },
+      "profit": 1410
+    },
+    "r156": {
+      "tempsMin": 2.25,
+      "output": {
+        "Soupe onctueuse de pomme de terre": 1
+      },
+      "profit": 750
+    },
+    "r157": {
+      "tempsMin": 3.38,
+      "output": {
+        "Tranches de radis de rosée lunaire": 1
+      },
+      "profit": 2370
+    },
+    "r158": {
+      "tempsMin": 2.25,
+      "output": {
+        "Soupe de pommes de terre premium": 1
+      },
+      "profit": 880
+    },
+    "r159": {
+      "tempsMin": 3.38,
+      "output": {
+        "Riz frit à la sauce soja": 1
+      },
+      "profit": 1280
+    },
+    "r160": {
+      "tempsMin": 3.38,
+      "output": {
+        "Ragoût ombral": 1
+      },
+      "profit": 2150
+    },
+    "r161": {
+      "tempsMin": 3.38,
+      "output": {
+        "Tofu à la sauce soja": 1
+      },
+      "profit": 1470
+    },
+    "r162": {
+      "tempsMin": 3.38,
+      "output": {
+        "Châtaignes grillées au sucre": 1
+      },
+      "profit": 2470
+    },
+    "r163": {
+      "tempsMin": 3.38,
+      "output": {
+        "Tanghulu": 1
+      },
+      "profit": 2260
+    },
+    "r164": {
+      "tempsMin": 2.7,
+      "output": {
+        "Gâteau au ginseng et à la châtaigne": 1
+      },
+      "profit": 2510
+    },
+    "r165": {
+      "tempsMin": 2.7,
+      "output": {
+        "Rouleau de vermicelles à la vapeur": 1
+      },
+      "profit": 2510
+    },
+    "r166": {
+      "tempsMin": 4.05,
+      "output": {
+        "Gâteau aux noix": 1
+      },
+      "profit": 3550
+    },
+    "r167": {
+      "tempsMin": 4.05,
+      "output": {
+        "Gelée": 1
+      },
+      "profit": 4790
+    },
+    "r168": {
+      "tempsMin": 4.05,
+      "output": {
+        "Gelée premium": 1
+      },
+      "profit": 5520
+    },
+    "r169": {
+      "tempsMin": 4.05,
+      "output": {
+        "Compote de raisin gourmande": 1
+      },
+      "profit": 5050
+    },
+    "r170": {
+      "tempsMin": 5.4,
+      "output": {
+        "Bonbon à la fraise": 1
+      },
+      "profit": 6840
+    },
+    "r171": {
+      "tempsMin": 6.75,
+      "output": {
+        "Chocolat à la canneberge": 1
+      },
+      "profit": 13480
+    },
+    "r172": {
+      "tempsMin": 4.05,
+      "output": {
+        "Chou à la crème à la fraise": 1
+      },
+      "profit": 5650
+    },
+    "r173": {
+      "tempsMin": 2.25,
+      "output": {
+        "Thé vert au riz grillé": 1
+      },
+      "profit": 740
+    },
+    "r174": {
+      "tempsMin": 2.25,
+      "output": {
+        "Thé au blé": 1
+      },
+      "profit": 330
+    },
+    "r175": {
+      "tempsMin": 2.25,
+      "output": {
+        "Jus de pomme": 1
+      },
+      "profit": 1000
+    },
+    "r176": {
+      "tempsMin": 4.5,
+      "output": {
+        "Kvass de pomme de terre": 1
+      },
+      "profit": 2640
+    },
+    "r177": {
+      "tempsMin": 2.25,
+      "output": {
+        "Jus de fraise": 1
+      },
+      "profit": 1180
+    },
+    "r178": {
+      "tempsMin": 1.13,
+      "output": {
+        "Jus de canne à sucre": 1
+      },
+      "profit": 650
+    },
+    "r179": {
+      "tempsMin": 2.7,
+      "output": {
+        "Eau de ginseng": 1
+      },
+      "profit": 2670
+    },
+    "r180": {
+      "tempsMin": 2.7,
+      "output": {
+        "Jus de raisin": 1
+      },
+      "profit": 2390
+    },
+    "r181": {
+      "tempsMin": 4.05,
+      "output": {
+        "Boisson au raisin citronnée": 1
+      },
+      "profit": 2970
+    },
+    "r182": {
+      "tempsMin": 2.7,
+      "output": {
+        "Lait de noix": 1
+      },
+      "profit": 2270
+    },
+    "r183": {
+      "tempsMin": 1.35,
+      "output": {
+        "Boisson fraîche à la noix de coco": 1
+      },
+      "profit": 1650
+    },
+    "r184": {
+      "tempsMin": 2.7,
+      "output": {
+        "Jus de canneberge": 1
+      },
+      "profit": 4060
+    },
+    "r185": {
+      "tempsMin": 4.05,
+      "output": {
+        "Boisson à l'agave": 1
+      },
+      "profit": 6610
+    },
+    "r186": {
+      "tempsMin": 2.7,
+      "output": {
+        "Lait de coco au cacao": 1
+      },
+      "profit": 4930
+    },
+    "r187": {
+      "tempsMin": 2.7,
+      "output": {
+        "Chocolat chaud": 1
+      },
+      "profit": 5330
+    },
+    "r188": {
+      "tempsMin": 2.7,
+      "output": {
+        "Rosée de fleur d'oranger": 1
+      },
+      "profit": 4700
+    },
+    "r189": {
+      "tempsMin": 1.8,
+      "output": {
+        "Pain premium": 1
+      },
+      "profit": 330
+    },
+    "r190": {
+      "tempsMin": 2.7,
+      "output": {
+        "Piment de lune croissante rôti": 1
+      },
+      "profit": 1520
+    },
+    "r191": {
+      "tempsMin": 1.8,
+      "output": {
+        "Graines de soja grillées": 1
+      },
+      "profit": 450
+    },
+    "r192": {
+      "tempsMin": 2.25,
+      "output": {
+        "Tarte aux pommes": 1
+      },
+      "profit": 590
+    },
+    "r193": {
+      "tempsMin": 3.38,
+      "output": {
+        "Pommes de terre rôties au bonbon à l'érable": 1
+      },
+      "profit": 850
+    },
+    "r194": {
+      "tempsMin": 3.38,
+      "output": {
+        "Sablé à la rose": 1
+      },
+      "profit": 1310
+    },
+    "r195": {
+      "tempsMin": 3.38,
+      "output": {
+        "Bonbon à la pomme": 1
+      },
+      "profit": 1980
+    },
+    "r196": {
+      "tempsMin": 2.25,
+      "output": {
+        "Biscuits à la lavande": 1
+      },
+      "profit": 1040
+    },
+    "r197": {
+      "tempsMin": 4.05,
+      "output": {
+        "Chips de noix au caramel": 1
+      },
+      "profit": 3130
+    },
+    "r198": {
+      "tempsMin": 4.05,
+      "output": {
+        "Bonbon au raisin": 1
+      },
+      "profit": 2850
+    },
+    "r199": {
+      "tempsMin": 2.7,
+      "output": {
+        "Cookies à la noix de coco": 1
+      },
+      "profit": 3700
+    },
+    "r200": {
+      "tempsMin": 2.7,
+      "output": {
+        "Bonbon en étoile à l'érable": 1
+      },
+      "profit": 2810
+    },
+    "r201": {
+      "tempsMin": 9.45,
+      "output": {
+        "Pudding chococo à la fraise": 1
+      },
+      "profit": 17890
+    },
+    "r202": {
+      "tempsMin": 2.7,
+      "output": {
+        "Pain aux fleurs": 1
+      },
+      "profit": 4610
+    },
+    "r203": {
+      "tempsMin": 9.45,
+      "output": {
+        "Pudding chococo à la fraise premium": 1
+      },
+      "profit": 20270
+    },
+    "r204": {
+      "tempsMin": 1.8,
+      "output": {
+        "Bouillie de riz nature": 1
+      },
+      "profit": 660
+    },
+    "r205": {
+      "tempsMin": 4.05,
+      "output": {
+        "Sauce sucrée-épicée ombrale": 1
+      },
+      "profit": 2390
+    },
+    "r206": {
+      "tempsMin": 2.25,
+      "output": {
+        "Concentré de rose": 1
+      },
+      "profit": 770
+    },
+    "r207": {
+      "tempsMin": 2.25,
+      "output": {
+        "Confiture de pomme au bonbon à l'érable": 1
+      },
+      "profit": 950
+    },
+    "r208": {
+      "tempsMin": 2.25,
+      "output": {
+        "Bille de sucre": 1
+      },
+      "profit": 1180
+    },
+    "r209": {
+      "tempsMin": 1.13,
+      "output": {
+        "Confiture de fraise": 1
+      },
+      "profit": 650
+    },
+    "r210": {
+      "tempsMin": 1.35,
+      "output": {
+        "Purée de châtaignes": 1
+      },
+      "profit": 980
+    },
+    "r211": {
+      "tempsMin": 2.7,
+      "output": {
+        "Bouillie de ginseng": 1
+      },
+      "profit": 2440
+    },
+    "r212": {
+      "tempsMin": 1.35,
+      "output": {
+        "Confiture de raisin": 1
+      },
+      "profit": 1120
+    },
+    "r213": {
+      "tempsMin": 4.05,
+      "output": {
+        "Sucre de malt": 1
+      },
+      "profit": 3440
+    },
+    "r214": {
+      "tempsMin": 1.35,
+      "output": {
+        "Morceau de sucre d'érable": 1
+      },
+      "profit": 1060
+    },
+    "r215": {
+      "tempsMin": 2.7,
+      "output": {
+        "Sirop d'agave": 1
+      },
+      "profit": 3080
+    },
+    "r216": {
+      "tempsMin": 5.4,
+      "output": {
+        "Pâte à tartiner au cacao": 1
+      },
+      "profit": 8350
+    },
+    "r217": {
+      "tempsMin": 5.4,
+      "output": {
+        "Confiture de canneberge": 1
+      },
+      "profit": 7350
+    },
+    "r218": {
+      "tempsMin": 0.9,
+      "output": {
+        "Chips de pomme de terre": 1
+      },
+      "profit": 110
+    },
+    "r219": {
+      "tempsMin": 0.9,
+      "output": {
+        "Tranches de citron séché": 1
+      },
+      "profit": 190
+    },
+    "r220": {
+      "tempsMin": 1.13,
+      "output": {
+        "Tofu séché": 1
+      },
+      "profit": 330
+    },
+    "r221": {
+      "tempsMin": 1.13,
+      "output": {
+        "Fleur de cerisier séchée": 1
+      },
+      "profit": 410
+    },
+    "r222": {
+      "tempsMin": 1.13,
+      "output": {
+        "Tranches de pomme séchée": 1
+      },
+      "profit": 510
+    },
+    "r223": {
+      "tempsMin": 1.13,
+      "output": {
+        "Fraises séchées": 1
+      },
+      "profit": 690
+    },
+    "r224": {
+      "tempsMin": 1.35,
+      "output": {
+        "Ginseng séché": 1
+      },
+      "profit": 1120
+    },
+    "r225": {
+      "tempsMin": 1.35,
+      "output": {
+        "Raisins secs": 1
+      },
+      "profit": 1210
+    },
+    "r226": {
+      "tempsMin": 1.35,
+      "output": {
+        "Noix de coco râpée": 1
+      },
+      "profit": 1470
+    },
+    "r227": {
+      "tempsMin": 1.35,
+      "output": {
+        "Canneberges séchées": 1
+      },
+      "profit": 2080
+    },
+    "r228": {
+      "tempsMin": 1.35,
+      "output": {
+        "Fleurs séchées": 1
+      },
+      "profit": 1990
+    },
+    "r229": {
+      "tempsMin": 2.25,
+      "output": {
+        "Bâton d'encens au bambou": 1
+      },
+      "profit": 470
+    },
+    "r230": {
+      "tempsMin": 2.25,
+      "output": {
+        "Encens à la cerise": 1
+      },
+      "profit": 840
+    },
+    "r231": {
+      "tempsMin": 2.25,
+      "output": {
+        "Encens à la rose": 1
+      },
+      "profit": 790
+    },
+    "r232": {
+      "tempsMin": 2.25,
+      "output": {
+        "Encens à la lavande": 1
+      },
+      "profit": 1270
+    },
+    "r233": {
+      "tempsMin": 2.25,
+      "output": {
+        "Encens au citron": 1
+      },
+      "profit": 700
+    },
+    "r234": {
+      "tempsMin": 2.7,
+      "output": {
+        "Arôme herbacé de ginseng": 1
+      },
+      "profit": 2360
+    },
+    "r235": {
+      "tempsMin": 4.05,
+      "output": {
+        "Savon premium": 1
+      },
+      "profit": 6320
+    },
+    "r236": {
+      "tempsMin": 4.05,
+      "output": {
+        "Savon": 1
+      },
+      "profit": 5500
+    },
+    "r237": {
+      "tempsMin": 2.7,
+      "output": {
+        "Lotion": 1
+      },
+      "profit": 7030
+    },
+    "r238": {
+      "tempsMin": 2.7,
+      "output": {
+        "Parfum composite": 1
+      },
+      "profit": 4850
+    },
+    "r239": {
+      "tempsMin": 2.7,
+      "output": {
+        "Encens à la fleur d'oranger": 1
+      },
+      "profit": 3640
+    },
+    "r240": {
+      "tempsMin": 2.7,
+      "output": {
+        "Parfum composite premium": 1
+      },
+      "profit": 5520
+    },
+    "r241": {
+      "tempsMin": 2.25,
+      "output": {
+        "Fleur de cerisier salée": 1
+      },
+      "profit": 780
+    },
+    "r242": {
+      "tempsMin": 2.25,
+      "output": {
+        "Sauce soja": 1
+      },
+      "profit": 650
+    },
+    "r243": {
+      "tempsMin": 3.38,
+      "output": {
+        "Pickles ombral": 1
+      },
+      "profit": 2290
+    },
+    "r244": {
+      "tempsMin": 1.13,
+      "output": {
+        "Vinaigre de cidre": 1
+      },
+      "profit": 510
+    },
+    "r245": {
+      "tempsMin": 4.5,
+      "output": {
+        "Vin de riz sucré premium": 1
+      },
+      "profit": 2980
+    },
+    "r246": {
+      "tempsMin": 4.5,
+      "output": {
+        "Boisson de riz sucrée": 1
+      },
+      "profit": 2580
+    },
+    "r247": {
+      "tempsMin": 2.7,
+      "output": {
+        "Citron salé premium": 1
+      },
+      "profit": 1440
+    },
+    "r248": {
+      "tempsMin": 2.7,
+      "output": {
+        "Vinaigre de riz": 1
+      },
+      "profit": 2510
+    },
+    "r249": {
+      "tempsMin": 2.7,
+      "output": {
+        "Citron salé": 1
+      },
+      "profit": 1110
+    },
+    "r250": {
+      "tempsMin": 2.7,
+      "output": {
+        "Fraises confites": 1
+      },
+      "profit": 2090
+    },
+    "r251": {
+      "tempsMin": 4.05,
+      "output": {
+        "Fleur d'oranger confite": 1
+      },
+      "profit": 6950
+    },
+    "r252": {
+      "tempsMin": 0.9,
+      "output": {
+        "Farine complète": 1
+      },
+      "profit": 70
+    },
+    "r253": {
+      "tempsMin": 0.9,
+      "output": {
+        "Riz décortiqué": 1
+      },
+      "profit": 240
+    },
+    "r254": {
+      "tempsMin": 0.9,
+      "output": {
+        "Tofu": 1
+      },
+      "profit": 230
+    },
+    "r255": {
+      "tempsMin": 1.13,
+      "output": {
+        "Poudre de lavande": 1
+      },
+      "profit": 650
+    },
+    "r256": {
+      "tempsMin": 1.35,
+      "output": {
+        "Poudre de ginseng": 1
+      },
+      "profit": 1160
+    },
+    "r257": {
+      "tempsMin": 2.7,
+      "output": {
+        "Boisson au riz": 1
+      },
+      "profit": 1860
+    },
+    "r258": {
+      "tempsMin": 1.35,
+      "output": {
+        "Huile de coco": 1
+      },
+      "profit": 1580
+    },
+    "r259": {
+      "tempsMin": 1.35,
+      "output": {
+        "Farine raffinée": 1
+      },
+      "profit": 1260
+    },
+    "r260": {
+      "tempsMin": 1.35,
+      "output": {
+        "Poudre de cacao": 1
+      },
+      "profit": 2470
+    },
+    "r261": {
+      "tempsMin": 2.7,
+      "output": {
+        "Lait de coco": 1
+      },
+      "profit": 3820
+    },
+    "r262": {
+      "tempsMin": 1.13,
+      "output": {
+        "Fil de coton": 1
+      },
+      "profit": 410
+    },
+    "r263": {
+      "tempsMin": 1.13,
+      "output": {
+        "Tissu en coton": 1
+      },
+      "profit": 610
+    },
+    "r264": {
+      "tempsMin": 1.13,
+      "output": {
+        "Pelote de laine": 1
+      },
+      "profit": 760
+    },
+    "r265": {
+      "tempsMin": 1.35,
+      "output": {
+        "Corde de palmier": 1
+      },
+      "profit": 1150
+    },
+    "r266": {
+      "tempsMin": 1.35,
+      "output": {
+        "Tissu en laine": 1
+      },
+      "profit": 1190
+    },
+    "r267": {
+      "tempsMin": 4.05,
+      "output": {
+        "Tissu en coton teint": 1
+      },
+      "profit": 6920
+    },
+    "r268": {
+      "tempsMin": 0.57,
+      "output": {
+        "Minerai grossièrement tamisé": 1
+      },
+      "profit": 0
+    },
+    "r269": {
+      "tempsMin": 0.57,
+      "output": {
+        "Brique de minerai frittée": 1
+      },
+      "profit": 0
+    },
+    "r270": {
+      "tempsMin": 0.68,
+      "output": {
+        "Minerai raffiné": 1
+      },
+      "profit": 0
+    },
+    "r271": {
+      "tempsMin": 0.68,
+      "output": {
+        "Plaque de minerai microcristallin": 1
+      },
+      "profit": 0
+    },
+    "r272": {
+      "tempsMin": 0.57,
+      "output": {
+        "Bois brut": 1
+      },
+      "profit": 0
+    },
+    "r273": {
+      "tempsMin": 0.57,
+      "output": {
+        "Planches standard": 1
+      },
+      "profit": 0
+    },
+    "r274": {
+      "tempsMin": 0.68,
+      "output": {
+        "Poutres lamellées": 1
+      },
+      "profit": 0
+    },
+    "r275": {
+      "tempsMin": 0.68,
+      "output": {
+        "Élément en bois densifié": 1
+      },
+      "profit": 0
+    },
+    "r276": {
+      "tempsMin": 30,
+      "output": {
+        "Aniipod": 1
+      },
+      "profit": 0
+    },
+    "r277": {
+      "tempsMin": 30,
+      "output": {
+        "Aniipod pro": 1
+      },
+      "profit": 0
+    },
+    "r278": {
+      "tempsMin": 30,
+      "output": {
+        "Aniipod méga": 1
+      },
+      "profit": 0
+    },
+    "r279": {
+      "tempsMin": 20,
+      "output": {
+        "Bourgeon de croissance": 3
+      },
+      "profit": 0
+    },
+    "r280": {
+      "tempsMin": 40,
+      "output": {
+        "Fleur de croissance": 2
+      },
+      "profit": 0
+    },
+    "r281": {
+      "tempsMin": 60,
+      "output": {
+        "Fruit de croissance": 1
+      },
+      "profit": 0
+    }
+  }
+}
