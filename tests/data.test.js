@@ -84,9 +84,13 @@ test('recettes : pas de gabarits (1×1, 30 min, profit 0) issus de l\'import aut
   assert.equal(gabarits.length, 0, `${gabarits.length} gabarits restants`);
 });
 
-test('recettes : structures sans rôle d\'Aniimo', { todo: '« Four à cheminée » double « Four de cheminée »' }, () => {
+test('recettes : structures sans rôle d\'Aniimo', () => {
   const sansRole = [...new Set(RECETTES.map((r) => r.structure))].filter((s) => !ROLES[s]);
   assert.deepEqual(sansRole, ['Zone de coupe']);
+});
+
+test('recettes : pas de recette « Pain » dans un four (le pain se fait à l\'Attrape-popote)', () => {
+  assert.ok(!RECETTES.some((r) => r.id === 'r14' || r.structure === 'Four à cheminée'));
 });
 
 // ---------- aniimo ----------

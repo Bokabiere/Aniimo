@@ -19,7 +19,6 @@ export const STRUCTURE_UNLOCK_LEVELS = {
   'Établi de menuiserie': [6, 10, 14, 18],
   'Établi phonolfactif': [6, 7, 10, 14, 17, 19],
   'Four de cheminée': [6, 10, 14, 18],
-  'Four à cheminée': [6, 10, 14, 18],
   'Maison de Plumiel': [6, 11],
   'Trempo-barils': [6, 9, 13, 17, 19],
   'Climatisation': [7],

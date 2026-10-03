@@ -212,25 +212,6 @@
     "color": "bg-pink-300 text-pink-900"
   },
   {
-    "id": "r14",
-    "nom": "Pain",
-    "structure": "Four à cheminée",
-    "w": 1,
-    "h": 1,
-    "tempsMin": 30,
-    "input": {
-      "Farine": 1,
-      "Eau": 1
-    },
-    "output": {
-      "Pain": 1
-    },
-    "profit": 80,
-    "needsAura": "Chaud",
-    "capacite": "Cuisine",
-    "color": "bg-orange-600"
-  },
-  {
     "id": "r15",
     "nom": "Pickles",
     "structure": "Bocal à pickles",

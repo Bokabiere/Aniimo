@@ -231,7 +231,10 @@ function App() {
   // grid stocke { id: uuid, rId: 'r1', originR: 0, originC: 0 }
   const [grid, setGrid] = useState(() => {
     const saved = localStorage.getItem('aniimo_grid_v6');
-    if (saved) return JSON.parse(saved);
+    if (saved) {
+      // retire de la grille les recettes supprimées de la base (ex. r14)
+      return JSON.parse(saved).map(row => row.map(cell => (cell && cell.rId === 'r14' ? null : cell)));
+    }
     return Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(null));
   });
 
@@ -240,9 +243,11 @@ function App() {
       const saved = localStorage.getItem('aniimo_recettes_db_v12');
       if (saved) {
         const parsed = JSON.parse(saved);
-        const missing = DEFAULT_RECETTES.filter(d => !parsed.some(p => p.id === d.id));
-        if (missing.length === 0) return parsed;
-        return [...parsed, ...missing];
+        const obsoletes = ['r14']; // « Pain » au Four à cheminée : recette inexistante en jeu
+        const gardees = parsed.filter(p => !obsoletes.includes(p.id));
+        const missing = DEFAULT_RECETTES.filter(d => !gardees.some(p => p.id === d.id));
+        if (missing.length === 0) return gardees;
+        return [...gardees, ...missing];
       }
       const oldSaved = localStorage.getItem('aniimo_recettes_db_v10');
       if (oldSaved) {
@@ -1208,7 +1213,7 @@ function App() {
       const secondaryCandidates = [
         recettesDB.find(r => r.id === 'r8'),  // Établi artisanal
         recettesDB.find(r => r.id === 'r15'), // Bocal à pickles
-        recettesDB.find(r => r.id === 'r14'), // Marmite à mijoter
+        recettesDB.find(r => r.structure === 'Marmite à mijoter'),
         recettesDB.find(r => r.id === 'r11'), // Puits
         recettesDB.find(r => r.structure === 'Attrape-popote'),
         recettesDB.find(r => r.structure === 'Grande roue à tisser')
