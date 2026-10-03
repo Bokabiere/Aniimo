@@ -1705,7 +1705,7 @@ function App() {
 
   return (
     <div className="min-h-screen p-2 sm:p-4 lg:p-6 w-full flex flex-col items-center">
-      <div className="w-full max-w-[1920px] space-y-4">
+      <main className="w-full max-w-[1920px] space-y-4">
         
         {/* Toast Notification flottant */}
         {notification && (
@@ -2092,11 +2092,11 @@ function App() {
                     </span>
 
                     {/* Menu déroulant propre et direct sans scrollbar */}
-                    <div className="relative">
+                    <div className="relative max-w-full min-w-0">
                       <select
                         value={activePresetId}
                         onChange={(e) => handleSelectPreset(e.target.value)}
-                        className="bg-slate-900 border border-emerald-500/70 hover:border-emerald-400 text-emerald-300 font-extrabold text-xs pl-3 pr-7 py-1.5 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer appearance-none transition-colors"
+                        className="max-w-full bg-slate-900 border border-emerald-500/70 hover:border-emerald-400 text-emerald-300 font-extrabold text-xs pl-3 pr-7 py-1.5 rounded-xl shadow-inner focus:outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer appearance-none transition-colors"
                       >
                         {presets.map(p => (
                           <option key={p.id} value={p.id} className="bg-slate-900 text-white">
@@ -2281,7 +2281,7 @@ function App() {
                     {/* Grille In-Game */}
                     <div 
                       className="grid gap-1.5 relative z-10"
-                      style={{ gridTemplateColumns: `repeat(${GRID_SIZE}, minmax(42px, 1fr))`, gridAutoRows: 'clamp(44px, 4.8vw, 62px)', width: '100%' }}
+                      style={{ gridTemplateColumns: `repeat(${GRID_SIZE}, minmax(0, 1fr))`, gridAutoRows: 'min(clamp(44px, 4.8vw, 62px), max(30px, 8.5vw))', width: '100%' }}
                     >
                       {grid.map((row, rIndex) => row.map((cell, cIndex) => {
                         if (cell && (cell.originR !== rIndex || cell.originC !== cIndex)) return null;
@@ -2460,7 +2460,7 @@ function App() {
                 /* ================= VUE TECHNIQUE ================= */
                 <div 
                   className="grid gap-1.5 w-full max-w-[680px] 2xl:max-w-[760px] transition-all"
-                  style={{ gridTemplateColumns: `repeat(${GRID_SIZE}, minmax(42px, 1fr))`, gridAutoRows: 'clamp(44px, 4.8vw, 62px)', width: '100%' }}
+                  style={{ gridTemplateColumns: `repeat(${GRID_SIZE}, minmax(0, 1fr))`, gridAutoRows: 'min(clamp(44px, 4.8vw, 62px), max(30px, 8.5vw))', width: '100%' }}
                 >
                   {grid.map((row, rIndex) => row.map((cell, cIndex) => {
                     // Ne dessiner le bloc complet que si c'est la cellule d'origine,
@@ -4055,7 +4055,7 @@ function App() {
           </div>
         )}
 
-      </div>
+      </main>
     </div>
   );
 }
