@@ -1,7 +1,7 @@
 {
   "_source": "aniofrance.com/aniimos.html, recoupé avec aniimotools.dev/creatures et aniipedia.com",
   "_verifie": "2026-10-03",
-  "_note": "« Roche » du site = « Terre » dans l'app ; « Ténèbres » = « Obscurité ». Premier élément = élément retenu si l'actuel n'est pas dans la liste.",
+  "_note": "« Roche » du site = « Terre » dans l'app ; « Ténèbres » = « Obscurité ». Premier élément = élément retenu si l'actuel n'est pas dans la liste. Les « elements » listent TOUTES les compétences d'élément de l'Aniimo (ex. Givrotus : Eau + Glace) ; « element » de l'app = celui retenu pour l'affichage.",
   "elements": {
     "Loufeuteau": [
       "Feu"
@@ -242,6 +242,36 @@
     ],
     "Hélion": [
       "Lumière"
+    ],
+    "Mandibouille": [
+      "Vent"
+    ],
+    "Cuicui": [
+      "Vent"
+    ],
+    "Trombec": [
+      "Vent"
+    ],
+    "Clairbec": [
+      "Vent"
+    ],
+    "Tubabec": [
+      "Vent"
+    ],
+    "Fredon": [
+      "Plante"
+    ],
+    "Farfafeu": [
+      "Feu"
+    ],
+    "Flamirage": [
+      "Feu"
+    ],
+    "Falou": [
+      "Eau"
+    ],
+    "Fabulle": [
+      "Eau"
     ]
   }
 }

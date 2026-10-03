@@ -53,12 +53,13 @@ def dump_aniimo(rows):
     out = []
     for a in rows:
         out.append(
-            '  { "nom": %s "capacite": %s "nivMax": %d, "element": %s "score": %d }'
+            '  { "nom": %s "capacite": %s "nivMax": %d, "element": %s "elements": %s, "score": %d }'
             % (
                 (json.dumps(a["nom"], ensure_ascii=False) + ",").ljust(14),
                 (json.dumps(a["capacite"], ensure_ascii=False) + ",").ljust(13),
                 a["nivMax"],
                 (json.dumps(a["element"], ensure_ascii=False) + ",").ljust(11),
+                json.dumps(a.get("elements", [a["element"]]), ensure_ascii=False),
                 a["score"],
             )
         )
@@ -103,13 +104,24 @@ def plan_elements():
     rows = load_json(DATA / "aniimo_db.json")
     ref_el = ref("aniimo_elements.json")["elements"]
     changes, unverified = [], []
+    # Nouveaux Aniimo (fiches relevées sur aniimotools.dev)
+    connus = {a["nom"] for a in rows}
+    for n in ref("aniimo_nouveaux.json")["aniimo"]:
+        if n["nom"] not in connus:
+            rows.append(dict(n))
+            changes.append(Change("aniimo_db.json", f"{n['nom']} : ajouté ({n['element']}, {n['capacite']})"))
     for a in rows:
         wanted = ref_el.get(a["nom"])
         if wanted is None:
             unverified.append(a["nom"])
-        elif a["element"] not in wanted:
+            a.setdefault("elements", [a["element"]])
+            continue
+        if a["element"] not in wanted:
             changes.append(Change("aniimo_db.json", f"{a['nom']} : {a['element']} → {wanted[0]}"))
             a["element"] = wanted[0]
+        if a.get("elements") != wanted:
+            changes.append(Change("aniimo_db.json", f"{a['nom']} : elements {a.get('elements')} → {wanted}"))
+            a["elements"] = list(wanted)
     return rows, changes, unverified
 
 

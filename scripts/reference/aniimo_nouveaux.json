@@ -1,0 +1,96 @@
+{
+  "_source": "aniimotools.dev/fr/creatures/<fiche> (Capacités de Foyer), relevé le 2026-10-03",
+  "_note": "Aniimo dont la fiche ne liste qu'une compétence d'élément (pas de Porter/Artisanat/Loisir/Parfumerie). nivMax = niveau de la compétence d'élément affichée sur la fiche.",
+  "aniimo": [
+    {
+      "nom": "Cuicui",
+      "capacite": "Aucune",
+      "nivMax": 1,
+      "element": "Vent",
+      "elements": [
+        "Vent"
+      ],
+      "score": 1
+    },
+    {
+      "nom": "Trombec",
+      "capacite": "Aucune",
+      "nivMax": 3,
+      "element": "Vent",
+      "elements": [
+        "Vent"
+      ],
+      "score": 3
+    },
+    {
+      "nom": "Clairbec",
+      "capacite": "Aucune",
+      "nivMax": 3,
+      "element": "Vent",
+      "elements": [
+        "Vent"
+      ],
+      "score": 3
+    },
+    {
+      "nom": "Tubabec",
+      "capacite": "Aucune",
+      "nivMax": 3,
+      "element": "Vent",
+      "elements": [
+        "Vent"
+      ],
+      "score": 3
+    },
+    {
+      "nom": "Fredon",
+      "capacite": "Aucune",
+      "nivMax": 1,
+      "element": "Plante",
+      "elements": [
+        "Plante"
+      ],
+      "score": 1
+    },
+    {
+      "nom": "Farfafeu",
+      "capacite": "Aucune",
+      "nivMax": 2,
+      "element": "Feu",
+      "elements": [
+        "Feu"
+      ],
+      "score": 2
+    },
+    {
+      "nom": "Flamirage",
+      "capacite": "Aucune",
+      "nivMax": 3,
+      "element": "Feu",
+      "elements": [
+        "Feu"
+      ],
+      "score": 3
+    },
+    {
+      "nom": "Falou",
+      "capacite": "Aucune",
+      "nivMax": 1,
+      "element": "Eau",
+      "elements": [
+        "Eau"
+      ],
+      "score": 1
+    },
+    {
+      "nom": "Fabulle",
+      "capacite": "Aucune",
+      "nivMax": 3,
+      "element": "Eau",
+      "elements": [
+        "Eau"
+      ],
+      "score": 3
+    }
+  ]
+}

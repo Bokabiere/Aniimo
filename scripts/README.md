@@ -39,3 +39,10 @@ Les ingrédients des 149 recettes de transformation sont comparés au relevé `s
 `.github/workflows/deploy.yml` construit l'app et la publie à chaque push sur `main`
 (adresse : `https://<compte>.github.io/<dépôt>/`). Activation unique : sur GitHub, **Settings → Pages → Source : GitHub Actions**.
 Le sous-chemin est fourni par la variable `VITE_BASE` (vide en local).
+
+## Aniimo
+
+`aniimo_db.json` : `element` = élément affiché, `elements` = toutes les compétences d'élément de la fiche (ex. Givrotus : Eau + Glace),
+`capacite` = Porter / Artisanat / Loisir / Parfumerie, ou `Aucune` pour les Aniimo qui n'ont qu'une compétence d'élément.
+Références : `aniimo_elements.json` (éléments) et `aniimo_nouveaux.json` (Aniimo à ajouter), relevées sur aniimotools.dev.
+Non relevés : 10 Aniimo marins/combat (Coracroc, Coraleurre, Cheekie, Wavwal, Algobulle, Algoglam, Poulplash, Gachapoulpe, Malange, Malaglace) dont la fiche ne détaille pas de capacité de foyer.

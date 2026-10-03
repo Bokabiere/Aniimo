@@ -12,6 +12,7 @@ const GRAINES = load('graines_db.json');
 
 const ELEMENTS = ['Feu', 'Eau', 'Plante', 'Terre', 'Vent', 'Foudre', 'Glace', 'Obscurité', 'Lumière'];
 const CAPACITES = ['Porter', 'Artisanat', 'Loisir', 'Parfumerie'];
+const CAPACITES_OU_AUCUNE = [...CAPACITES, 'Aucune'];
 
 // ---------- recettes ----------
 test('recettes : identifiants uniques', () => {
@@ -92,9 +93,11 @@ test('recettes : structures sans rôle d\'Aniimo', { todo: '« Four à cheminée
 test('aniimo : noms uniques, capacité et élément valides', () => {
   assert.equal(new Set(ANIIMO.map((a) => a.nom)).size, ANIIMO.length);
   for (const a of ANIIMO) {
-    assert.ok(CAPACITES.includes(a.capacite), `${a.nom}: capacité « ${a.capacite} »`);
+    assert.ok(CAPACITES_OU_AUCUNE.includes(a.capacite), `${a.nom}: capacité « ${a.capacite} »`);
+    assert.ok(Array.isArray(a.elements) && a.elements.includes(a.element), `${a.nom}: elements doit contenir element`);
+    for (const e of a.elements) assert.ok(ELEMENTS.includes(e), `${a.nom}: élément « ${e} »`);
     assert.ok(ELEMENTS.includes(a.element), `${a.nom}: élément « ${a.element} »`);
-    assert.ok([3, 4].includes(a.nivMax), `${a.nom}: nivMax ${a.nivMax}`);
+    assert.ok(a.capacite === 'Aucune' ? a.nivMax >= 1 && a.nivMax <= 4 : [3, 4].includes(a.nivMax), `${a.nom}: nivMax ${a.nivMax}`);
     assert.equal(a.score, a.nivMax, `${a.nom}: score ≠ nivMax`);
   }
 });
@@ -102,6 +105,14 @@ test('aniimo : noms uniques, capacité et élément valides', () => {
 test('aniimo : répartition des capacités conforme à la source (38 / 20 / 18 / 2)', () => {
   const count = (c) => ANIIMO.filter((a) => a.capacite === c).length;
   assert.deepEqual([count('Porter'), count('Artisanat'), count('Loisir'), count('Parfumerie')], [38, 20, 18, 2]);
+});
+
+test('aniimo : compétences d\'élément multiples et ajouts du 2026-10-03', () => {
+  const parNom = Object.fromEntries(ANIIMO.map((a) => [a.nom, a]));
+  assert.deepEqual(parNom.Givrotus.elements, ['Eau', 'Glace']);
+  assert.equal(parNom.Mandibouille.element, 'Vent');
+  assert.equal(ANIIMO.filter((a) => a.capacite === 'Aucune').length, 9);
+  assert.equal(ANIIMO.length, 87);
 });
 
 test('aniimo : éléments corrigés le 2026-10-03', () => {

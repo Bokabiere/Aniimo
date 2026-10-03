@@ -9,6 +9,8 @@ import ProgressionTracker from './components/ProgressionTracker.jsx';
 import OngletsFoyer from './components/OngletsFoyer.jsx';
 import ProchaineAction from './components/ProchaineAction.jsx';
 import RecetteIcone from './components/RecetteIcone.jsx';
+import EquipeAniimo from './components/EquipeAniimo.jsx';
+import { structuresPosees, besoinsGrille } from './lib/equipe.js';
 import FiltresRecettes from './components/FiltresRecettes.jsx';
 import { filtrerRecettes, installations as listerInstallations, profitParHeure } from './lib/recettes-liste.js';
 import { formatCycle } from './lib/format.js';
@@ -25,16 +27,6 @@ const ONGLETS = [
 
 const GRID_SIZE = 10;
 const MAX_STRUCTURES_PER_LEVEL = 5;
-
-// Mapping capacite recette → capacite aniimo
-const CAPACITE_MAP = {
-  'Culture': 'Porter',
-  'Transport': 'Porter',
-  'Fabrication': 'Artisanat',
-  'Cuisine': 'Artisanat',
-  'Repos': 'Loisir',
-  'Parfumerie': 'Parfumerie',
-};
 
 // Helper pour l'affichage fidèle "Vue Jeu" (icônes rondes et niveaux Lv.X)
 const getGameViewInfo = (recette) => {
@@ -1701,6 +1693,7 @@ function App() {
   };
   let nbStructures = 0;
   grid.forEach((row, rr) => row.forEach((cell, cc) => { if (cell && cell.originR === rr && cell.originC === cc) nbStructures++; }));
+  const besoinsEquipe = besoinsGrille(structuresPosees(grid, recettesDB), ANIIMO_ROLES);
   const prochaine = prochaineAction({ level: logis.level, pieces: logis.pieces || 0, niveaux: NIVEAUX, graines: GRAINES_DB, nbStructures, profitHoraire: flow.profitHoraire });
 
   return (
@@ -3115,144 +3108,7 @@ function App() {
 
 {/* ===== MON ÉQUIPE ANIIMO ===== */}
         <div role="tabpanel" aria-labelledby="onglet-equipe" className={tab === 'equipe' ? '' : 'hidden'}>
-        <section className="bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-700">
-          <details>
-            <summary className="cursor-pointer flex items-center justify-between select-none">
-              <h2 className="text-2xl font-bold">🐾 Mon Équipe Aniimo</h2>
-              <span className="text-slate-400 text-sm">{monEquipe.length} sélectionné{monEquipe.length > 1 ? "s" : ""} — cliquer pour {monEquipe.length > 0 ? "modifier" : "configurer"}</span>
-            </summary>
-
-            {/* Légende des tiers */}
-            <div className="mt-4 flex flex-wrap gap-3 text-xs">
-              <span className="px-2 py-1 rounded bg-yellow-500/20 border border-yellow-500/50 text-yellow-300 font-bold">★ S — Loisir Niv.4 · 150/135/120 travail/min</span>
-              <span className="px-2 py-1 rounded bg-slate-600/40 border border-slate-500/50 text-slate-300 font-bold">★ A — Porter Niv.3 · 120/105/90 travail/min</span>
-              <span className="px-2 py-1 rounded bg-amber-700/20 border border-amber-600/50 text-amber-300 font-bold">★ A — Artisanat Niv.3 · 240/180/60 travail/min</span>
-              <span className="px-2 py-1 rounded bg-purple-700/20 border border-purple-500/50 text-purple-300 font-bold">★ A — Parfumerie Niv.3 · 240/180/60 travail/min</span>
-            </div>
-
-            {/* Recommandations pour la grille courante */}
-            {(() => {
-              const capNeeded = {};
-              grid.forEach((row, r) => row.forEach((cell, c) => {
-                if (cell && cell.originR === r && cell.originC === c) {
-                  const rec = recettesDB.find(x => x.id === cell.rId);
-                  if (rec?.capacite) {
-                    const cap = CAPACITE_MAP[rec.capacite] || rec.capacite;
-                    if (!capNeeded[cap]) capNeeded[cap] = [];
-                    if (!capNeeded[cap].includes(rec.structure)) capNeeded[cap].push(rec.structure);
-                  }
-                }
-              }));
-              if (!Object.keys(capNeeded).length) return null;
-              return (
-                <div className="mt-5 p-4 bg-slate-900/60 rounded-xl border border-slate-700">
-                  <h3 className="font-bold text-sm text-slate-300 mb-3">⚡ Meilleurs choix pour votre grille actuelle</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {Object.entries(capNeeded).map(([cap, structures]) => {
-                      const best = ANIIMO_DB.filter(a => a.capacite === cap).sort((a,b) => b.score - a.score);
-                      const tier = cap === 'Loisir' ? 'S' : 'A';
-                      const tierColor = cap === 'Loisir' ? 'text-yellow-300 bg-yellow-500/20 border-yellow-500/50' : 'text-slate-300 bg-slate-700/50 border-slate-600';
-                      return best.slice(0,5).map(a => {
-                        const isOwned = monEquipe.includes(a.nom);
-                        const elemEmoji = {Feu:'🔥',Eau:'🌊',Plante:'🌿',Terre:'🪨',Vent:'💨',Foudre:'⚡',Glace:'❄️',Obscurité:'🌑',Lumière:'✨'}[a.element] || '';
-                        const workRates = a.capacite === 'Porter' ? ['120','105','90'] : a.capacite === 'Loisir' ? ['150','135','120'] : ['240','180','60'];
-                        return (
-                          <div key={a.nom} className="relative group">
-                            <button
-                              onClick={() => setMonEquipe(prev => isOwned ? prev.filter(n => n !== a.nom) : [...prev, a.nom])}
-                              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm font-bold transition-all ${isOwned ? 'bg-indigo-600 border-indigo-400 text-white shadow-lg shadow-indigo-900/50' : 'bg-slate-700 border-slate-600 text-slate-400 hover:text-white hover:border-slate-400'}`}
-                            >
-                              <span className={`text-xs font-black px-1 rounded ${tierColor} border`}>{tier}</span>
-                              {elemEmoji} {a.nom}
-                              {isOwned && <span className="text-green-400">✓</span>}
-                            </button>
-                            {/* Overlay stats */}
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 bg-slate-900 border border-slate-600 rounded-xl p-3 shadow-2xl z-50 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity text-xs">
-                              <div className="font-bold text-white mb-1">{elemEmoji} {a.nom}</div>
-                              <div className="text-slate-400 mb-2">{a.capacite} · Niv. max {a.nivMax} · {a.element}</div>
-                              <div className="text-slate-400 mb-1 font-semibold">Travail/min à Niv.{a.nivMax} :</div>
-                              <div className="grid grid-cols-3 gap-1 text-center">
-                                <div className="bg-slate-800 rounded p-1"><div className="text-slate-500 text-[9px]">Recette Niv.1</div><div className="text-green-400 font-bold">{workRates[0]}</div></div>
-                                <div className="bg-slate-800 rounded p-1"><div className="text-slate-500 text-[9px]">Recette Niv.2</div><div className="text-yellow-400 font-bold">{workRates[1]}</div></div>
-                                <div className="bg-slate-800 rounded p-1"><div className="text-slate-500 text-[9px]">Recette Niv.3</div><div className="text-orange-400 font-bold">{workRates[2]}</div></div>
-                              </div>
-                              <div className="mt-2 text-[9px] text-slate-500">+20% si lettre de perso. correspondante</div>
-                              <div className="mt-1 text-[9px] text-indigo-400">Pour : {structures.slice(0,3).join(', ')}</div>
-                              <div className="absolute bottom-[-6px] left-1/2 -translate-x-1/2 w-3 h-3 bg-slate-900 border-r border-b border-slate-600 rotate-45"></div>
-                            </div>
-                          </div>
-                        );
-                      });
-                    })}
-                  </div>
-                </div>
-              );
-            })()}
-
-            {/* Sélection complète par capacité */}
-            <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {['Loisir', 'Artisanat', 'Porter', 'Parfumerie'].map(cap => {
-                const capStyle = {
-                  Loisir:     { color: 'text-yellow-300', border: 'border-yellow-500/40', bg: 'bg-yellow-900/10', emoji: '🎉', tier: 'S', tierStyle: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/50' },
-                  Artisanat:  { color: 'text-amber-400',  border: 'border-amber-600/40',  bg: 'bg-amber-900/10',  emoji: '🔨', tier: 'A', tierStyle: 'bg-slate-700 text-slate-300 border-slate-500' },
-                  Porter:     { color: 'text-blue-400',   border: 'border-blue-600/40',   bg: 'bg-blue-900/10',   emoji: '🚚', tier: 'A', tierStyle: 'bg-slate-700 text-slate-300 border-slate-500' },
-                  Parfumerie: { color: 'text-purple-400', border: 'border-purple-600/40', bg: 'bg-purple-900/10', emoji: '🌸', tier: 'A', tierStyle: 'bg-slate-700 text-slate-300 border-slate-500' },
-                }[cap];
-                const aniimosOfCap = ANIIMO_DB.filter(a => a.capacite === cap);
-                const selectedCount = aniimosOfCap.filter(a => monEquipe.includes(a.nom)).length;
-                const workRates = cap === 'Porter' ? ['120','105','90'] : cap === 'Loisir' ? ['150','135','120'] : ['240','180','60'];
-                const workLabel = cap === 'Porter' ? 'Champs/Mine/Puits' : 'Atelier/Cuisine/Repos';
-                return (
-                  <div key={cap} className={`p-4 rounded-xl border ${capStyle.border} ${capStyle.bg}`}>
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        <span className={`text-xs font-black px-1.5 py-0.5 rounded border ${capStyle.tierStyle}`}>{capStyle.tier}</span>
-                        <span className={`font-bold ${capStyle.color}`}>{capStyle.emoji} {cap}</span>
-                        <span className="text-slate-500 text-xs">Niv.max {aniimosOfCap[0]?.nivMax ?? '?'} · {workRates[0]}/{workRates[1]}/{workRates[2]}/min</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-slate-500 text-xs">{selectedCount}/{aniimosOfCap.length}</span>
-                        <button onClick={() => setMonEquipe(prev => [...new Set([...prev, ...aniimosOfCap.map(a => a.nom)])])} className="text-[10px] text-slate-400 hover:text-white bg-slate-700 px-2 py-0.5 rounded">Tous</button>
-                        <button onClick={() => setMonEquipe(prev => prev.filter(n => !aniimosOfCap.find(a => a.nom === n)))} className="text-[10px] text-slate-400 hover:text-white bg-slate-700 px-2 py-0.5 rounded">Aucun</button>
-                      </div>
-                    </div>
-                    <div className="flex flex-wrap gap-1.5">
-                      {aniimosOfCap.map(a => {
-                        const isSelected = monEquipe.includes(a.nom);
-                        const elemEmoji = {Feu:'🔥',Eau:'🌊',Plante:'🌿',Terre:'🪨',Vent:'💨',Foudre:'⚡',Glace:'❄️',Obscurité:'🌑',Lumière:'✨'}[a.element] || '';
-                        return (
-                          <div key={a.nom} className="relative group">
-                            <button
-                              onClick={() => setMonEquipe(prev => isSelected ? prev.filter(n => n !== a.nom) : [...prev, a.nom])}
-                              className={`text-xs px-2 py-1 rounded border transition-all flex items-center gap-1 ${isSelected ? 'bg-indigo-600 border-indigo-400 text-white font-bold shadow-sm' : 'bg-slate-700 border-slate-600 text-slate-400 hover:text-white hover:border-slate-400'}`}
-                            >
-                              <span>{elemEmoji}</span>
-                              <span>{a.nom}</span>
-                            </button>
-                            {/* Tooltip stats */}
-                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 bg-slate-900 border border-slate-600 rounded-xl p-3 shadow-2xl z-50 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity text-xs">
-                              <div className="font-bold text-white mb-1">{elemEmoji} {a.nom}</div>
-                              <div className="text-slate-400 mb-1">{a.capacite} · {a.element} · Niv. max {a.nivMax}</div>
-                              <div className="text-slate-500 text-[9px] mb-1">{workLabel}</div>
-                              <div className="grid grid-cols-3 gap-1 text-center">
-                                <div className="bg-slate-800 rounded p-1"><div className="text-slate-500 text-[9px]">Recipe Niv.1</div><div className="text-green-400 font-bold">{workRates[0]}</div></div>
-                                <div className="bg-slate-800 rounded p-1"><div className="text-slate-500 text-[9px]">Recipe Niv.2</div><div className="text-yellow-400 font-bold">{workRates[1]}</div></div>
-                                <div className="bg-slate-800 rounded p-1"><div className="text-slate-500 text-[9px]">Recipe Niv.3</div><div className="text-orange-400 font-bold">{workRates[2]}</div></div>
-                              </div>
-                              <div className="mt-2 text-[9px] text-slate-500">+20% si lettre de personnalité correspondante à l'installation</div>
-                              <div className="absolute bottom-[-6px] left-1/2 -translate-x-1/2 w-3 h-3 bg-slate-900 border-r border-b border-slate-600 rotate-45"></div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-          </details>
-        </section>
+          <EquipeAniimo db={ANIIMO_DB} equipe={monEquipe} onChange={setMonEquipe} besoins={besoinsEquipe} onAller={allerA} />
         </div>
 
         </div>
