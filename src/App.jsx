@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, Fragment } from 'react';
 import DEFAULT_RECETTES from './data/recettes.json';
 import ANIIMO_ROLES from './data/aniimo_roles.json';
 import ANIIMO_DB from './data/aniimo_db.json';
@@ -9,6 +9,9 @@ import ProgressionTracker from './components/ProgressionTracker.jsx';
 import OngletsFoyer from './components/OngletsFoyer.jsx';
 import ProchaineAction from './components/ProchaineAction.jsx';
 import RecetteIcone from './components/RecetteIcone.jsx';
+import FiltresRecettes from './components/FiltresRecettes.jsx';
+import { filtrerRecettes, installations as listerInstallations, profitParHeure } from './lib/recettes-liste.js';
+import { formatCycle } from './lib/format.js';
 import { prochaineAction } from './lib/recommandation.js';
 
 const ONGLETS = [
@@ -271,11 +274,17 @@ function App() {
 
   const sortedRecettes = [...recettesDB].sort((a, b) => a.structure.localeCompare(b.structure) || a.nom.localeCompare(b.nom));
 
-  const filteredRecettes = sortedRecettes.filter(r =>
-    !recipeSearch ||
-    r.nom.toLowerCase().includes(recipeSearch.toLowerCase()) ||
-    r.structure.toLowerCase().includes(recipeSearch.toLowerCase())
-  );
+  const [recipeStructure, setRecipeStructure] = useState('');
+  const [recipeSort, setRecipeSort] = useState('installation');
+  const [hideLockedRecipes, setHideLockedRecipes] = useState(true);
+  const [confirmClear, setConfirmClear] = useState(false);
+  const { liste: filteredRecettes, masquees: recettesMasquees } = filtrerRecettes(recettesDB, {
+    recherche: recipeSearch,
+    structure: recipeStructure,
+    masquerVerrouillees: hideLockedRecipes,
+    limite: (st) => getLimitForStructure(st, logis.level),
+    tri: recipeSort,
+  });
 
   const [selectedTool, setSelectedTool] = useState(null);
   const [showRecipeModal, setShowRecipeModal] = useState(false);
@@ -1745,12 +1754,10 @@ function App() {
             
             <div className="flex flex-wrap items-center gap-3">
               <div className="bg-slate-900 border border-indigo-500/50 p-2 rounded-lg flex flex-wrap items-center gap-2 shadow-inner max-w-full">
-                <span className="text-xs uppercase font-bold text-indigo-400">Auto ({maxStructuresAllowed} max) :</span>
-                <button onClick={() => autoOptimize('money')} className="bg-indigo-600 hover:bg-indigo-500 px-3 py-1 text-sm rounded font-semibold transition">Max Argent</button>
-                <button onClick={() => autoOptimize('optimal')} className="bg-amber-500 text-black hover:bg-amber-400 px-3 py-1 text-sm rounded font-bold transition">Plan Optimal (Meta)</button>
-                  <button onClick={() => { autoOptimize('levelup'); setShowLevelModal(true); }} className="bg-emerald-600 hover:bg-emerald-500 px-3 py-1 text-sm rounded font-bold transition">⬆️ Max Niveau</button>
-                  <button onClick={() => { setNiveauCible(logis.level + 1); setShowNiveauModal(true); }} className="bg-teal-600 hover:bg-teal-500 px-3 py-1 text-sm rounded font-bold transition">📊 Calc. Niveau</button>
-                  <button onClick={() => setShowGrainesModal(true)} className="bg-lime-500 hover:bg-lime-400 text-slate-900 px-3 py-1 text-sm rounded font-bold transition flex items-center gap-1 shadow-sm">🌱 Graines</button>
+                <span className="text-xs uppercase font-bold text-indigo-400" title="Ces boutons remplacent la disposition actuelle de la grille">Remplir automatiquement ({maxStructuresAllowed} max)</span>
+                <button onClick={() => autoOptimize('money')} title="Remplit la grille avec les cultures les plus rentables (fraises + aura Frais) pour gagner un maximum de pièces." className="bg-indigo-600 hover:bg-indigo-500 px-3 py-1 text-sm rounded font-semibold transition">💰 Gagner des pièces</button>
+                <button onClick={() => autoOptimize('optimal')} title="Un mélange équilibré de recettes (blé, pommes de terre, citrons…) qui produit de tout." className="bg-amber-500 text-black hover:bg-amber-400 px-3 py-1 text-sm rounded font-bold transition">⚖️ Plan équilibré</button>
+                <button onClick={() => allerA('niveaumax')} title="Maximise le nombre de commandes remplies par heure, pour monter de niveau plus vite." className="bg-emerald-600 hover:bg-emerald-500 px-3 py-1 text-sm rounded font-bold transition">⬆️ Monter de niveau vite</button>
                 
                 {/* Menu déroulant avec recherche intégrée pour Optimiser pour */}
                 <div className="relative">
@@ -1762,7 +1769,7 @@ function App() {
                     }}
                     className="bg-indigo-700 hover:bg-indigo-600 px-3 py-1 text-sm rounded font-semibold text-white focus:outline-none flex items-center gap-1.5 cursor-pointer transition shadow-sm"
                   >
-                    <span>🎯 Optimiser pour...</span>
+                    <span title="Remplit la grille pour produire le plus possible d'une recette précise">🎯 Viser une recette…</span>
                     <span className="text-[10px] opacity-75">{showOptimizeDropdown ? '▲' : '▼'}</span>
                   </button>
 
@@ -1873,7 +1880,13 @@ function App() {
                   )}
                 </div>
               </div>
-              <button onClick={clearGrid} className="bg-red-900/50 text-red-400 hover:bg-red-900/80 border border-red-800 px-4 py-2 text-sm rounded-lg font-bold transition">Effacer</button>
+              <button
+                onClick={() => {
+                  if (nbStructures > 0 && !confirmClear) { setConfirmClear(true); setTimeout(() => setConfirmClear(false), 4000); return; }
+                  clearGrid(); setConfirmClear(false);
+                }}
+                className={`border px-4 py-2 text-sm rounded-lg font-bold transition ${confirmClear ? 'bg-red-600 text-white border-red-400' : 'bg-red-900/50 text-red-400 hover:bg-red-900/80 border-red-800'}`}
+              >{confirmClear ? 'Confirmer : tout vider ?' : '🗑️ Vider la grille'}</button>
             </div>
           </div>
           
@@ -1908,18 +1921,39 @@ function App() {
                 )}
               </div>
 
+              <FiltresRecettes
+                installations={listerInstallations(recettesDB)}
+                structure={recipeStructure}
+                onStructure={setRecipeStructure}
+                tri={recipeSort}
+                onTri={setRecipeSort}
+                masquerVerrouillees={hideLockedRecipes}
+                onMasquer={setHideLockedRecipes}
+                nbMasquees={recettesMasquees}
+              />
+
               {filteredRecettes.length === 0 ? (
                 <div className="text-center py-4 text-xs text-slate-500 italic">
-                  Aucune recette trouvée pour « {recipeSearch} »
+                  Aucune recette ne correspond{recipeSearch ? <> à « {recipeSearch} »</> : ''}.
+                  {(recipeSearch || recipeStructure) && (
+                    <button onClick={() => { setRecipeSearch(''); setRecipeStructure(''); }} className="block mx-auto mt-2 text-indigo-300 underline not-italic">Réinitialiser les filtres</button>
+                  )}
                 </div>
-              ) : filteredRecettes.map(r => {
+              ) : filteredRecettes.map((r, idx) => {
                 const limit = getLimitForStructure(r.structure, logis.level);
+                const nouveauGroupe = recipeSort === 'installation' && (idx === 0 || filteredRecettes[idx - 1].structure !== r.structure);
                 const usage = getUsageForStructure(grid, r.structure);
                 const isLocked = limit === 0;
                 const isFull = usage >= limit;
                 return (
+                <Fragment key={r.id}>
+                {nouveauGroupe && (
+                  <div className="sticky top-0 z-10 -mx-1 px-1 py-1 bg-slate-900/95 text-[10px] font-bold uppercase tracking-wider text-slate-400 flex justify-between border-b border-slate-700/60">
+                    <span>{ANIIMO_ROLES[r.structure]?.emoji || '🏠'} {r.structure}</span>
+                    <span className="font-mono">{usage}/{limit}</span>
+                  </div>
+                )}
                 <button 
-                  key={r.id} 
                   onClick={() => setSelectedTool(r.id)}
                   className={`flex items-center gap-3 p-2 rounded-lg transition border text-left cursor-pointer ${
                     selectedTool === r.id 
@@ -1930,7 +1964,10 @@ function App() {
                   <RecetteIcone nom={r.nom} structure={r.structure} color={r.color} size="md" />
                   <div className="flex-1 min-w-0">
                     <div className="font-bold text-sm leading-tight truncate">{r.nom}</div>
-                    <div className="text-[10px] text-slate-400">{r.structure} ({r.w||1}x{r.h||1})</div>
+                    <div className="text-[10px] text-slate-400">
+                      {recipeSort !== 'installation' && <>{r.structure} · </>}{r.w||1}×{r.h||1} · ⏱ {formatCycle(r.tempsMin)}
+                      {profitParHeure(r) > 0 && <span className="text-emerald-400"> · ≈ {Math.round(profitParHeure(r)).toLocaleString('fr-FR')} 🪙/h</span>}
+                    </div>
                     {(r.needsAura || r.providesAura) && (
                        <div className="text-[9px] text-cyan-300 mt-0.5">
                          {r.needsAura ? `Requiert: ${r.needsAura}` : `Génère: ${r.providesAura.type}`}
@@ -1963,6 +2000,7 @@ function App() {
                     )}
                   </div>
                 </button>
+                </Fragment>
               )})}
             </div>
 
