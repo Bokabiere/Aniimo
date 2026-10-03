@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, Fragment } from 'react';
 import DEFAULT_RECETTES from './data/recettes.json';
 import ANIIMO_ROLES from './data/aniimo_roles.json';
 import ANIIMO_DB from './data/aniimo_db.json';
+import { installationsGrille } from './lib/optimisation.js';
 import NIVEAUX from './data/niveaux.json';
 import GRAINES_DB from './data/graines_db.json';
 import { getLimitForStructure, getFirstUnlockLevel } from './lib/structures.js';
@@ -3108,7 +3109,7 @@ function App() {
 
 {/* ===== MON ÉQUIPE ANIIMO ===== */}
         <div role="tabpanel" aria-labelledby="onglet-equipe" className={tab === 'equipe' ? '' : 'hidden'}>
-          <EquipeAniimo db={ANIIMO_DB} equipe={monEquipe} onChange={setMonEquipe} besoins={besoinsEquipe} onAller={allerA} />
+          <EquipeAniimo db={ANIIMO_DB} equipe={monEquipe} onChange={setMonEquipe} besoins={besoinsEquipe} onAller={allerA} installations={installationsGrille(grid, recettesDB, ANIIMO_ROLES)} />
         </div>
 
         </div>

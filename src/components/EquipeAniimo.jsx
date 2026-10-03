@@ -4,6 +4,8 @@ import {
   couverture, suggererEquipe,
 } from '../lib/equipe.js';
 import { normaliser } from '../lib/recettes-liste.js';
+import { planOptimal } from '../lib/optimisation.js';
+import NIVEAUX from '../data/aniimo_niveaux.json';
 
 const STYLE_CAPACITE = {
   Loisir: 'border-yellow-500/50 text-yellow-300',
@@ -20,7 +22,7 @@ function description(a) {
 }
 
 /** Onglet « Équipe » : couverture de la grille, suggestion, sélection filtrable des Aniimo. */
-export default function EquipeAniimo({ db, equipe, onChange, besoins, onAller }) {
+export default function EquipeAniimo({ db, equipe, onChange, besoins, onAller, installations = [] }) {
   const [recherche, setRecherche] = useState('');
   const [capacite, setCapacite] = useState('');
   const [element, setElement] = useState('');
@@ -28,6 +30,8 @@ export default function EquipeAniimo({ db, equipe, onChange, besoins, onAller })
 
   const cov = useMemo(() => couverture(equipe, besoins, db), [equipe, besoins, db]);
   const suggestion = useMemo(() => suggererEquipe(equipe, besoins, db), [equipe, besoins, db]);
+  const plan = useMemo(() => planOptimal(installations, db, equipe, NIVEAUX), [installations, db, equipe]);
+  const [voirTout, setVoirTout] = useState(false);
   const nbCouverts = cov.filter((b) => b.couvert).length;
 
   const visibles = useMemo(() => {
@@ -103,6 +107,60 @@ export default function EquipeAniimo({ db, equipe, onChange, besoins, onAller })
               </div>
             )}
           </>
+        )}
+      </div>
+
+      {/* ---- Affectation optimale ---- */}
+      <div className="p-4 bg-slate-900/60 rounded-xl border border-slate-700" aria-labelledby="affect-titre" role="region">
+        <h3 id="affect-titre" className="font-bold text-slate-200 mb-1">🎯 Qui placer où ? (affectation optimale)</h3>
+        {installations.length === 0 ? (
+          <p className="text-sm text-slate-300">Posez des installations sur la grille pour obtenir une répartition.</p>
+        ) : equipe.length === 0 ? (
+          <p className="text-sm text-slate-300">Cochez les Aniimo que vous possédez pour obtenir la répartition recommandée.</p>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-sm text-slate-200">
+              Production estimée : <strong className="text-emerald-300">≈ {Math.round(plan.total)} pièces/h</strong>
+              {plan.naif > 0 && plan.total > plan.naif && (
+                <> — soit <strong className="text-emerald-300">+{Math.round(plan.total - plan.naif)}</strong> par rapport à une affectation au premier venu ({Math.round(plan.naif)}).</>
+              )}
+            </p>
+            <ul className="space-y-1 text-sm">
+              {(voirTout ? plan.affectations : plan.affectations.slice(0, 8)).map((x) => (
+                <li key={x.installation.cle} className="flex flex-wrap justify-between gap-x-3 bg-slate-800/70 rounded px-2 py-1">
+                  <span><strong>{x.aniimo.nom}</strong> → {x.installation.structure} <span className="text-slate-300">({x.installation.recette})</span></span>
+                  <span className="text-slate-300">niv. {x.niveau} · ≈ {Math.round(x.piecesH)}/h</span>
+                </li>
+              ))}
+            </ul>
+            {plan.affectations.length > 8 && (
+              <button type="button" onClick={() => setVoirTout((v) => !v)} className="text-sm text-sky-300 underline">
+                {voirTout ? 'Réduire' : `Voir les ${plan.affectations.length} affectations`}
+              </button>
+            )}
+            {plan.sansAniimo.length > 0 && (
+              <p className="text-sm text-amber-300">
+                ⚠️ {plan.sansAniimo.length} installation{plan.sansAniimo.length > 1 ? 's' : ''} sans Aniimo adapté dans votre équipe : {[...new Set(plan.sansAniimo.map((i) => i.structure))].join(', ')}.
+              </p>
+            )}
+            {plan.acquerir.length > 0 && (
+              <div>
+                <p className="text-sm font-semibold text-slate-200">Aniimo à acquérir en priorité</p>
+                <ul className="text-sm text-slate-200 space-y-1 mt-1">
+                  {plan.acquerir.slice(0, 5).map((x) => (
+                    <li key={x.installation.cle}>
+                      <strong>{x.aniimo.nom}</strong> sur {x.installation.structure} (niv. {x.niveau}) :{' '}
+                      <span className="text-emerald-300">+{Math.round(x.gain)} pièces/h</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <p className="text-xs text-slate-400">
+              Estimation : vitesse selon le niveau de compétence (×1, ×3, ×4, ×5), niveau de recette non pris en compte, bonus de personnalité ignoré.
+              Niveaux relevés pour 74 Aniimo ; sinon niveau max supposé.
+            </p>
+          </div>
         )}
       </div>
 
