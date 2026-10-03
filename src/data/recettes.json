@@ -31,21 +31,6 @@
     "color": "bg-red-500"
   },
   {
-    "id": "r3",
-    "nom": "Champ Coton",
-    "structure": "Ferme",
-    "w": 2,
-    "h": 2,
-    "tempsMin": 30,
-    "input": {},
-    "output": {
-      "Coton": 8
-    },
-    "profit": 80,
-    "capacite": "Culture",
-    "color": "bg-slate-100 text-slate-800"
-  },
-  {
     "id": "r4",
     "nom": "Pomme de terre",
     "structure": "Ferme",
@@ -57,7 +42,6 @@
       "Pomme de terre": 46
     },
     "profit": 368,
-    "needsAura": "Frais",
     "capacite": "Culture",
     "color": "bg-amber-600"
   },
@@ -67,59 +51,45 @@
     "structure": "Pépinière",
     "w": 2,
     "h": 2,
-    "tempsMin": 30,
+    "tempsMin": 40,
     "input": {},
     "output": {
-      "Citron": 20
+      "Citron": 42
     },
-    "profit": 400,
-    "needsAura": "Frais",
+    "profit": 672,
     "capacite": "Culture",
     "color": "bg-lime-400 text-lime-900"
   },
   {
     "id": "r6",
-    "nom": "Gisement Pierre",
+    "nom": "Roche + Sable minéral",
     "structure": "Mine",
     "w": 2,
     "h": 2,
-    "tempsMin": 30,
+    "tempsMin": 15,
     "input": {},
     "output": {
-      "Pierre": 10
+      "Roche": 6,
+      "Sable minéral": 3
     },
-    "profit": 0,
+    "profit": 42,
     "capacite": "Fabrication",
     "color": "bg-slate-600"
   },
   {
-    "id": "r7",
-    "nom": "Extraction Eau",
-    "structure": "Puits",
-    "w": 1,
-    "h": 1,
-    "tempsMin": 15,
-    "input": {},
-    "output": {
-      "Eau": 5
-    },
-    "profit": 0,
-    "capacite": "Transport",
-    "color": "bg-blue-400 text-blue-900"
-  },
-  {
     "id": "r8",
-    "nom": "Carillon vent avancé",
+    "nom": "Carillon à vent avancé",
     "structure": "Établi artisanal",
     "w": 1,
     "h": 1,
-    "tempsMin": 60,
+    "tempsMin": 4.05,
     "input": {
-      "Citron": 5,
-      "Pomme de terre": 5
+      "Minerai de cuivre": 5,
+      "Pelote de laine": 1,
+      "Étoile": 2
     },
     "output": {
-      "Carillon": 1
+      "Carillon à vent avancé": 1
     },
     "profit": 3600,
     "capacite": "Fabrication",
@@ -127,55 +97,21 @@
   },
   {
     "id": "r9",
-    "nom": "Encens citron avancé",
+    "nom": "Encens au citron avancé",
     "structure": "Établi phonolfactif",
     "w": 1,
     "h": 1,
-    "tempsMin": 45,
+    "tempsMin": 2.25,
     "input": {
-      "Citron": 10
+      "Citron": 12,
+      "Aromathyste": 2
     },
     "output": {
-      "Encens": 1
+      "Encens au citron avancé": 1
     },
     "profit": 900,
     "capacite": "Fabrication",
     "color": "bg-purple-500"
-  },
-  {
-    "id": "r10",
-    "nom": "Tranches citron séché",
-    "structure": "Séchoir jukebox",
-    "w": 1,
-    "h": 1,
-    "tempsMin": 20,
-    "input": {
-      "Citron": 2
-    },
-    "output": {
-      "Nourriture": 10
-    },
-    "profit": 150,
-    "needsAura": "Chaud",
-    "capacite": "Fabrication",
-    "color": "bg-yellow-300 text-yellow-900"
-  },
-  {
-    "id": "r11",
-    "nom": "Farine",
-    "structure": "Moulin-carrousel",
-    "w": 2,
-    "h": 2,
-    "tempsMin": 10,
-    "input": {
-      "Blé": 2
-    },
-    "output": {
-      "Farine": 1
-    },
-    "profit": 15,
-    "capacite": "Fabrication",
-    "color": "bg-orange-200 text-orange-900"
   },
   {
     "id": "r12",
@@ -193,42 +129,6 @@
     "profit": 25,
     "capacite": "Fabrication",
     "color": "bg-amber-700"
-  },
-  {
-    "id": "r13",
-    "nom": "Tissu",
-    "structure": "Grande roue à tisser",
-    "w": 2,
-    "h": 2,
-    "tempsMin": 15,
-    "input": {
-      "Coton": 3
-    },
-    "output": {
-      "Tissu": 1
-    },
-    "profit": 30,
-    "capacite": "Fabrication",
-    "color": "bg-pink-300 text-pink-900"
-  },
-  {
-    "id": "r15",
-    "nom": "Pickles",
-    "structure": "Bocal à pickles",
-    "w": 1,
-    "h": 1,
-    "tempsMin": 45,
-    "input": {
-      "Fraise": 1,
-      "Eau": 1
-    },
-    "output": {
-      "Pickles": 1
-    },
-    "profit": 120,
-    "needsAura": "Frais",
-    "capacite": "Cuisine",
-    "color": "bg-lime-500 text-lime-950"
   },
   {
     "id": "r16",
@@ -263,36 +163,6 @@
     },
     "capacite": "Chaleur",
     "color": "bg-amber-500 text-amber-950"
-  },
-  {
-    "id": "r17",
-    "nom": "Nettoyage",
-    "structure": "Trempo-barils",
-    "w": 1,
-    "h": 1,
-    "tempsMin": 20,
-    "input": {
-      "Eau": 2
-    },
-    "output": {
-      "Eau Propre": 2
-    },
-    "profit": 10,
-    "capacite": "Transport",
-    "color": "bg-cyan-700"
-  },
-  {
-    "id": "r18",
-    "nom": "Sommeil",
-    "structure": "Lit de Cumulaine",
-    "w": 1,
-    "h": 1,
-    "tempsMin": 60,
-    "input": {},
-    "output": {},
-    "profit": 0,
-    "capacite": "Repos",
-    "color": "bg-blue-800"
   },
   {
     "id": "r100",
@@ -355,6 +225,21 @@
     "color": "bg-slate-600"
   },
   {
+    "id": "r284",
+    "nom": "Pomme de terre (×2)",
+    "structure": "Ferme",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 11,
+    "input": {},
+    "output": {
+      "Pomme de terre": 2
+    },
+    "profit": 16,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
     "id": "r104",
     "nom": "Riz",
     "structure": "Ferme",
@@ -398,22 +283,6 @@
     "profit": 308,
     "capacite": "Culture",
     "color": "bg-slate-600"
-  },
-  {
-    "id": "r107",
-    "nom": "Recette rapide : pomme de terre",
-    "structure": "Ferme",
-    "w": 1,
-    "h": 1,
-    "tempsMin": 40,
-    "input": {},
-    "output": {
-      "Pomme de terre": 46
-    },
-    "profit": 368,
-    "capacite": "Culture",
-    "color": "bg-slate-600",
-    "needsAura": "Frais"
   },
   {
     "id": "r108",
@@ -565,22 +434,6 @@
     "profit": 1470,
     "capacite": "Culture",
     "color": "bg-slate-600"
-  },
-  {
-    "id": "r118",
-    "nom": "Recette rapide : fraise",
-    "structure": "Ferme",
-    "w": 1,
-    "h": 1,
-    "tempsMin": 40,
-    "input": {},
-    "output": {
-      "Fraise": 26
-    },
-    "profit": 1586,
-    "capacite": "Culture",
-    "color": "bg-slate-600",
-    "needsAura": "Frais"
   },
   {
     "id": "r119",
@@ -789,6 +642,36 @@
       "Fleur d'oranger": 8
     },
     "profit": 1840,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r282",
+    "nom": "Bambou (rendement ×23)",
+    "structure": "Pépinière",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Bambou": 23
+    },
+    "profit": 299,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r283",
+    "nom": "Noix de coco (rendement ×8)",
+    "structure": "Pépinière",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Noix de coco": 8
+    },
+    "profit": 1760,
     "capacite": "Culture",
     "color": "bg-slate-600"
   },
@@ -1182,6 +1065,24 @@
       "Poupée": 1
     },
     "profit": 11110,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r285",
+    "nom": "Poussière de gemme avancée",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Gemme": 2,
+      "Écailles": 8
+    },
+    "output": {
+      "Poussière de gemme avancée": 1
+    },
+    "profit": 5210,
     "capacite": "Fabrication",
     "color": "bg-slate-600"
   },
@@ -2511,6 +2412,24 @@
     "color": "bg-slate-600"
   },
   {
+    "id": "r286",
+    "nom": "Mélange de noix",
+    "structure": "Séchoir jukebox",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Châtaigne": 7,
+      "Noix": 6
+    },
+    "output": {
+      "Mélange de noix": 1
+    },
+    "profit": 1980,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
     "id": "r229",
     "nom": "Bâton d'encens au bambou",
     "structure": "Établi phonolfactif",
@@ -3476,12 +3395,27 @@
     "structure": "Puits",
     "w": 1,
     "h": 1,
-    "tempsMin": 10,
+    "tempsMin": 30,
+    "input": {},
+    "output": {
+      "Eau de puits": 10
+    },
+    "profit": 120,
+    "capacite": "Transport",
+    "color": "bg-blue-600"
+  },
+  {
+    "id": "base_eau_puits_x15",
+    "nom": "Eau de puits (détecteur niv. 1)",
+    "structure": "Puits",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
     "input": {},
     "output": {
       "Eau de puits": 15
     },
-    "profit": 15,
+    "profit": 180,
     "capacite": "Transport",
     "color": "bg-blue-600"
   },
@@ -3491,12 +3425,27 @@
     "structure": "Puits",
     "w": 1,
     "h": 1,
-    "tempsMin": 15,
+    "tempsMin": 37.5,
     "input": {},
     "output": {
-      "Eau fraîche": 15
+      "Eau fraîche": 8
     },
-    "profit": 20,
+    "profit": 368,
+    "capacite": "Transport",
+    "color": "bg-blue-500"
+  },
+  {
+    "id": "base_eau_fraiche_x17",
+    "nom": "Eau fraîche (détecteur niv. 4)",
+    "structure": "Puits",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 45,
+    "input": {},
+    "output": {
+      "Eau fraîche": 17
+    },
+    "profit": 782,
     "capacite": "Transport",
     "color": "bg-blue-500"
   },
@@ -3506,12 +3455,27 @@
     "structure": "Puits",
     "w": 1,
     "h": 1,
-    "tempsMin": 20,
+    "tempsMin": 45,
     "input": {},
     "output": {
-      "Eau minérale naturelle": 15
+      "Eau minérale naturelle": 6
     },
-    "profit": 25,
+    "profit": 1500,
+    "capacite": "Transport",
+    "color": "bg-cyan-500"
+  },
+  {
+    "id": "base_eau_minerale_x9",
+    "nom": "Eau minérale naturelle (détecteur niv. 7)",
+    "structure": "Puits",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 45,
+    "input": {},
+    "output": {
+      "Eau minérale naturelle": 9
+    },
+    "profit": 2250,
     "capacite": "Transport",
     "color": "bg-cyan-500"
   },
@@ -3521,147 +3485,167 @@
     "structure": "Puits",
     "w": 1,
     "h": 1,
-    "tempsMin": 25,
+    "tempsMin": 45,
     "input": {},
     "output": {
-      "Eau de source des profondeurs rocheuses": 15
+      "Eau de source des profondeurs rocheuses": 6
     },
-    "profit": 30,
+    "profit": 900,
+    "capacite": "Transport",
+    "color": "bg-teal-500"
+  },
+  {
+    "id": "base_eau_rocheuse_x9",
+    "nom": "Eau de source des profondeurs rocheuses (détecteur niv. 6)",
+    "structure": "Puits",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 45,
+    "input": {},
+    "output": {
+      "Eau de source des profondeurs rocheuses": 9
+    },
+    "profit": 1350,
     "capacite": "Transport",
     "color": "bg-teal-500"
   },
   {
     "id": "base_sel",
     "nom": "Sel de mer",
-    "structure": "Puits",
-    "w": 1,
-    "h": 1,
-    "tempsMin": 15,
-    "input": {},
-    "output": {
-      "Sel de mer": 10
-    },
-    "profit": 15,
-    "capacite": "Transport",
-    "color": "bg-slate-200 text-slate-800"
-  },
-  {
-    "id": "base_roche",
-    "nom": "Roche",
-    "structure": "Mine",
-    "w": 2,
-    "h": 2,
-    "tempsMin": 10,
-    "input": {},
-    "output": {
-      "Roche": 12
-    },
-    "profit": 15,
-    "capacite": "Transport",
-    "color": "bg-stone-600"
-  },
-  {
-    "id": "base_argile",
-    "nom": "Argile",
-    "structure": "Mine",
-    "w": 2,
-    "h": 2,
-    "tempsMin": 15,
-    "input": {},
-    "output": {
-      "Argile": 8
-    },
-    "profit": 25,
-    "capacite": "Transport",
-    "color": "bg-orange-800"
-  },
-  {
-    "id": "base_sable",
-    "nom": "Sable minéral",
-    "structure": "Mine",
-    "w": 2,
-    "h": 2,
-    "tempsMin": 15,
-    "input": {},
-    "output": {
-      "Sable minéral": 8
-    },
-    "profit": 25,
-    "capacite": "Transport",
-    "color": "bg-amber-600"
-  },
-  {
-    "id": "base_coquillage",
-    "nom": "Coquillage",
-    "structure": "Mine",
-    "w": 2,
-    "h": 2,
-    "tempsMin": 20,
-    "input": {},
-    "output": {
-      "Coquillage": 6
-    },
-    "profit": 30,
-    "capacite": "Transport",
-    "color": "bg-pink-300 text-pink-900"
-  },
-  {
-    "id": "base_cuivre",
-    "nom": "Minerai de cuivre",
-    "structure": "Mine",
-    "w": 2,
-    "h": 2,
-    "tempsMin": 20,
-    "input": {},
-    "output": {
-      "Minerai de cuivre": 6
-    },
-    "profit": 35,
-    "capacite": "Transport",
-    "color": "bg-orange-600"
-  },
-  {
-    "id": "base_quartz",
-    "nom": "Minerai de quartz",
-    "structure": "Mine",
-    "w": 2,
-    "h": 2,
-    "tempsMin": 25,
-    "input": {},
-    "output": {
-      "Minerai de quartz": 4
-    },
-    "profit": 45,
-    "capacite": "Transport",
-    "color": "bg-violet-300 text-violet-900"
-  },
-  {
-    "id": "base_gemme",
-    "nom": "Gemme",
-    "structure": "Mine",
+    "structure": "Château de sable Murmarée",
     "w": 2,
     "h": 2,
     "tempsMin": 30,
     "input": {},
     "output": {
-      "Gemme": 2
+      "Sel de mer": 10
     },
-    "profit": 60,
+    "profit": 160,
+    "capacite": "Transport",
+    "color": "bg-slate-200 text-slate-800"
+  },
+  {
+    "id": "base_sel_x23",
+    "nom": "Sel de mer (détecteur niv. 2)",
+    "structure": "Château de sable Murmarée",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 37.5,
+    "input": {},
+    "output": {
+      "Sel de mer": 23
+    },
+    "profit": 368,
+    "capacite": "Transport",
+    "color": "bg-slate-200 text-slate-800"
+  },
+  {
+    "id": "base_argile",
+    "nom": "Argile + Sable minéral",
+    "structure": "Mine",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 37.5,
+    "input": {},
+    "output": {
+      "Argile": 10,
+      "Sable minéral": 16
+    },
+    "profit": 220,
+    "capacite": "Transport",
+    "color": "bg-orange-800"
+  },
+  {
+    "id": "base_coquillage",
+    "nom": "Coquillage + Sable minéral",
+    "structure": "Mine",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 37.5,
+    "input": {},
+    "output": {
+      "Coquillage": 6,
+      "Sable minéral": 32
+    },
+    "profit": 456,
+    "capacite": "Transport",
+    "color": "bg-pink-300 text-pink-900"
+  },
+  {
+    "id": "base_cuivre",
+    "nom": "Minerai de cuivre + Sable minéral",
+    "structure": "Mine",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 45,
+    "input": {},
+    "output": {
+      "Minerai de cuivre": 5,
+      "Sable minéral": 56
+    },
+    "profit": 800,
+    "capacite": "Transport",
+    "color": "bg-orange-600"
+  },
+  {
+    "id": "base_quartz",
+    "nom": "Minerai de quartz + Sable minéral",
+    "structure": "Mine",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 45,
+    "input": {},
+    "output": {
+      "Minerai de quartz": 4,
+      "Sable minéral": 86
+    },
+    "profit": 1200,
+    "capacite": "Transport",
+    "color": "bg-violet-300 text-violet-900"
+  },
+  {
+    "id": "base_gemme",
+    "nom": "Gemme + Sable minéral",
+    "structure": "Mine",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 45,
+    "input": {},
+    "output": {
+      "Gemme": 2,
+      "Sable minéral": 122
+    },
+    "profit": 1700,
     "capacite": "Transport",
     "color": "bg-emerald-500"
   },
   {
     "id": "base_aromathyste",
     "nom": "Aromathyste",
-    "structure": "Mine",
+    "structure": "Maison de Plumiel",
     "w": 2,
     "h": 2,
-    "tempsMin": 25,
+    "tempsMin": 37.5,
     "input": {},
     "output": {
       "Aromathyste": 4
     },
-    "profit": 40,
+    "profit": 224,
+    "capacite": "Transport",
+    "color": "bg-purple-600"
+  },
+  {
+    "id": "base_aromathyste_x12",
+    "nom": "Aromathyste (niv. 3)",
+    "structure": "Maison de Plumiel",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 45,
+    "input": {},
+    "output": {
+      "Aromathyste": 12
+    },
+    "profit": 672,
     "capacite": "Transport",
     "color": "bg-purple-600"
   },
@@ -3671,57 +3655,87 @@
     "structure": "Lit de Cumulaine",
     "w": 2,
     "h": 2,
-    "tempsMin": 20,
+    "tempsMin": 37.5,
     "input": {},
     "output": {
       "Laine": 4
     },
-    "profit": 30,
+    "profit": 560,
     "capacite": "Repos",
     "color": "bg-slate-100 text-slate-800"
   },
   {
-    "id": "base_petales",
-    "nom": "Pétales",
-    "structure": "Ferme",
+    "id": "base_laine_x6",
+    "nom": "Laine (niv. 2)",
+    "structure": "Lit de Cumulaine",
     "w": 2,
     "h": 2,
-    "tempsMin": 15,
+    "tempsMin": 45,
     "input": {},
     "output": {
-      "Pétales": 10
+      "Laine": 6
     },
-    "profit": 20,
-    "capacite": "Culture",
-    "color": "bg-rose-400"
+    "profit": 840,
+    "capacite": "Repos",
+    "color": "bg-slate-100 text-slate-800"
+  },
+  {
+    "id": "base_petales_lit",
+    "nom": "Pétales",
+    "structure": "Lit de Cumulaine",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 45,
+    "input": {},
+    "output": {
+      "Pétales": 6
+    },
+    "profit": 1380,
+    "capacite": "Repos",
+    "color": "bg-slate-100 text-slate-800"
   },
   {
     "id": "base_perle",
     "nom": "Perle",
-    "structure": "Mine",
+    "structure": "Château de sable Murmarée",
     "w": 2,
     "h": 2,
-    "tempsMin": 25,
+    "tempsMin": 45,
     "input": {},
     "output": {
       "Perle": 2
     },
-    "profit": 50,
+    "profit": 900,
     "capacite": "Transport",
     "color": "bg-slate-100 text-slate-800"
   },
   {
     "id": "base_ecailles",
     "nom": "Écailles",
-    "structure": "Mine",
+    "structure": "Moulin floral",
     "w": 2,
     "h": 2,
-    "tempsMin": 20,
+    "tempsMin": 45,
     "input": {},
     "output": {
-      "Écailles": 4
+      "Écailles": 8
     },
-    "profit": 30,
+    "profit": 1680,
+    "capacite": "Transport",
+    "color": "bg-cyan-600"
+  },
+  {
+    "id": "base_ecailles_x12",
+    "nom": "Écailles (détecteur niv. 8)",
+    "structure": "Moulin floral",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 45,
+    "input": {},
+    "output": {
+      "Écailles": 12
+    },
+    "profit": 2520,
     "capacite": "Transport",
     "color": "bg-cyan-600"
   },
@@ -3731,12 +3745,12 @@
     "structure": "Hamac d'astrechute",
     "w": 2,
     "h": 2,
-    "tempsMin": 30,
+    "tempsMin": 45,
     "input": {},
     "output": {
       "Étoile": 2
     },
-    "profit": 50,
+    "profit": 780,
     "capacite": "Repos",
     "color": "bg-yellow-300 text-yellow-900"
   }

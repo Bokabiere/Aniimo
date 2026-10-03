@@ -1,0 +1,3743 @@
+[
+  {
+    "id": "r1",
+    "nom": "Champ Blé",
+    "structure": "Ferme",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 20,
+    "input": {},
+    "output": {
+      "Blé": 42
+    },
+    "profit": 42,
+    "capacite": "Culture",
+    "color": "bg-yellow-500 text-yellow-900"
+  },
+  {
+    "id": "r2",
+    "nom": "Champ Fraise",
+    "structure": "Ferme",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Fraise": 26
+    },
+    "profit": 1586,
+    "needsAura": "Frais",
+    "capacite": "Culture",
+    "color": "bg-red-500"
+  },
+  {
+    "id": "r3",
+    "nom": "Champ Coton",
+    "structure": "Ferme",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 30,
+    "input": {},
+    "output": {
+      "Coton": 8
+    },
+    "profit": 80,
+    "capacite": "Culture",
+    "color": "bg-slate-100 text-slate-800"
+  },
+  {
+    "id": "r4",
+    "nom": "Pomme de terre",
+    "structure": "Ferme",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Pomme de terre": 46
+    },
+    "profit": 368,
+    "needsAura": "Frais",
+    "capacite": "Culture",
+    "color": "bg-amber-600"
+  },
+  {
+    "id": "r5",
+    "nom": "Arbre à Citron",
+    "structure": "Pépinière",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 30,
+    "input": {},
+    "output": {
+      "Citron": 20
+    },
+    "profit": 400,
+    "needsAura": "Frais",
+    "capacite": "Culture",
+    "color": "bg-lime-400 text-lime-900"
+  },
+  {
+    "id": "r6",
+    "nom": "Gisement Pierre",
+    "structure": "Mine",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 30,
+    "input": {},
+    "output": {
+      "Pierre": 10
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r7",
+    "nom": "Extraction Eau",
+    "structure": "Puits",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 15,
+    "input": {},
+    "output": {
+      "Eau": 5
+    },
+    "profit": 0,
+    "capacite": "Transport",
+    "color": "bg-blue-400 text-blue-900"
+  },
+  {
+    "id": "r8",
+    "nom": "Carillon vent avancé",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 60,
+    "input": {
+      "Citron": 5,
+      "Pomme de terre": 5
+    },
+    "output": {
+      "Carillon": 1
+    },
+    "profit": 3600,
+    "capacite": "Fabrication",
+    "color": "bg-indigo-400"
+  },
+  {
+    "id": "r9",
+    "nom": "Encens citron avancé",
+    "structure": "Établi phonolfactif",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 45,
+    "input": {
+      "Citron": 10
+    },
+    "output": {
+      "Encens": 1
+    },
+    "profit": 900,
+    "capacite": "Fabrication",
+    "color": "bg-purple-500"
+  },
+  {
+    "id": "r10",
+    "nom": "Tranches citron séché",
+    "structure": "Séchoir jukebox",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 20,
+    "input": {
+      "Citron": 2
+    },
+    "output": {
+      "Nourriture": 10
+    },
+    "profit": 150,
+    "needsAura": "Chaud",
+    "capacite": "Fabrication",
+    "color": "bg-yellow-300 text-yellow-900"
+  },
+  {
+    "id": "r11",
+    "nom": "Farine",
+    "structure": "Moulin-carrousel",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 10,
+    "input": {
+      "Blé": 2
+    },
+    "output": {
+      "Farine": 1
+    },
+    "profit": 15,
+    "capacite": "Fabrication",
+    "color": "bg-orange-200 text-orange-900"
+  },
+  {
+    "id": "r12",
+    "nom": "Planches",
+    "structure": "Établi de menuiserie",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 20,
+    "input": {
+      "Bois": 2
+    },
+    "output": {
+      "Planche": 1
+    },
+    "profit": 25,
+    "capacite": "Fabrication",
+    "color": "bg-amber-700"
+  },
+  {
+    "id": "r13",
+    "nom": "Tissu",
+    "structure": "Grande roue à tisser",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 15,
+    "input": {
+      "Coton": 3
+    },
+    "output": {
+      "Tissu": 1
+    },
+    "profit": 30,
+    "capacite": "Fabrication",
+    "color": "bg-pink-300 text-pink-900"
+  },
+  {
+    "id": "r15",
+    "nom": "Pickles",
+    "structure": "Bocal à pickles",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 45,
+    "input": {
+      "Fraise": 1,
+      "Eau": 1
+    },
+    "output": {
+      "Pickles": 1
+    },
+    "profit": 120,
+    "needsAura": "Frais",
+    "capacite": "Cuisine",
+    "color": "bg-lime-500 text-lime-950"
+  },
+  {
+    "id": "r16",
+    "nom": "Climatisation",
+    "structure": "Climatisation",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 60,
+    "input": {},
+    "output": {},
+    "profit": 0,
+    "providesAura": {
+      "type": "Frais",
+      "range": 2
+    },
+    "capacite": "Repos",
+    "color": "bg-cyan-200 text-cyan-900"
+  },
+  {
+    "id": "r16_fournaise",
+    "nom": "Fournaise thermique",
+    "structure": "Fournaise",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 60,
+    "input": {},
+    "output": {},
+    "profit": 0,
+    "providesAura": {
+      "type": "Chaud",
+      "range": 2
+    },
+    "capacite": "Chaleur",
+    "color": "bg-amber-500 text-amber-950"
+  },
+  {
+    "id": "r17",
+    "nom": "Nettoyage",
+    "structure": "Trempo-barils",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 20,
+    "input": {
+      "Eau": 2
+    },
+    "output": {
+      "Eau Propre": 2
+    },
+    "profit": 10,
+    "capacite": "Transport",
+    "color": "bg-cyan-700"
+  },
+  {
+    "id": "r18",
+    "nom": "Sommeil",
+    "structure": "Lit de Cumulaine",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 60,
+    "input": {},
+    "output": {},
+    "profit": 0,
+    "capacite": "Repos",
+    "color": "bg-blue-800"
+  },
+  {
+    "id": "r100",
+    "nom": "Capitaine Patate",
+    "structure": "Ferme",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 13,
+    "input": {},
+    "output": {
+      "Capitaine Patate": 5
+    },
+    "profit": 15,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r101",
+    "nom": "Radis de rosée lunaire",
+    "structure": "Ferme",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Radis de rosée lunaire": 8
+    },
+    "profit": 592,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r102",
+    "nom": "Piment de lune croissante",
+    "structure": "Ferme",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Piment de lune croissante": 8
+    },
+    "profit": 592,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r103",
+    "nom": "Blé",
+    "structure": "Ferme",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4,
+    "input": {},
+    "output": {
+      "Blé": 5
+    },
+    "profit": 5,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r104",
+    "nom": "Riz",
+    "structure": "Ferme",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Riz": 18
+    },
+    "profit": 180,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r105",
+    "nom": "Germe de soja",
+    "structure": "Ferme",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Germe de soja": 16
+    },
+    "profit": 176,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r106",
+    "nom": "Coton",
+    "structure": "Ferme",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Coton": 7
+    },
+    "profit": 308,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r107",
+    "nom": "Recette rapide : pomme de terre",
+    "structure": "Ferme",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Pomme de terre": 46
+    },
+    "profit": 368,
+    "capacite": "Culture",
+    "color": "bg-slate-600",
+    "needsAura": "Frais"
+  },
+  {
+    "id": "r108",
+    "nom": "Rose",
+    "structure": "Ferme",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Rose": 8
+    },
+    "profit": 312,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r109",
+    "nom": "Lavande",
+    "structure": "Ferme",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Lavande": 7
+    },
+    "profit": 483,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r110",
+    "nom": "Fraise",
+    "structure": "Ferme",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Fraise": 8
+    },
+    "profit": 488,
+    "capacite": "Culture",
+    "color": "bg-slate-600",
+    "needsAura": "Frais"
+  },
+  {
+    "id": "r111",
+    "nom": "Canne à sucre",
+    "structure": "Ferme",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Canne à sucre": 6
+    },
+    "profit": 486,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r112",
+    "nom": "Ginseng",
+    "structure": "Ferme",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Ginseng": 3
+    },
+    "profit": 840,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r113",
+    "nom": "Raisins",
+    "structure": "Ferme",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Raisins": 9
+    },
+    "profit": 837,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r114",
+    "nom": "Blé premium",
+    "structure": "Ferme",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Blé premium": 15
+    },
+    "profit": 780,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r115",
+    "nom": "Recette rapide : riz",
+    "structure": "Ferme",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Riz": 79
+    },
+    "profit": 790,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r116",
+    "nom": "Agave",
+    "structure": "Ferme",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Agave": 6
+    },
+    "profit": 1440,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r117",
+    "nom": "Canneberge",
+    "structure": "Ferme",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Canneberge": 7
+    },
+    "profit": 1470,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r118",
+    "nom": "Recette rapide : fraise",
+    "structure": "Ferme",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Fraise": 26
+    },
+    "profit": 1586,
+    "capacite": "Culture",
+    "color": "bg-slate-600",
+    "needsAura": "Frais"
+  },
+  {
+    "id": "r119",
+    "nom": "Bois de saule",
+    "structure": "Pépinière",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 11,
+    "input": {},
+    "output": {
+      "Bois de saule": 5
+    },
+    "profit": 15,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r120",
+    "nom": "Bambou",
+    "structure": "Pépinière",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Bambou": 10
+    },
+    "profit": 130,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r121",
+    "nom": "Citron",
+    "structure": "Pépinière",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Citron": 8
+    },
+    "profit": 128,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r122",
+    "nom": "Pomme",
+    "structure": "Pépinière",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Pomme": 8
+    },
+    "profit": 312,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r123",
+    "nom": "Fleur de cerisier",
+    "structure": "Pépinière",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Fleur de cerisier": 7
+    },
+    "profit": 308,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r124",
+    "nom": "Sirop d'érable",
+    "structure": "Pépinière",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Sirop d'érable": 9
+    },
+    "profit": 315,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r125",
+    "nom": "Châtaigne",
+    "structure": "Pépinière",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Châtaigne": 7
+    },
+    "profit": 700,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r126",
+    "nom": "Écorce de palmier",
+    "structure": "Pépinière",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Écorce de palmier": 6
+    },
+    "profit": 720,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r127",
+    "nom": "Noix",
+    "structure": "Pépinière",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Noix": 6
+    },
+    "profit": 720,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r128",
+    "nom": "Noix de coco",
+    "structure": "Pépinière",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Noix de coco": 5
+    },
+    "profit": 1100,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r129",
+    "nom": "Caoutchouc naturel",
+    "structure": "Pépinière",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Caoutchouc naturel": 3
+    },
+    "profit": 1110,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r130",
+    "nom": "Recette rapide : sirop d'érable",
+    "structure": "Pépinière",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Sirop d'érable": 30
+    },
+    "profit": 1050,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r131",
+    "nom": "Cacao",
+    "structure": "Pépinière",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Cacao": 6
+    },
+    "profit": 1860,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r132",
+    "nom": "Fleur d'oranger",
+    "structure": "Pépinière",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {},
+    "output": {
+      "Fleur d'oranger": 8
+    },
+    "profit": 1840,
+    "capacite": "Culture",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r133",
+    "nom": "Plateau des moissons",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 6.75,
+    "input": {
+      "Piment de lune croissante rôti": 1,
+      "Tranches de radis de rosée lunaire": 1
+    },
+    "output": {
+      "Plateau des moissons": 1
+    },
+    "profit": 5290,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r134",
+    "nom": "Sculpture en bois",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 0.9,
+    "input": {
+      "Bois de saule": 19
+    },
+    "output": {
+      "Sculpture en bois": 1
+    },
+    "profit": 90,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r135",
+    "nom": "Vaisselle en bambou",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 0.9,
+    "input": {
+      "Bambou": 10
+    },
+    "output": {
+      "Vaisselle en bambou": 1
+    },
+    "profit": 190,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r136",
+    "nom": "Pierres polies de rivière premium",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.8,
+    "input": {
+      "Roche": 18,
+      "Eau de puits": 5
+    },
+    "output": {
+      "Pierres polies de rivière premium": 1
+    },
+    "profit": 360,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r137",
+    "nom": "Pierres polies de rivière",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.8,
+    "input": {
+      "Roche": 18,
+      "Eau de puits": 5
+    },
+    "output": {
+      "Pierres polies de rivière": 1
+    },
+    "profit": 300,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r138",
+    "nom": "Poterie",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Argile": 15,
+      "Eau de puits": 8
+    },
+    "output": {
+      "Poterie": 1
+    },
+    "profit": 630,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r139",
+    "nom": "Désodorisant à la rose premium",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 3.38,
+    "input": {
+      "Encens à la rose": 1,
+      "Bambou": 13
+    },
+    "output": {
+      "Désodorisant à la rose premium": 1
+    },
+    "profit": 1420,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r140",
+    "nom": "Désodorisant à la rose",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 3.38,
+    "input": {
+      "Encens à la rose": 1,
+      "Bambou": 13
+    },
+    "output": {
+      "Désodorisant à la rose": 1
+    },
+    "profit": 1270,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r141",
+    "nom": "Bouquet de fleurs",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Rose": 8,
+      "Lavande": 7
+    },
+    "output": {
+      "Bouquet de fleurs": 1
+    },
+    "profit": 1120,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r142",
+    "nom": "Sachet de lavande",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Poudre de lavande": 1,
+      "Tissu en coton": 1
+    },
+    "output": {
+      "Sachet de lavande": 1
+    },
+    "profit": 1580,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r143",
+    "nom": "Coquillage décoratif",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Coquillage": 6,
+      "Fil de coton": 1
+    },
+    "output": {
+      "Coquillage décoratif": 1
+    },
+    "profit": 1190,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r144",
+    "nom": "Attrape-rêve",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Fil de coton": 1,
+      "Pelote de laine": 1
+    },
+    "output": {
+      "Attrape-rêve": 1
+    },
+    "profit": 1730,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r145",
+    "nom": "Lanterne à vœu stellaire",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Minerai de cuivre": 5,
+      "Étoile": 2
+    },
+    "output": {
+      "Lanterne à vœu stellaire": 1
+    },
+    "profit": 2140,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r146",
+    "nom": "Carillon à vent",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4.05,
+    "input": {
+      "Minerai de cuivre": 5,
+      "Pelote de laine": 1,
+      "Étoile": 2
+    },
+    "output": {
+      "Carillon à vent": 1
+    },
+    "profit": 3180,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r147",
+    "nom": "Collier de perles",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Perle": 2,
+      "Corde de palmier": 1
+    },
+    "output": {
+      "Collier de perles": 1
+    },
+    "profit": 3210,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r148",
+    "nom": "Porcelaine",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Minerai de quartz": 4,
+      "Eau de source des profondeurs rocheuses": 6
+    },
+    "output": {
+      "Porcelaine": 1
+    },
+    "profit": 2960,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r149",
+    "nom": "Canard en caoutchouc",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.35,
+    "input": {
+      "Caoutchouc naturel": 3
+    },
+    "output": {
+      "Canard en caoutchouc": 1
+    },
+    "profit": 1540,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r150",
+    "nom": "Jouet tressé",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.35,
+    "input": {
+      "Corde de palmier": 1
+    },
+    "output": {
+      "Jouet tressé": 1
+    },
+    "profit": 1580,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r151",
+    "nom": "Teinture",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Pétales": 6,
+      "Écailles": 8
+    },
+    "output": {
+      "Teinture": 1
+    },
+    "profit": 4280,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r152",
+    "nom": "Fleurs en bouteille",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4.05,
+    "input": {
+      "Fleurs séchées": 1,
+      "Porcelaine": 1
+    },
+    "output": {
+      "Fleurs en bouteille": 1
+    },
+    "profit": 7700,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r153",
+    "nom": "Poussière de gemme",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Gemme": 2,
+      "Écailles": 8
+    },
+    "output": {
+      "Poussière de gemme": 1
+    },
+    "profit": 4600,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r154",
+    "nom": "Poupée",
+    "structure": "Établi artisanal",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 5.4,
+    "input": {
+      "Tissu en coton teint": 1,
+      "Tissu en laine": 1
+    },
+    "output": {
+      "Poupée": 1
+    },
+    "profit": 11110,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r155",
+    "nom": "Boule de riz à la fleur de cerisier",
+    "structure": "Cuisinière flamboyante",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 3.38,
+    "input": {
+      "Fleur de cerisier salée": 1,
+      "Riz décortiqué": 1
+    },
+    "output": {
+      "Boule de riz à la fleur de cerisier": 1
+    },
+    "profit": 1410,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r156",
+    "nom": "Soupe onctueuse de pomme de terre",
+    "structure": "Cuisinière flamboyante",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Pomme de terre": 15,
+      "Eau fraîche": 8
+    },
+    "output": {
+      "Soupe onctueuse de pomme de terre": 1
+    },
+    "profit": 750,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r157",
+    "nom": "Tranches de radis de rosée lunaire",
+    "structure": "Cuisinière flamboyante",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 3.38,
+    "input": {
+      "Radis de rosée lunaire": 8,
+      "Bille de sucre": 1
+    },
+    "output": {
+      "Tranches de radis de rosée lunaire": 1
+    },
+    "profit": 2370,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r158",
+    "nom": "Soupe de pommes de terre premium",
+    "structure": "Cuisinière flamboyante",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Pomme de terre": 15,
+      "Eau fraîche": 8
+    },
+    "output": {
+      "Soupe de pommes de terre premium": 1
+    },
+    "profit": 880,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r159",
+    "nom": "Riz frit à la sauce soja",
+    "structure": "Cuisinière flamboyante",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 3.38,
+    "input": {
+      "Riz décortiqué": 1,
+      "Sauce soja": 1
+    },
+    "output": {
+      "Riz frit à la sauce soja": 1
+    },
+    "profit": 1280,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r160",
+    "nom": "Ragoût ombral",
+    "structure": "Cuisinière flamboyante",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 3.38,
+    "input": {
+      "Radis de rosée lunaire": 8,
+      "Piment de lune croissante": 8,
+      "Eau fraîche": 8
+    },
+    "output": {
+      "Ragoût ombral": 1
+    },
+    "profit": 2150,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r161",
+    "nom": "Tofu à la sauce soja",
+    "structure": "Cuisinière flamboyante",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 3.38,
+    "input": {
+      "Tofu": 1,
+      "Sauce soja": 1
+    },
+    "output": {
+      "Tofu à la sauce soja": 1
+    },
+    "profit": 1470,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r162",
+    "nom": "Châtaignes grillées au sucre",
+    "structure": "Cuisinière flamboyante",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 3.38,
+    "input": {
+      "Châtaigne": 7,
+      "Bille de sucre": 1
+    },
+    "output": {
+      "Châtaignes grillées au sucre": 1
+    },
+    "profit": 2470,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r163",
+    "nom": "Tanghulu",
+    "structure": "Cuisinière flamboyante",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 3.38,
+    "input": {
+      "Fraise": 8,
+      "Bille de sucre": 1
+    },
+    "output": {
+      "Tanghulu": 1
+    },
+    "profit": 2260,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r164",
+    "nom": "Gâteau au ginseng et à la châtaigne",
+    "structure": "Cuisinière flamboyante",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Poudre de ginseng": 1,
+      "Châtaigne": 7
+    },
+    "output": {
+      "Gâteau au ginseng et à la châtaigne": 1
+    },
+    "profit": 2510,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r165",
+    "nom": "Rouleau de vermicelles à la vapeur",
+    "structure": "Cuisinière flamboyante",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Boisson au riz": 1
+    },
+    "output": {
+      "Rouleau de vermicelles à la vapeur": 1
+    },
+    "profit": 2510,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r166",
+    "nom": "Gâteau aux noix",
+    "structure": "Cuisinière flamboyante",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4.05,
+    "input": {
+      "Noix": 6,
+      "Boisson au riz": 1
+    },
+    "output": {
+      "Gâteau aux noix": 1
+    },
+    "profit": 3550,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r167",
+    "nom": "Gelée",
+    "structure": "Cuisinière flamboyante",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4.05,
+    "input": {
+      "Pétales": 6,
+      "Morceau de sucre d'érable": 1,
+      "Eau de source des profondeurs rocheuses": 6
+    },
+    "output": {
+      "Gelée": 1
+    },
+    "profit": 4790,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r168",
+    "nom": "Gelée premium",
+    "structure": "Cuisinière flamboyante",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4.05,
+    "input": {
+      "Pétales": 6,
+      "Morceau de sucre d'érable": 1,
+      "Eau de source des profondeurs rocheuses": 6
+    },
+    "output": {
+      "Gelée premium": 1
+    },
+    "profit": 5520,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r169",
+    "nom": "Compote de raisin gourmande",
+    "structure": "Cuisinière flamboyante",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4.05,
+    "input": {
+      "Jus de raisin": 1,
+      "Raisins secs": 1
+    },
+    "output": {
+      "Compote de raisin gourmande": 1
+    },
+    "profit": 5050,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r170",
+    "nom": "Bonbon à la fraise",
+    "structure": "Cuisinière flamboyante",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 5.4,
+    "input": {
+      "Fraise": 8,
+      "Sucre de malt": 1
+    },
+    "output": {
+      "Bonbon à la fraise": 1
+    },
+    "profit": 6840,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r171",
+    "nom": "Chocolat à la canneberge",
+    "structure": "Cuisinière flamboyante",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 6.75,
+    "input": {
+      "Pâte à tartiner au cacao": 1,
+      "Canneberges séchées": 1
+    },
+    "output": {
+      "Chocolat à la canneberge": 1
+    },
+    "profit": 13480,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r172",
+    "nom": "Chou à la crème à la fraise",
+    "structure": "Cuisinière flamboyante",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4.05,
+    "input": {
+      "Farine raffinée": 1,
+      "Fraise": 16,
+      "Huile de coco": 1
+    },
+    "output": {
+      "Chou à la crème à la fraise": 1
+    },
+    "profit": 5650,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r173",
+    "nom": "Thé vert au riz grillé",
+    "structure": "Trempo-barils",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Riz décortiqué": 2,
+      "Eau de puits": 8
+    },
+    "output": {
+      "Thé vert au riz grillé": 1
+    },
+    "profit": 740,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r174",
+    "nom": "Thé au blé",
+    "structure": "Trempo-barils",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Blé": 50,
+      "Eau de puits": 10
+    },
+    "output": {
+      "Thé au blé": 1
+    },
+    "profit": 330,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r175",
+    "nom": "Jus de pomme",
+    "structure": "Trempo-barils",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Pomme": 8,
+      "Eau fraîche": 8
+    },
+    "output": {
+      "Jus de pomme": 1
+    },
+    "profit": 1000,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r176",
+    "nom": "Kvass de pomme de terre",
+    "structure": "Trempo-barils",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4.5,
+    "input": {
+      "Pomme de terre": 15,
+      "Bille de sucre": 1,
+      "Eau fraîche": 8
+    },
+    "output": {
+      "Kvass de pomme de terre": 1
+    },
+    "profit": 2640,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r177",
+    "nom": "Jus de fraise",
+    "structure": "Trempo-barils",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Fraise": 8,
+      "Eau fraîche": 8
+    },
+    "output": {
+      "Jus de fraise": 1
+    },
+    "profit": 1180,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r178",
+    "nom": "Jus de canne à sucre",
+    "structure": "Trempo-barils",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.13,
+    "input": {
+      "Canne à sucre": 6
+    },
+    "output": {
+      "Jus de canne à sucre": 1
+    },
+    "profit": 650,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r179",
+    "nom": "Eau de ginseng",
+    "structure": "Trempo-barils",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Ginseng séché": 1,
+      "Eau de source des profondeurs rocheuses": 6
+    },
+    "output": {
+      "Eau de ginseng": 1
+    },
+    "profit": 2670,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r180",
+    "nom": "Jus de raisin",
+    "structure": "Trempo-barils",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Raisins": 9,
+      "Eau de source des profondeurs rocheuses": 6
+    },
+    "output": {
+      "Jus de raisin": 1
+    },
+    "profit": 2390,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r181",
+    "nom": "Boisson au raisin citronnée",
+    "structure": "Trempo-barils",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4.05,
+    "input": {
+      "Raisins": 9,
+      "Citron": 16,
+      "Eau de source des profondeurs rocheuses": 6
+    },
+    "output": {
+      "Boisson au raisin citronnée": 1
+    },
+    "profit": 2970,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r182",
+    "nom": "Lait de noix",
+    "structure": "Trempo-barils",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Noix": 6,
+      "Eau de source des profondeurs rocheuses": 6
+    },
+    "output": {
+      "Lait de noix": 1
+    },
+    "profit": 2270,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r183",
+    "nom": "Boisson fraîche à la noix de coco",
+    "structure": "Trempo-barils",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.35,
+    "input": {
+      "Noix de coco": 5
+    },
+    "output": {
+      "Boisson fraîche à la noix de coco": 1
+    },
+    "profit": 1650,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r184",
+    "nom": "Jus de canneberge",
+    "structure": "Trempo-barils",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Canneberge": 7,
+      "Eau minérale naturelle": 6
+    },
+    "output": {
+      "Jus de canneberge": 1
+    },
+    "profit": 4060,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r185",
+    "nom": "Boisson à l'agave",
+    "structure": "Trempo-barils",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4.05,
+    "input": {
+      "Sirop d'agave": 1,
+      "Eau minérale naturelle": 6
+    },
+    "output": {
+      "Boisson à l'agave": 1
+    },
+    "profit": 6610,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r186",
+    "nom": "Lait de coco au cacao",
+    "structure": "Trempo-barils",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Noix de coco": 5,
+      "Poudre de cacao": 1
+    },
+    "output": {
+      "Lait de coco au cacao": 1
+    },
+    "profit": 4930,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r187",
+    "nom": "Chocolat chaud",
+    "structure": "Trempo-barils",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Poudre de cacao": 1,
+      "Eau minérale naturelle": 6
+    },
+    "output": {
+      "Chocolat chaud": 1
+    },
+    "profit": 5330,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r188",
+    "nom": "Rosée de fleur d'oranger",
+    "structure": "Trempo-barils",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Fleur d'oranger": 8,
+      "Eau minérale naturelle": 6
+    },
+    "output": {
+      "Rosée de fleur d'oranger": 1
+    },
+    "profit": 4700,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r189",
+    "nom": "Pain premium",
+    "structure": "Attrape-popote",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.8,
+    "input": {
+      "Farine complète": 2,
+      "Eau de puits": 5
+    },
+    "output": {
+      "Pain premium": 1
+    },
+    "profit": 330,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r190",
+    "nom": "Piment de lune croissante rôti",
+    "structure": "Attrape-popote",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Piment de lune croissante": 8,
+      "Sel de mer": 23
+    },
+    "output": {
+      "Piment de lune croissante rôti": 1
+    },
+    "profit": 1520,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r191",
+    "nom": "Graines de soja grillées",
+    "structure": "Attrape-popote",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.8,
+    "input": {
+      "Germe de soja": 16,
+      "Sel de mer": 10
+    },
+    "output": {
+      "Graines de soja grillées": 1
+    },
+    "profit": 450,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r192",
+    "nom": "Tarte aux pommes",
+    "structure": "Attrape-popote",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Farine complète": 1,
+      "Pomme": 8
+    },
+    "output": {
+      "Tarte aux pommes": 1
+    },
+    "profit": 590,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r193",
+    "nom": "Pommes de terre rôties au bonbon à l'érable",
+    "structure": "Attrape-popote",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 3.38,
+    "input": {
+      "Pomme de terre": 8,
+      "Sirop d'érable": 9,
+      "Sel de mer": 10
+    },
+    "output": {
+      "Pommes de terre rôties au bonbon à l'érable": 1
+    },
+    "profit": 850,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r194",
+    "nom": "Sablé à la rose",
+    "structure": "Attrape-popote",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 3.38,
+    "input": {
+      "Concentré de rose": 1,
+      "Farine complète": 1
+    },
+    "output": {
+      "Sablé à la rose": 1
+    },
+    "profit": 1310,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r195",
+    "nom": "Bonbon à la pomme",
+    "structure": "Attrape-popote",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 3.38,
+    "input": {
+      "Pomme": 8,
+      "Bille de sucre": 1
+    },
+    "output": {
+      "Bonbon à la pomme": 1
+    },
+    "profit": 1980,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r196",
+    "nom": "Biscuits à la lavande",
+    "structure": "Attrape-popote",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Poudre de lavande": 1,
+      "Farine complète": 1
+    },
+    "output": {
+      "Biscuits à la lavande": 1
+    },
+    "profit": 1040,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r197",
+    "nom": "Chips de noix au caramel",
+    "structure": "Attrape-popote",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4.05,
+    "input": {
+      "Noix": 1,
+      "Sirop d'érable": 9
+    },
+    "output": {
+      "Chips de noix au caramel": 1
+    },
+    "profit": 3130,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r198",
+    "nom": "Bonbon au raisin",
+    "structure": "Attrape-popote",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4.05,
+    "input": {
+      "Raisins": 9,
+      "Bille de sucre": 1
+    },
+    "output": {
+      "Bonbon au raisin": 1
+    },
+    "profit": 2850,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r199",
+    "nom": "Cookies à la noix de coco",
+    "structure": "Attrape-popote",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Noix de coco râpée": 1,
+      "Farine raffinée": 1
+    },
+    "output": {
+      "Cookies à la noix de coco": 1
+    },
+    "profit": 3700,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r200",
+    "nom": "Bonbon en étoile à l'érable",
+    "structure": "Attrape-popote",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Morceau de sucre d'érable": 1,
+      "Étoile": 2
+    },
+    "output": {
+      "Bonbon en étoile à l'érable": 1
+    },
+    "profit": 2810,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r201",
+    "nom": "Pudding chococo à la fraise",
+    "structure": "Attrape-popote",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 9.45,
+    "input": {
+      "Pâte à tartiner au cacao": 1,
+      "Fraise": 16,
+      "Lait de coco": 1
+    },
+    "output": {
+      "Pudding chococo à la fraise": 1
+    },
+    "profit": 17890,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r202",
+    "nom": "Pain aux fleurs",
+    "structure": "Attrape-popote",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Farine raffinée": 1,
+      "Fleurs séchées": 1
+    },
+    "output": {
+      "Pain aux fleurs": 1
+    },
+    "profit": 4610,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r203",
+    "nom": "Pudding chococo à la fraise premium",
+    "structure": "Attrape-popote",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 9.45,
+    "input": {
+      "Pâte à tartiner au cacao": 1,
+      "Fraise": 16,
+      "Lait de coco": 1
+    },
+    "output": {
+      "Pudding chococo à la fraise premium": 1
+    },
+    "profit": 20270,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r204",
+    "nom": "Bouillie de riz nature",
+    "structure": "Marmite à mijoter",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.8,
+    "input": {
+      "Riz décortiqué": 2,
+      "Eau de puits": 5
+    },
+    "output": {
+      "Bouillie de riz nature": 1
+    },
+    "profit": 660,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r205",
+    "nom": "Sauce sucrée-épicée ombrale",
+    "structure": "Marmite à mijoter",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4.05,
+    "input": {
+      "Radis de rosée lunaire": 8,
+      "Piment de lune croissante": 8,
+      "Sel de mer": 23
+    },
+    "output": {
+      "Sauce sucrée-épicée ombrale": 1
+    },
+    "profit": 2390,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r206",
+    "nom": "Concentré de rose",
+    "structure": "Marmite à mijoter",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Rose": 12,
+      "Eau de puits": 8
+    },
+    "output": {
+      "Concentré de rose": 1
+    },
+    "profit": 770,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r207",
+    "nom": "Confiture de pomme au bonbon à l'érable",
+    "structure": "Marmite à mijoter",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Sirop d'érable": 9,
+      "Pomme": 8
+    },
+    "output": {
+      "Confiture de pomme au bonbon à l'érable": 1
+    },
+    "profit": 950,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r208",
+    "nom": "Bille de sucre",
+    "structure": "Marmite à mijoter",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Canne à sucre": 6,
+      "Eau fraîche": 8
+    },
+    "output": {
+      "Bille de sucre": 1
+    },
+    "profit": 1180,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r209",
+    "nom": "Confiture de fraise",
+    "structure": "Marmite à mijoter",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.13,
+    "input": {
+      "Fraise": 8
+    },
+    "output": {
+      "Confiture de fraise": 1
+    },
+    "profit": 650,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r210",
+    "nom": "Purée de châtaignes",
+    "structure": "Marmite à mijoter",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.35,
+    "input": {
+      "Châtaigne": 7
+    },
+    "output": {
+      "Purée de châtaignes": 1
+    },
+    "profit": 980,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r211",
+    "nom": "Bouillie de ginseng",
+    "structure": "Marmite à mijoter",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Ginseng séché": 1,
+      "Riz décortiqué": 2
+    },
+    "output": {
+      "Bouillie de ginseng": 1
+    },
+    "profit": 2440,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r212",
+    "nom": "Confiture de raisin",
+    "structure": "Marmite à mijoter",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.35,
+    "input": {
+      "Raisins": 9
+    },
+    "output": {
+      "Confiture de raisin": 1
+    },
+    "profit": 1120,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r213",
+    "nom": "Sucre de malt",
+    "structure": "Marmite à mijoter",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4.05,
+    "input": {
+      "Blé premium": 15,
+      "Riz décortiqué": 2,
+      "Eau de source des profondeurs rocheuses": 6
+    },
+    "output": {
+      "Sucre de malt": 1
+    },
+    "profit": 3440,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r214",
+    "nom": "Morceau de sucre d'érable",
+    "structure": "Marmite à mijoter",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.35,
+    "input": {
+      "Sirop d'érable": 18
+    },
+    "output": {
+      "Morceau de sucre d'érable": 1
+    },
+    "profit": 1060,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r215",
+    "nom": "Sirop d'agave",
+    "structure": "Marmite à mijoter",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Agave": 6,
+      "Eau fraîche": 9
+    },
+    "output": {
+      "Sirop d'agave": 1
+    },
+    "profit": 3080,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r216",
+    "nom": "Pâte à tartiner au cacao",
+    "structure": "Marmite à mijoter",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 5.4,
+    "input": {
+      "Poudre de cacao": 1,
+      "Sucre de malt": 1
+    },
+    "output": {
+      "Pâte à tartiner au cacao": 1
+    },
+    "profit": 8350,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r217",
+    "nom": "Confiture de canneberge",
+    "structure": "Marmite à mijoter",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 5.4,
+    "input": {
+      "Canneberge": 7,
+      "Sucre de malt": 1
+    },
+    "output": {
+      "Confiture de canneberge": 1
+    },
+    "profit": 7350,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r218",
+    "nom": "Chips de pomme de terre",
+    "structure": "Séchoir jukebox",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 0.9,
+    "input": {
+      "Pomme de terre": 8
+    },
+    "output": {
+      "Chips de pomme de terre": 1
+    },
+    "profit": 110,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r219",
+    "nom": "Tranches de citron séché",
+    "structure": "Séchoir jukebox",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 0.9,
+    "input": {
+      "Citron": 8
+    },
+    "output": {
+      "Tranches de citron séché": 1
+    },
+    "profit": 190,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r220",
+    "nom": "Tofu séché",
+    "structure": "Séchoir jukebox",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.13,
+    "input": {
+      "Tofu": 1
+    },
+    "output": {
+      "Tofu séché": 1
+    },
+    "profit": 330,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r221",
+    "nom": "Fleur de cerisier séchée",
+    "structure": "Séchoir jukebox",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.13,
+    "input": {
+      "Fleur de cerisier": 7
+    },
+    "output": {
+      "Fleur de cerisier séchée": 1
+    },
+    "profit": 410,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r222",
+    "nom": "Tranches de pomme séchée",
+    "structure": "Séchoir jukebox",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.13,
+    "input": {
+      "Pomme": 8
+    },
+    "output": {
+      "Tranches de pomme séchée": 1
+    },
+    "profit": 510,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r223",
+    "nom": "Fraises séchées",
+    "structure": "Séchoir jukebox",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.13,
+    "input": {
+      "Fraise": 8
+    },
+    "output": {
+      "Fraises séchées": 1
+    },
+    "profit": 690,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r224",
+    "nom": "Ginseng séché",
+    "structure": "Séchoir jukebox",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.35,
+    "input": {
+      "Ginseng": 3
+    },
+    "output": {
+      "Ginseng séché": 1
+    },
+    "profit": 1120,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r225",
+    "nom": "Raisins secs",
+    "structure": "Séchoir jukebox",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.35,
+    "input": {
+      "Raisins": 9
+    },
+    "output": {
+      "Raisins secs": 1
+    },
+    "profit": 1210,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r226",
+    "nom": "Noix de coco râpée",
+    "structure": "Séchoir jukebox",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.35,
+    "input": {
+      "Noix de coco": 5
+    },
+    "output": {
+      "Noix de coco râpée": 1
+    },
+    "profit": 1470,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r227",
+    "nom": "Canneberges séchées",
+    "structure": "Séchoir jukebox",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.35,
+    "input": {
+      "Canneberge": 7
+    },
+    "output": {
+      "Canneberges séchées": 1
+    },
+    "profit": 2080,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r228",
+    "nom": "Fleurs séchées",
+    "structure": "Séchoir jukebox",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.35,
+    "input": {
+      "Pétales": 6
+    },
+    "output": {
+      "Fleurs séchées": 1
+    },
+    "profit": 1990,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r229",
+    "nom": "Bâton d'encens au bambou",
+    "structure": "Établi phonolfactif",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Bambou": 15,
+      "Aromathyste": 2
+    },
+    "output": {
+      "Bâton d'encens au bambou": 1
+    },
+    "profit": 470,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r230",
+    "nom": "Encens à la cerise",
+    "structure": "Établi phonolfactif",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Fleur de cerisier séchée": 1,
+      "Aromathyste": 4
+    },
+    "output": {
+      "Encens à la cerise": 1
+    },
+    "profit": 840,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r231",
+    "nom": "Encens à la rose",
+    "structure": "Établi phonolfactif",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Rose": 12,
+      "Aromathyste": 2
+    },
+    "output": {
+      "Encens à la rose": 1
+    },
+    "profit": 790,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r232",
+    "nom": "Encens à la lavande",
+    "structure": "Établi phonolfactif",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Lavande": 11,
+      "Aromathyste": 2
+    },
+    "output": {
+      "Encens à la lavande": 1
+    },
+    "profit": 1270,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r233",
+    "nom": "Encens au citron",
+    "structure": "Établi phonolfactif",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Citron": 12,
+      "Aromathyste": 2
+    },
+    "output": {
+      "Encens au citron": 1
+    },
+    "profit": 700,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r234",
+    "nom": "Arôme herbacé de ginseng",
+    "structure": "Établi phonolfactif",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Poudre de ginseng": 1,
+      "Aromathyste": 8
+    },
+    "output": {
+      "Arôme herbacé de ginseng": 1
+    },
+    "profit": 2360,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r235",
+    "nom": "Savon premium",
+    "structure": "Établi phonolfactif",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4.05,
+    "input": {
+      "Huile de coco": 1,
+      "Pétales": 6,
+      "Eau de source des profondeurs rocheuses": 6
+    },
+    "output": {
+      "Savon premium": 1
+    },
+    "profit": 6320,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r236",
+    "nom": "Savon",
+    "structure": "Établi phonolfactif",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4.05,
+    "input": {
+      "Huile de coco": 1,
+      "Pétales": 6,
+      "Eau de source des profondeurs rocheuses": 6
+    },
+    "output": {
+      "Savon": 1
+    },
+    "profit": 5500,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r237",
+    "nom": "Lotion",
+    "structure": "Établi phonolfactif",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Fleur d'oranger": 8,
+      "Huile de coco": 2
+    },
+    "output": {
+      "Lotion": 1
+    },
+    "profit": 7030,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r238",
+    "nom": "Parfum composite",
+    "structure": "Établi phonolfactif",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Fleurs séchées": 1,
+      "Eau minérale naturelle": 6
+    },
+    "output": {
+      "Parfum composite": 1
+    },
+    "profit": 4850,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r239",
+    "nom": "Encens à la fleur d'oranger",
+    "structure": "Établi phonolfactif",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Fleur d'oranger": 8,
+      "Aromathyste": 8
+    },
+    "output": {
+      "Encens à la fleur d'oranger": 1
+    },
+    "profit": 3640,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r240",
+    "nom": "Parfum composite premium",
+    "structure": "Établi phonolfactif",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Fleurs séchées": 1,
+      "Eau minérale naturelle": 6
+    },
+    "output": {
+      "Parfum composite premium": 1
+    },
+    "profit": 5520,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r241",
+    "nom": "Fleur de cerisier salée",
+    "structure": "Bocal à pickles",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Fleur de cerisier": 7,
+      "Sel de mer": 13
+    },
+    "output": {
+      "Fleur de cerisier salée": 1
+    },
+    "profit": 780,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r242",
+    "nom": "Sauce soja",
+    "structure": "Bocal à pickles",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.25,
+    "input": {
+      "Germe de soja": 16,
+      "Sel de mer": 13
+    },
+    "output": {
+      "Sauce soja": 1
+    },
+    "profit": 650,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r243",
+    "nom": "Pickles ombral",
+    "structure": "Bocal à pickles",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 3.38,
+    "input": {
+      "Radis de rosée lunaire": 8,
+      "Piment de lune croissante": 8,
+      "Vinaigre de cidre": 1
+    },
+    "output": {
+      "Pickles ombral": 1
+    },
+    "profit": 2290,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r244",
+    "nom": "Vinaigre de cidre",
+    "structure": "Bocal à pickles",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.13,
+    "input": {
+      "Pomme": 8
+    },
+    "output": {
+      "Vinaigre de cidre": 1
+    },
+    "profit": 510,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r245",
+    "nom": "Vin de riz sucré premium",
+    "structure": "Bocal à pickles",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4.5,
+    "input": {
+      "Riz décortiqué": 1,
+      "Eau fraîche": 8,
+      "Bille de sucre": 1
+    },
+    "output": {
+      "Vin de riz sucré premium": 1
+    },
+    "profit": 2980,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r246",
+    "nom": "Boisson de riz sucrée",
+    "structure": "Bocal à pickles",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4.5,
+    "input": {
+      "Riz décortiqué": 1,
+      "Eau fraîche": 8,
+      "Bille de sucre": 1
+    },
+    "output": {
+      "Boisson de riz sucrée": 1
+    },
+    "profit": 2580,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r247",
+    "nom": "Citron salé premium",
+    "structure": "Bocal à pickles",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Citron": 16,
+      "Sel de mer": 13
+    },
+    "output": {
+      "Citron salé premium": 1
+    },
+    "profit": 1440,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r248",
+    "nom": "Vinaigre de riz",
+    "structure": "Bocal à pickles",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Boisson au riz": 1
+    },
+    "output": {
+      "Vinaigre de riz": 1
+    },
+    "profit": 2510,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r249",
+    "nom": "Citron salé",
+    "structure": "Bocal à pickles",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Citron": 16,
+      "Sel de mer": 13
+    },
+    "output": {
+      "Citron salé": 1
+    },
+    "profit": 1110,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r250",
+    "nom": "Fraises confites",
+    "structure": "Bocal à pickles",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Sirop d'érable": 18,
+      "Fraise": 8
+    },
+    "output": {
+      "Fraises confites": 1
+    },
+    "profit": 2090,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r251",
+    "nom": "Fleur d'oranger confite",
+    "structure": "Bocal à pickles",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4.05,
+    "input": {
+      "Sirop d'agave": 1,
+      "Fleur d'oranger": 8
+    },
+    "output": {
+      "Fleur d'oranger confite": 1
+    },
+    "profit": 6950,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r252",
+    "nom": "Farine complète",
+    "structure": "Moulin-carrousel",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 0.9,
+    "input": {
+      "Blé": 50
+    },
+    "output": {
+      "Farine complète": 1
+    },
+    "profit": 70,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r253",
+    "nom": "Riz décortiqué",
+    "structure": "Moulin-carrousel",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 0.9,
+    "input": {
+      "Riz": 18
+    },
+    "output": {
+      "Riz décortiqué": 1
+    },
+    "profit": 240,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r254",
+    "nom": "Tofu",
+    "structure": "Moulin-carrousel",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 0.9,
+    "input": {
+      "Germe de soja": 16
+    },
+    "output": {
+      "Tofu": 1
+    },
+    "profit": 230,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r255",
+    "nom": "Poudre de lavande",
+    "structure": "Moulin-carrousel",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.13,
+    "input": {
+      "Lavande": 7
+    },
+    "output": {
+      "Poudre de lavande": 1
+    },
+    "profit": 650,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r256",
+    "nom": "Poudre de ginseng",
+    "structure": "Moulin-carrousel",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.35,
+    "input": {
+      "Ginseng": 3
+    },
+    "output": {
+      "Poudre de ginseng": 1
+    },
+    "profit": 1160,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r257",
+    "nom": "Boisson au riz",
+    "structure": "Moulin-carrousel",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Riz décortiqué": 2,
+      "Eau fraîche": 16
+    },
+    "output": {
+      "Boisson au riz": 1
+    },
+    "profit": 1860,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r258",
+    "nom": "Huile de coco",
+    "structure": "Moulin-carrousel",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.35,
+    "input": {
+      "Noix de coco": 5
+    },
+    "output": {
+      "Huile de coco": 1
+    },
+    "profit": 1580,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r259",
+    "nom": "Farine raffinée",
+    "structure": "Moulin-carrousel",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.35,
+    "input": {
+      "Blé premium": 15
+    },
+    "output": {
+      "Farine raffinée": 1
+    },
+    "profit": 1260,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r260",
+    "nom": "Poudre de cacao",
+    "structure": "Moulin-carrousel",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.35,
+    "input": {
+      "Cacao": 6
+    },
+    "output": {
+      "Poudre de cacao": 1
+    },
+    "profit": 2470,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r261",
+    "nom": "Lait de coco",
+    "structure": "Moulin-carrousel",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 2.7,
+    "input": {
+      "Noix de coco": 5,
+      "Eau minérale naturelle": 6
+    },
+    "output": {
+      "Lait de coco": 1
+    },
+    "profit": 3820,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r262",
+    "nom": "Fil de coton",
+    "structure": "Grande roue à tisser",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.13,
+    "input": {
+      "Coton": 7
+    },
+    "output": {
+      "Fil de coton": 1
+    },
+    "profit": 410,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r263",
+    "nom": "Tissu en coton",
+    "structure": "Grande roue à tisser",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.13,
+    "input": {
+      "Fil de coton": 1
+    },
+    "output": {
+      "Tissu en coton": 1
+    },
+    "profit": 610,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r264",
+    "nom": "Pelote de laine",
+    "structure": "Grande roue à tisser",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.13,
+    "input": {
+      "Laine": 4
+    },
+    "output": {
+      "Pelote de laine": 1
+    },
+    "profit": 760,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r265",
+    "nom": "Corde de palmier",
+    "structure": "Grande roue à tisser",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.35,
+    "input": {
+      "Écorce de palmier": 6
+    },
+    "output": {
+      "Corde de palmier": 1
+    },
+    "profit": 1150,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r266",
+    "nom": "Tissu en laine",
+    "structure": "Grande roue à tisser",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 1.35,
+    "input": {
+      "Pelote de laine": 1
+    },
+    "output": {
+      "Tissu en laine": 1
+    },
+    "profit": 1190,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r267",
+    "nom": "Tissu en coton teint",
+    "structure": "Grande roue à tisser",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 4.05,
+    "input": {
+      "Tissu en coton": 1,
+      "Teinture": 1
+    },
+    "output": {
+      "Tissu en coton teint": 1
+    },
+    "profit": 6920,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r268",
+    "nom": "Minerai grossièrement tamisé",
+    "structure": "Four de cheminée",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 0.57,
+    "input": {
+      "Sable minéral": 8
+    },
+    "output": {
+      "Minerai grossièrement tamisé": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r269",
+    "nom": "Brique de minerai frittée",
+    "structure": "Four de cheminée",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 0.57,
+    "input": {
+      "Minerai grossièrement tamisé": 8
+    },
+    "output": {
+      "Brique de minerai frittée": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r270",
+    "nom": "Minerai raffiné",
+    "structure": "Four de cheminée",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 0.68,
+    "input": {
+      "Brique de minerai frittée": 8
+    },
+    "output": {
+      "Minerai raffiné": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r271",
+    "nom": "Plaque de minerai microcristallin",
+    "structure": "Four de cheminée",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 0.68,
+    "input": {
+      "Minerai raffiné": 4
+    },
+    "output": {
+      "Plaque de minerai microcristallin": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r272",
+    "nom": "Bois brut",
+    "structure": "Établi de menuiserie",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 0.57,
+    "input": {
+      "Bloc de bois": 8
+    },
+    "output": {
+      "Bois brut": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r273",
+    "nom": "Planches standard",
+    "structure": "Établi de menuiserie",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 0.57,
+    "input": {
+      "Bois brut": 8
+    },
+    "output": {
+      "Planches standard": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r274",
+    "nom": "Poutres lamellées",
+    "structure": "Établi de menuiserie",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 0.68,
+    "input": {
+      "Planches standard": 8
+    },
+    "output": {
+      "Poutres lamellées": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r275",
+    "nom": "Élément en bois densifié",
+    "structure": "Établi de menuiserie",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 0.68,
+    "input": {
+      "Poutres lamellées": 4
+    },
+    "output": {
+      "Élément en bois densifié": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r276",
+    "nom": "Aniipod",
+    "structure": "Machine à Aniipod",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "Roche": 12
+    },
+    "output": {
+      "Aniipod": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r277",
+    "nom": "Aniipod pro",
+    "structure": "Machine à Aniipod",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "Argile": 10
+    },
+    "output": {
+      "Aniipod pro": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r278",
+    "nom": "Aniipod méga",
+    "structure": "Machine à Aniipod",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 30,
+    "input": {
+      "Coquillage": 6
+    },
+    "output": {
+      "Aniipod méga": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r279",
+    "nom": "Bourgeon de croissance",
+    "structure": "Polissoir dansant",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 20,
+    "input": {
+      "Pomme de terre": 23
+    },
+    "output": {
+      "Bourgeon de croissance": 3
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r280",
+    "nom": "Fleur de croissance",
+    "structure": "Polissoir dansant",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 40,
+    "input": {
+      "Germe de soja": 16
+    },
+    "output": {
+      "Fleur de croissance": 2
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "r281",
+    "nom": "Fruit de croissance",
+    "structure": "Polissoir dansant",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 60,
+    "input": {
+      "Rose": 8
+    },
+    "output": {
+      "Fruit de croissance": 1
+    },
+    "profit": 0,
+    "capacite": "Fabrication",
+    "color": "bg-slate-600"
+  },
+  {
+    "id": "base_bois_bloc",
+    "nom": "Bloc de bois",
+    "structure": "Zone de coupe",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 15,
+    "input": {},
+    "output": {
+      "Bloc de bois": 10
+    },
+    "profit": 20,
+    "capacite": "Culture",
+    "color": "bg-amber-800"
+  },
+  {
+    "id": "base_bois",
+    "nom": "Bois",
+    "structure": "Zone de coupe",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 15,
+    "input": {},
+    "output": {
+      "Bois": 10
+    },
+    "profit": 20,
+    "capacite": "Culture",
+    "color": "bg-amber-800"
+  },
+  {
+    "id": "base_eau_puits",
+    "nom": "Eau de puits",
+    "structure": "Puits",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 10,
+    "input": {},
+    "output": {
+      "Eau de puits": 15
+    },
+    "profit": 15,
+    "capacite": "Transport",
+    "color": "bg-blue-600"
+  },
+  {
+    "id": "base_eau_fraiche",
+    "nom": "Eau fraîche",
+    "structure": "Puits",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 15,
+    "input": {},
+    "output": {
+      "Eau fraîche": 15
+    },
+    "profit": 20,
+    "capacite": "Transport",
+    "color": "bg-blue-500"
+  },
+  {
+    "id": "base_eau_minerale",
+    "nom": "Eau minérale naturelle",
+    "structure": "Puits",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 20,
+    "input": {},
+    "output": {
+      "Eau minérale naturelle": 15
+    },
+    "profit": 25,
+    "capacite": "Transport",
+    "color": "bg-cyan-500"
+  },
+  {
+    "id": "base_eau_rocheuse",
+    "nom": "Eau de source des profondeurs rocheuses",
+    "structure": "Puits",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 25,
+    "input": {},
+    "output": {
+      "Eau de source des profondeurs rocheuses": 15
+    },
+    "profit": 30,
+    "capacite": "Transport",
+    "color": "bg-teal-500"
+  },
+  {
+    "id": "base_sel",
+    "nom": "Sel de mer",
+    "structure": "Puits",
+    "w": 1,
+    "h": 1,
+    "tempsMin": 15,
+    "input": {},
+    "output": {
+      "Sel de mer": 10
+    },
+    "profit": 15,
+    "capacite": "Transport",
+    "color": "bg-slate-200 text-slate-800"
+  },
+  {
+    "id": "base_roche",
+    "nom": "Roche",
+    "structure": "Mine",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 10,
+    "input": {},
+    "output": {
+      "Roche": 12
+    },
+    "profit": 15,
+    "capacite": "Transport",
+    "color": "bg-stone-600"
+  },
+  {
+    "id": "base_argile",
+    "nom": "Argile",
+    "structure": "Mine",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 15,
+    "input": {},
+    "output": {
+      "Argile": 8
+    },
+    "profit": 25,
+    "capacite": "Transport",
+    "color": "bg-orange-800"
+  },
+  {
+    "id": "base_sable",
+    "nom": "Sable minéral",
+    "structure": "Mine",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 15,
+    "input": {},
+    "output": {
+      "Sable minéral": 8
+    },
+    "profit": 25,
+    "capacite": "Transport",
+    "color": "bg-amber-600"
+  },
+  {
+    "id": "base_coquillage",
+    "nom": "Coquillage",
+    "structure": "Mine",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 20,
+    "input": {},
+    "output": {
+      "Coquillage": 6
+    },
+    "profit": 30,
+    "capacite": "Transport",
+    "color": "bg-pink-300 text-pink-900"
+  },
+  {
+    "id": "base_cuivre",
+    "nom": "Minerai de cuivre",
+    "structure": "Mine",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 20,
+    "input": {},
+    "output": {
+      "Minerai de cuivre": 6
+    },
+    "profit": 35,
+    "capacite": "Transport",
+    "color": "bg-orange-600"
+  },
+  {
+    "id": "base_quartz",
+    "nom": "Minerai de quartz",
+    "structure": "Mine",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 25,
+    "input": {},
+    "output": {
+      "Minerai de quartz": 4
+    },
+    "profit": 45,
+    "capacite": "Transport",
+    "color": "bg-violet-300 text-violet-900"
+  },
+  {
+    "id": "base_gemme",
+    "nom": "Gemme",
+    "structure": "Mine",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 30,
+    "input": {},
+    "output": {
+      "Gemme": 2
+    },
+    "profit": 60,
+    "capacite": "Transport",
+    "color": "bg-emerald-500"
+  },
+  {
+    "id": "base_aromathyste",
+    "nom": "Aromathyste",
+    "structure": "Mine",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 25,
+    "input": {},
+    "output": {
+      "Aromathyste": 4
+    },
+    "profit": 40,
+    "capacite": "Transport",
+    "color": "bg-purple-600"
+  },
+  {
+    "id": "base_laine",
+    "nom": "Laine",
+    "structure": "Lit de Cumulaine",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 20,
+    "input": {},
+    "output": {
+      "Laine": 4
+    },
+    "profit": 30,
+    "capacite": "Repos",
+    "color": "bg-slate-100 text-slate-800"
+  },
+  {
+    "id": "base_petales",
+    "nom": "Pétales",
+    "structure": "Ferme",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 15,
+    "input": {},
+    "output": {
+      "Pétales": 10
+    },
+    "profit": 20,
+    "capacite": "Culture",
+    "color": "bg-rose-400"
+  },
+  {
+    "id": "base_perle",
+    "nom": "Perle",
+    "structure": "Mine",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 25,
+    "input": {},
+    "output": {
+      "Perle": 2
+    },
+    "profit": 50,
+    "capacite": "Transport",
+    "color": "bg-slate-100 text-slate-800"
+  },
+  {
+    "id": "base_ecailles",
+    "nom": "Écailles",
+    "structure": "Mine",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 20,
+    "input": {},
+    "output": {
+      "Écailles": 4
+    },
+    "profit": 30,
+    "capacite": "Transport",
+    "color": "bg-cyan-600"
+  },
+  {
+    "id": "base_etoile",
+    "nom": "Étoile",
+    "structure": "Hamac d'astrechute",
+    "w": 2,
+    "h": 2,
+    "tempsMin": 30,
+    "input": {},
+    "output": {
+      "Étoile": 2
+    },
+    "profit": 50,
+    "capacite": "Repos",
+    "color": "bg-yellow-300 text-yellow-900"
+  }
+]

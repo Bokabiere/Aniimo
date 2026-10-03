@@ -3,6 +3,7 @@ import DEFAULT_RECETTES from './data/recettes.json';
 import ANIIMO_ROLES from './data/aniimo_roles.json';
 import ANIIMO_DB from './data/aniimo_db.json';
 import { installationsGrille } from './lib/optimisation.js';
+import { migrerGrille, migrerBase, migrerPresets } from './lib/migration.js';
 import NIVEAUX from './data/niveaux.json';
 import GRAINES_DB from './data/graines_db.json';
 import { getLimitForStructure, getFirstUnlockLevel } from './lib/structures.js';
@@ -204,7 +205,7 @@ const generateInitialPresets = (existingGrid, level = 11) => {
   addBuilding(gPieces, 0, 7, 'r5', 2, 2);  // Citron
   addBuilding(gPieces, 2, 1, 'r8', 1, 1);  // Carillon vent
   addBuilding(gPieces, 2, 2, 'r9', 1, 1);  // Encens citron
-  addBuilding(gPieces, 2, 3, 'r10', 1, 1); // Séchoir citron
+  addBuilding(gPieces, 2, 3, 'r219', 1, 1); // Séchoir citron
   addBuilding(gPieces, 3, 1, 'r12', 2, 2); // Menuiserie
 
   const presetRushPieces = {
@@ -231,10 +232,7 @@ function App() {
   // grid stocke { id: uuid, rId: 'r1', originR: 0, originC: 0 }
   const [grid, setGrid] = useState(() => {
     const saved = localStorage.getItem('aniimo_grid_v6');
-    if (saved) {
-      // retire de la grille les recettes supprimées de la base (ex. r14)
-      return JSON.parse(saved).map(row => row.map(cell => (cell && cell.rId === 'r14' ? null : cell)));
-    }
+    if (saved) return migrerGrille(JSON.parse(saved));
     return Array(GRID_SIZE).fill().map(() => Array(GRID_SIZE).fill(null));
   });
 
@@ -243,11 +241,10 @@ function App() {
       const saved = localStorage.getItem('aniimo_recettes_db_v12');
       if (saved) {
         const parsed = JSON.parse(saved);
-        const obsoletes = ['r14']; // « Pain » au Four à cheminée : recette inexistante en jeu
-        const gardees = parsed.filter(p => !obsoletes.includes(p.id));
-        const missing = DEFAULT_RECETTES.filter(d => !gardees.some(p => p.id === d.id));
-        if (missing.length === 0) return gardees;
-        return [...gardees, ...missing];
+        // Une seule fois : les recettes par défaut corrigées remplacent les anciennes copies sauvegardées.
+        const dejaMigre = localStorage.getItem('aniimo_recettes_migrees_v2');
+        localStorage.setItem('aniimo_recettes_migrees_v2', '1');
+        return migrerBase(parsed, DEFAULT_RECETTES, { remplacer: !dejaMigre });
       }
       const oldSaved = localStorage.getItem('aniimo_recettes_db_v10');
       if (oldSaved) {
@@ -306,7 +303,7 @@ function App() {
   const [presets, setPresets] = useState(() => {
     try {
       const saved = localStorage.getItem('aniimo_presets_v1');
-      if (saved) return JSON.parse(saved);
+      if (saved) return migrerPresets(JSON.parse(saved));
     } catch (e) {}
     const existingGrid = localStorage.getItem('aniimo_grid_v6');
     const parsedGrid = existingGrid ? JSON.parse(existingGrid) : null;
@@ -995,7 +992,7 @@ function App() {
       strategy = 'custom';
       targetId = 'r2';
     } else if (strategy === 'optimal') {
-      const ratio = ['r5', 'r5', 'r4', 'r16', 'r8', 'r9', 'r10', 'r5', 'r5', 'r4'];
+      const ratio = ['r5', 'r5', 'r4', 'r16', 'r8', 'r9', 'r219', 'r5', 'r5', 'r4'];
       for (let i = 0; i < maxStructs; i++) tryAdd(ratio[i % ratio.length], tempUsages);
     } else if (strategy === 'levelup') {
       // Stratégie Max Niveau : maximise le nombre d'items produits/heure (cycles courts, petites structures)
@@ -1212,9 +1209,9 @@ function App() {
       // E. Ateliers complémentaires débloqués (Artisanat, Cuisine, Bocal...)
       const secondaryCandidates = [
         recettesDB.find(r => r.id === 'r8'),  // Établi artisanal
-        recettesDB.find(r => r.id === 'r15'), // Bocal à pickles
+        recettesDB.find(r => r.structure === 'Bocal à pickles'),
         recettesDB.find(r => r.structure === 'Marmite à mijoter'),
-        recettesDB.find(r => r.id === 'r11'), // Puits
+        recettesDB.find(r => r.id === 'base_eau_puits'), // Puits
         recettesDB.find(r => r.structure === 'Attrape-popote'),
         recettesDB.find(r => r.structure === 'Grande roue à tisser')
       ].filter(Boolean);

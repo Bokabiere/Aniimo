@@ -1,5 +1,7 @@
 # Relevé aniimotools.dev (2026-10-03) : station ## puis « produit | ingrédient×qté, … »
 ## Établi artisanal
+Carillon à vent avancé | Minerai de cuivre×5, Pelote de laine×1, Étoile×2
+Poussière de gemme avancée | Gemme×2, Écailles×8
 Sculpture en bois | Bois de saule×19
 Plateau des moissons | Piment de lune croissante rôti×1, Tranches de radis de rosée lunaire×1
 Vaisselle en bambou | Bambou×10
@@ -23,6 +25,7 @@ Poussière de gemme | Gemme×2, Écailles×8
 Fleurs en bouteille | Fleurs séchées×1, Porcelaine×1
 Poupée | Tissu en coton teint×1, Tissu en laine×1
 ## Séchoir jukebox
+Mélange de noix | Châtaigne×7, Noix×6
 Chips de pomme de terre | Pomme de terre×8
 Tranches de citron séché | Citron×8
 Fleur de cerisier séchée | Fleur de cerisier×7
@@ -58,6 +61,7 @@ Tissu en laine | Pelote de laine×1
 Corde de palmier | Écorce de palmier×6
 Tissu en coton teint | Tissu en coton×1, Teinture×1
 ## Établi phonolfactif
+Encens au citron avancé | Citron×12, Aromathyste×2
 Bâton d'encens au bambou | Bambou×15, Aromathyste×2
 Encens à la rose | Rose×12, Aromathyste×2
 Encens à la cerise | Fleur de cerisier séchée×1, Aromathyste×4
