@@ -77,15 +77,6 @@
       "profit": 308,
       "capacite": "Culture"
     },
-    "r107": {
-      "tempsMin": 40,
-      "output": {
-        "Pomme de terre": 46
-      },
-      "profit": 368,
-      "capacite": "Culture",
-      "needsAura": "Frais"
-    },
     "r108": {
       "tempsMin": 40,
       "output": {
@@ -166,15 +157,6 @@
       },
       "profit": 1470,
       "capacite": "Culture"
-    },
-    "r118": {
-      "tempsMin": 40,
-      "output": {
-        "Fraise": 26
-      },
-      "profit": 1586,
-      "capacite": "Culture",
-      "needsAura": "Frais"
     },
     "r119": {
       "tempsMin": 11,
