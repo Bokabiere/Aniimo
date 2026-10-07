@@ -1,6 +1,7 @@
 // Optimisation de l'affectation Aniimo → installations de la grille.
 // Logique pure (sans React), testée par `npm test`.
 import { competences } from './equipe.js';
+import { estStructureElectrique } from './structures.js';
 
 /** Production par minute selon le niveau de compétence de l'Aniimo (1 à 4), relevé sur aniimotools.dev. */
 export const PRODUCTION_PAR_NIVEAU = [60, 180, 240, 300];
@@ -27,17 +28,27 @@ export function niveauPour(a, roles, niveauxDb) {
 
 /**
  * Installations posées sur la grille (une entrée par installation) avec la recette qu'elle produit.
- * `piecesH` = pièces par heure au niveau 1 (avant Aniimo).
+ * `piecesH` = pièces par heure au niveau 1 (avant Aniimo), avec bonus réseau ×1.2 si ezMode électrique actif.
  */
-export function installationsGrille(grid, recettes, roles) {
+export function installationsGrille(grid, recettes, roles, options = {}) {
+  const { ezMode = false } = options;
   const parId = new Map(recettes.map((r) => [r.id, r]));
   const out = [];
   grid.forEach((row, r) => row.forEach((cell, c) => {
     if (!cell || cell.originR !== r || cell.originC !== c) return;
     const rec = parId.get(cell.rId);
     if (!rec || !roles[rec.structure]) return;
-    const piecesH = rec.profit > 0 ? (rec.profit * 60) / Math.max(0.1, rec.tempsMin) : 0;
-    out.push({ cle: `${r}-${c}`, structure: rec.structure, recette: rec.nom, piecesH, roles: roles[rec.structure].elements });
+    const isElec = ezMode && estStructureElectrique(rec.structure);
+    const speedMult = isElec ? 1.2 : 1;
+    const piecesH = rec.profit > 0 ? (rec.profit * 60 * speedMult) / Math.max(0.1, rec.tempsMin) : 0;
+    out.push({
+      cle: `${r}-${c}`,
+      structure: rec.structure,
+      recette: rec.nom,
+      piecesH,
+      roles: roles[rec.structure].elements,
+      electrique: isElec,
+    });
   }));
   return out;
 }
@@ -110,18 +121,34 @@ export function affecterNaif(installations, aniimos, niveauxDb) {
 /**
  * Plan complet : affectation avec l'équipe possédée, gain face à l'affectation naïve, et Aniimo à acquérir
  * (ceux que choisirait l'affectation idéale sur toute la base, avec le gain qu'ils apportent).
+ * En ezMode : les installations électriques produisent automatiquement (sans Aniimo dédié),
+ * libérant les Aniimo de l'équipe pour les autres installations.
  */
-export function planOptimal(installations, db, equipe, niveauxDb) {
+export function planOptimal(installations, db, equipe, niveauxDb, options = {}) {
+  const { ezMode = false } = options;
+  const instElectriques = installations.filter((i) => ezMode && i.electrique);
+  const instManuelles = installations.filter((i) => !(ezMode && i.electrique));
+  const profitElectrique = instElectriques.reduce((sum, i) => sum + i.piecesH, 0);
+
   const possedes = db.filter((a) => equipe.includes(a.nom));
-  const actuel = affecter(installations, possedes, niveauxDb);
-  const naif = affecterNaif(installations, possedes, niveauxDb);
-  const ideal = affecter(installations, db, niveauxDb);
+  const actuel = affecter(instManuelles, possedes, niveauxDb);
+  const naif = affecterNaif(instManuelles, possedes, niveauxDb) + profitElectrique;
+  const ideal = affecter(instManuelles, db, niveauxDb);
   const parInst = new Map(actuel.affectations.map((x) => [x.installation.cle, x.piecesH]));
   const acquerir = ideal.affectations
     .filter((x) => !equipe.includes(x.aniimo.nom))
     .map((x) => ({ ...x, gain: x.piecesH - (parInst.get(x.installation.cle) || 0) }))
     .filter((x) => x.gain > 0)
     .sort((a, b) => b.gain - a.gain);
-  const sansAniimo = installations.filter((i) => !actuel.affectations.some((x) => x.installation.cle === i.cle));
-  return { ...actuel, naif, ideal: ideal.total, acquerir, sansAniimo };
+  const sansAniimo = instManuelles.filter((i) => !actuel.affectations.some((x) => x.installation.cle === i.cle));
+  return {
+    ...actuel,
+    total: actuel.total + profitElectrique,
+    naif,
+    ideal: ideal.total + profitElectrique,
+    acquerir,
+    sansAniimo,
+    electriques: instElectriques,
+    profitElectrique,
+  };
 }

@@ -2,6 +2,48 @@
 // Source : pages « stations » d'AniimoTools (vérifiées le 2026-10-03 pour Ferme, Pépinière, Mine,
 // Établi de menuiserie et Four de cheminée).
 
+export const NIVEAU_DEBLOCAGE_EZ_MODE = 12;
+
+/**
+ * 16 installations du Logis compatibles avec le mode électrique (EZ MODE) dès le niveau 12.
+ * En mode électrique, elles tournent sans Aniimo dédié et à 120 % de vitesse réseau.
+ */
+export const STRUCTURES_ELECTRIQUES = new Set([
+  'Mine',
+  'Puits',
+  'Moulin-carrousel',
+  'Établi artisanal',
+  'Séchoir jukebox',
+  'Attrape-popote',
+  'Grande roue à tisser',
+  'Établi phonolfactif',
+  'Trempo-barils',
+  'Marmite à mijoter',
+  'Cuisinière flamboyante',
+  'Établi de menuiserie',
+  'Four de cheminée',
+  'Bocal à pickles',
+  'Machine à Aniipod',
+  'Polissoir dansant',
+]);
+
+export const estStructureElectrique = (structureName) => {
+  if (!structureName) return false;
+  const sTrim = structureName.trim().toLowerCase();
+  for (const name of STRUCTURES_ELECTRIQUES) {
+    if (name.toLowerCase() === sTrim) return true;
+  }
+  // Alias fréquents
+  if (sTrim.includes('pickle')) return true;
+  if (sTrim.includes('menuiserie')) return true;
+  if (sTrim.includes('four') && !sTrim.includes('fournaise')) return true;
+  if (sTrim.includes('marmite')) return true;
+  if (sTrim.includes('baril')) return true;
+  if (sTrim.includes('tisser')) return true;
+  if (sTrim.includes('cuisinière') || sTrim.includes('cuisiniere')) return true;
+  return false;
+};
+
 export const STRUCTURE_UNLOCK_LEVELS = {
   'Ferme': [1, 2, 5, 7, 9, 12, 16],
   'Éclorateur': [2],

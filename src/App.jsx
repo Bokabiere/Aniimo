@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, Fragment } from 'react';
+import { useState, useEffect, useMemo, useRef, Fragment } from 'react';
 import DEFAULT_RECETTES from './data/recettes.json';
 import ANIIMO_ROLES from './data/aniimo_roles.json';
 import ANIIMO_DB from './data/aniimo_db.json';
@@ -6,7 +6,7 @@ import { installationsGrille } from './lib/optimisation.js';
 import { migrerGrille, migrerBase, migrerPresets } from './lib/migration.js';
 import NIVEAUX from './data/niveaux.json';
 import GRAINES_DB from './data/graines_db.json';
-import { getLimitForStructure, getFirstUnlockLevel } from './lib/structures.js';
+import { getLimitForStructure, getFirstUnlockLevel, estStructureElectrique, NIVEAU_DEBLOCAGE_EZ_MODE } from './lib/structures.js';
 import ProgressionTracker from './components/ProgressionTracker.jsx';
 import OngletsFoyer from './components/OngletsFoyer.jsx';
 import ProchaineAction from './components/ProchaineAction.jsx';
@@ -359,6 +359,30 @@ function App() {
   }, [activePresetId]);
 
   const updateLogis = (key, value) => setLogis(prev => ({ ...prev, [key]: value }));
+
+  const ezModeActif = Boolean(logis.level >= NIVEAU_DEBLOCAGE_EZ_MODE && (logis.ezMode ?? true));
+
+  const prevLevelRef = useRef(logis.level);
+  useEffect(() => {
+    if (prevLevelRef.current < NIVEAU_DEBLOCAGE_EZ_MODE && logis.level >= NIVEAU_DEBLOCAGE_EZ_MODE) {
+      showToast('⚡ Niveau 12 atteint ! Vous avez débloqué l\'EZ MODE avec l\'électricité !', 'success');
+    }
+    prevLevelRef.current = logis.level;
+  }, [logis.level]);
+
+  const toggleEzMode = () => {
+    if (logis.level < NIVEAU_DEBLOCAGE_EZ_MODE) {
+      showToast(`L'EZ MODE avec l'électricité se débloque au niveau ${NIVEAU_DEBLOCAGE_EZ_MODE} du camping-car !`, 'info');
+      return;
+    }
+    const nouveau = !ezModeActif;
+    updateLogis('ezMode', nouveau);
+    if (nouveau) {
+      showToast('⚡ EZ MODE activé : 16 ateliers passent en mode électrique (autonomes sans Aniimo & vitesse ×1,2) !', 'success');
+    } else {
+      showToast('Mode électrique désactivé.', 'info');
+    }
+  };
 
   const getPresetStats = (preset) => {
     if (!preset || !preset.grid) return { count: 0, occupied: 0 };
@@ -1599,7 +1623,9 @@ function App() {
       }
 
       if (active) {
-        const runsPerHour = (60 / Math.max(0.1, rec.tempsMin)) * speedFactor;
+        const isElectrique = ezModeActif && estStructureElectrique(rec.structure);
+        const speedMultiplier = isElectrique ? 1.2 : 1;
+        const runsPerHour = (60 / Math.max(0.1, rec.tempsMin)) * speedFactor * speedMultiplier;
         let buildingProfit = (rec.profit * runsPerHour);
         if (rec.structure === 'Ferme' || rec.structure === 'Pépinière') {
           const g = GRAINES_DB.find(x => x.culture.toLowerCase() === rec.nom.toLowerCase() || rec.nom.toLowerCase().includes(x.culture.toLowerCase()));
@@ -1696,7 +1722,7 @@ function App() {
   };
   let nbStructures = 0;
   grid.forEach((row, rr) => row.forEach((cell, cc) => { if (cell && cell.originR === rr && cell.originC === cc) nbStructures++; }));
-  const besoinsEquipe = besoinsGrille(structuresPosees(grid, recettesDB), ANIIMO_ROLES);
+  const besoinsEquipe = besoinsGrille(structuresPosees(grid, recettesDB), ANIIMO_ROLES, { ezMode: ezModeActif });
   const prochaine = prochaineAction({ level: logis.level, pieces: logis.pieces || 0, niveaux: NIVEAUX, graines: GRAINES_DB, nbStructures, profitHoraire: flow.profitHoraire });
 
   return (
@@ -1717,19 +1743,53 @@ function App() {
           </div>
         )}
 
-        <header className="bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-700 flex justify-between items-center">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
-            Aniimo - Foyer
-          </h1>
-          <div className="bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-700 flex items-center gap-2">
-            <label className="text-xs text-slate-400 uppercase font-bold">Niveau Camping-Car</label>
-            <input 
-              type="number" 
-              value={logis.level}
-              onChange={e => updateLogis('level', parseInt(e.target.value) || 1)}
-              className="bg-slate-800 text-lg font-bold w-12 text-center rounded focus:outline-none"
-              min="1" max="20"
-            />
+        <header className="bg-slate-800 p-5 sm:p-6 rounded-2xl shadow-lg border border-slate-700 flex flex-wrap justify-between items-center gap-4">
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
+              Aniimo - Foyer
+            </h1>
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Toggle EZ MODE (Électricité dès le niveau 12) */}
+            {logis.level >= NIVEAU_DEBLOCAGE_EZ_MODE ? (
+              <button
+                type="button"
+                onClick={toggleEzMode}
+                className={`px-3 py-1.5 rounded-lg border text-xs sm:text-sm font-extrabold flex items-center gap-2 transition-all cursor-pointer shadow-md ${
+                  ezModeActif
+                    ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 border-amber-300 ring-2 ring-amber-400/40'
+                    : 'bg-slate-900 hover:bg-slate-800 text-amber-300 border-amber-600/50'
+                }`}
+                title={ezModeActif ? "EZ MODE Actif : Ateliers autonomes sans Aniimo à 120 % de vitesse" : "Cliquer pour activer l'EZ MODE électrique"}
+              >
+                <span className="text-base select-none">⚡</span>
+                <span>{ezModeActif ? 'EZ MODE ACTIF' : 'Activer EZ MODE'}</span>
+                <span className={`text-[10px] px-1.5 py-0.5 rounded font-black uppercase tracking-wide ${ezModeActif ? 'bg-slate-950 text-amber-300' : 'bg-slate-800 text-slate-300'}`}>
+                  {ezModeActif ? 'ON' : 'OFF'}
+                </span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={toggleEzMode}
+                className="px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-900/80 text-slate-400 text-xs sm:text-sm font-semibold flex items-center gap-1.5 cursor-pointer hover:border-slate-600 hover:text-slate-300 transition"
+                title="L'EZ MODE avec l'électricité se débloque au niveau 12 du camping-car"
+              >
+                <span className="opacity-70 select-none">🔒</span>
+                <span>EZ MODE (Niv. 12)</span>
+              </button>
+            )}
+
+            <div className="bg-slate-900 px-3 py-1.5 rounded-lg border border-slate-700 flex items-center gap-2">
+              <label className="text-xs text-slate-400 uppercase font-bold">Niveau Camping-Car</label>
+              <input 
+                type="number" 
+                value={logis.level}
+                onChange={e => updateLogis('level', parseInt(e.target.value) || 1)}
+                className="bg-slate-800 text-lg font-bold w-12 text-center rounded focus:outline-none text-white"
+                min="1" max="20"
+              />
+            </div>
           </div>
         </header>
 
@@ -2292,6 +2352,7 @@ function App() {
                           auraMissing = !hasAura(grid, rIndex, cIndex, w, h, recette.needsAura);
                         }
 
+                        const isElectrique = ezModeActif && recette && estStructureElectrique(recette.structure);
                         const gameInfo = recette ? getGameViewInfo(recette) : null;
                         const seeds = recette ? getRecommendedSeedsForRecipe(recette) : [];
                         const primarySeed = seeds[0];
@@ -2361,8 +2422,13 @@ function App() {
                             {recette && (
                               <div className="flex flex-col items-center justify-center w-full h-full p-1 overflow-hidden leading-tight">
                                 {/* Disc badge avec icône du jeu */}
-                                <div className={`${isMultiCell ? 'w-8 h-8 sm:w-9 sm:h-9 text-base sm:text-lg' : 'w-5 h-5 text-xs'} rounded-full bg-[#39424e] text-white border-2 border-white shadow-sm flex items-center justify-center flex-shrink-0`}>
-                                  {gameInfo.icon}
+                                <div className="relative">
+                                  <div className={`${isMultiCell ? 'w-8 h-8 sm:w-9 sm:h-9 text-base sm:text-lg' : 'w-5 h-5 text-xs'} rounded-full bg-[#39424e] text-white border-2 border-white shadow-sm flex items-center justify-center flex-shrink-0`}>
+                                    {gameInfo.icon}
+                                  </div>
+                                  {isElectrique && (
+                                    <span className="absolute -top-1 -right-1 bg-amber-400 text-slate-950 font-black text-[9px] w-3.5 h-3.5 rounded-full flex items-center justify-center shadow" title="Mode électrique (EZ) : fonctionne sans Aniimo (vitesse ×1,2)">⚡</span>
+                                  )}
                                 </div>
 
                                 {/* Niveau Lv.X */}
@@ -2399,6 +2465,13 @@ function App() {
                                 <div className="text-[10px] text-slate-400 mt-0.5">
                                   Dimensions : {w}×{h} · Durée : {recette.tempsMin} min
                                 </div>
+
+                                {isElectrique && (
+                                  <div className="mt-1 pt-1 border-t border-amber-500/50 text-[10px] text-amber-300 font-bold flex items-center gap-1">
+                                    <span>⚡</span>
+                                    <span>Mode électrique (EZ) : production autonome sans Aniimo (vitesse ×1,2)</span>
+                                  </div>
+                                )}
 
                                 {primarySeed && (
                                   <div className="mt-1.5 pt-1.5 border-t border-slate-700/80 text-[11px] text-lime-300 flex items-center gap-1">
@@ -2474,6 +2547,7 @@ function App() {
                       auraMissing = !hasAura(grid, rIndex, cIndex, w, h, recette.needsAura);
                     }
 
+                    const isElectrique = ezModeActif && recette && estStructureElectrique(recette.structure);
                     const seeds = recette ? getRecommendedSeedsForRecipe(recette) : [];
                     const primarySeed = seeds[0];
                     const isMultiCell = w > 1 || h > 1;
@@ -2517,6 +2591,13 @@ function App() {
                             }`}>
                               {haloType === 'Frais' ? '❄️' : '🔥'}
                             </div>
+                          </div>
+                        )}
+
+                        {/* Badge Mode électrique */}
+                        {isElectrique && (
+                          <div className="absolute top-1 left-1 z-25 bg-amber-400 text-slate-950 rounded-full w-4 h-4 flex items-center justify-center text-[9px] font-black shadow-md" title="Mode électrique (EZ) : sans Aniimo (vitesse ×1,2)">
+                            ⚡
                           </div>
                         )}
 
@@ -2622,6 +2703,13 @@ function App() {
                             <div className="text-[10px] text-slate-400 mt-0.5">
                               Dimensions : {w}×{h} · Durée : {recette.tempsMin} min
                             </div>
+
+                            {isElectrique && (
+                              <div className="mt-1 pt-1 border-t border-amber-500/50 text-[10px] text-amber-300 font-bold flex items-center gap-1">
+                                <span>⚡</span>
+                                <span>Mode électrique (EZ) : production autonome sans Aniimo (vitesse ×1,2)</span>
+                              </div>
+                            )}
 
                             {primarySeed && (
                               <div className="mt-1.5 pt-1.5 border-t border-slate-700/80 text-[11px] text-lime-300 flex items-center gap-1">
@@ -3111,7 +3199,16 @@ function App() {
 
 {/* ===== MON ÉQUIPE ANIIMO ===== */}
         <div role="tabpanel" aria-labelledby="onglet-equipe" className={tab === 'equipe' ? '' : 'hidden'}>
-          <EquipeAniimo db={ANIIMO_DB} equipe={monEquipe} onChange={setMonEquipe} besoins={besoinsEquipe} onAller={allerA} installations={installationsGrille(grid, recettesDB, ANIIMO_ROLES)} />
+          <EquipeAniimo
+            db={ANIIMO_DB}
+            equipe={monEquipe}
+            onChange={setMonEquipe}
+            besoins={besoinsEquipe}
+            onAller={allerA}
+            installations={installationsGrille(grid, recettesDB, ANIIMO_ROLES, { ezMode: ezModeActif })}
+            ezMode={ezModeActif}
+            level={logis.level}
+          />
         </div>
 
         </div>

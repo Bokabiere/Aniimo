@@ -53,12 +53,13 @@ export function prochaineAction({ level, pieces = 0, niveaux, graines, nbStructu
   }
 
   const manque = Math.max(0, prochain.pieces - pieces);
+  const conseilNiv12 = level === 11 ? " ⚡ Le niveau 12 débloque l'EZ MODE avec l'électricité !" : '';
   if (manque === 0) {
     return {
       id: 'pret',
       niveau: 'ok',
       titre: `Vous avez assez de pièces pour le niveau ${level + 1}`,
-      detail: 'Vérifiez qu\'il ne vous manque aucun matériau, puis lancez la construction.',
+      detail: `Vérifiez qu'il ne vous manque aucun matériau, puis lancez la construction.${conseilNiv12}`,
       cta: { label: 'Voir les besoins', tab: 'progression' },
     };
   }
@@ -66,7 +67,7 @@ export function prochaineAction({ level, pieces = 0, niveaux, graines, nbStructu
     id: 'epargner',
     niveau: 'info',
     titre: `Niveau ${level + 1} dans environ ${formatDuration(manque / profitHoraire)}`,
-    detail: `Il manque ${nombre(manque)} pièces ; votre grille en produit ${nombre(profitHoraire)} par heure.${conseilGraine ? ' ' + conseilGraine : ''}`,
+    detail: `Il manque ${nombre(manque)} pièces ; votre grille en produit ${nombre(profitHoraire)} par heure.${conseilGraine ? ' ' + conseilGraine : ''}${conseilNiv12}`,
     cta: { label: 'Suivre la progression', tab: 'progression' },
   };
 }

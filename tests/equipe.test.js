@@ -64,3 +64,19 @@ test('suggererEquipe : rien à ajouter si l\'équipe couvre déjà tout', () => 
   const complet = sugg.map((s) => s.aniimo.nom);
   assert.deepEqual(suggererEquipe(complet, besoins, DB), []);
 });
+
+test('besoinsGrille en ezMode : ateliers électriques tournent sans Aniimo et demandent 1 Foudre pour le Générateur', () => {
+  const posees = { 'Moulin-carrousel': 1, 'Cuisinière flamboyante': 1, 'Ferme': 2 };
+  const sansEz = besoinsGrille(posees, ROLES);
+  assert.equal(sansEz.some((b) => b.structure === 'Moulin-carrousel'), true);
+  assert.equal(sansEz.some((b) => b.structure === 'Cuisinière flamboyante'), true);
+
+  const avecEz = besoinsGrille(posees, ROLES, { ezMode: true });
+  assert.equal(avecEz.some((b) => b.structure === 'Moulin-carrousel'), false);
+  assert.equal(avecEz.some((b) => b.structure === 'Cuisinière flamboyante'), false);
+  assert.equal(avecEz.some((b) => b.structure === 'Ferme'), true);
+  const gen = avecEz.find((b) => b.structure.includes('Générateur'));
+  assert.ok(gen);
+  assert.deepEqual(gen.roles, ['Foudre']);
+  assert.equal(avecEz.some((b) => b.structure === 'Transport des récoltes'), true);
+});

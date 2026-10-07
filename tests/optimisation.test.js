@@ -66,3 +66,37 @@ test('installationsGrille lit la grille', () => {
   assert.equal(l.length, 1);
   assert.equal(l[0].piecesH, 60);
 });
+
+test('installationsGrille et planOptimal en ezMode : bonus 1.2 et production sans Aniimo', () => {
+  const recettes = [
+    { id: 'r1', nom: 'Planches standard', structure: 'Établi de menuiserie', profit: 50, tempsMin: 30 },
+    { id: 'r2', nom: 'Fraise', structure: 'Ferme', profit: 20, tempsMin: 20 },
+  ];
+  const roles = {
+    'Établi de menuiserie': { elements: ['Artisanat'] },
+    Ferme: { elements: ['Plante'] },
+  };
+  const grid = [
+    [{ rId: 'r1', originR: 0, originC: 0 }, { rId: 'r2', originR: 0, originC: 1 }],
+  ];
+
+  const sansEz = installationsGrille(grid, recettes, roles, { ezMode: false });
+  assert.equal(sansEz.find((x) => x.structure === 'Établi de menuiserie').piecesH, 100);
+
+  const avecEz = installationsGrille(grid, recettes, roles, { ezMode: true });
+  const menuiserie = avecEz.find((x) => x.structure === 'Établi de menuiserie');
+  assert.equal(menuiserie.piecesH, 120);
+  assert.equal(menuiserie.electrique, true);
+
+  const ferme = avecEz.find((x) => x.structure === 'Ferme');
+  assert.equal(ferme.piecesH, 60);
+  assert.equal(ferme.electrique, false);
+
+  const db = [A('Planteur', 'Plante', 'Aucune')];
+  const niv = { Planteur: { Plante: 1 } };
+  const plan = planOptimal(avecEz, db, ['Planteur'], niv, { ezMode: true });
+
+  assert.equal(plan.electriques.length, 1);
+  assert.equal(plan.profitElectrique, 120);
+  assert.equal(plan.total, 180);
+});

@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { STRUCTURE_UNLOCK_LEVELS, getLimitForStructure, getFirstUnlockLevel } from '../src/lib/structures.js';
+import {
+  STRUCTURE_UNLOCK_LEVELS, getLimitForStructure, getFirstUnlockLevel,
+  STRUCTURES_ELECTRIQUES, estStructureElectrique, NIVEAU_DEBLOCAGE_EZ_MODE
+} from '../src/lib/structures.js';
 
 // Paliers vérifiés le 2026-10-03 sur aniimotools.dev (pages stations).
 const VERIFIED = {
@@ -59,4 +62,24 @@ test('getFirstUnlockLevel', () => {
   assert.equal(getFirstUnlockLevel('Climatisation'), 7);
   assert.equal(getFirstUnlockLevel('Structure fantôme'), 1);
   assert.equal(getFirstUnlockLevel(undefined), 1);
+});
+
+test('EZ Mode électrique : 16 structures et déblocage au niveau 12', () => {
+  assert.equal(NIVEAU_DEBLOCAGE_EZ_MODE, 12);
+  assert.equal(STRUCTURES_ELECTRIQUES.size, 16);
+  assert.ok(STRUCTURES_ELECTRIQUES.has('Mine'));
+  assert.ok(STRUCTURES_ELECTRIQUES.has('Établi artisanal'));
+  assert.ok(STRUCTURES_ELECTRIQUES.has('Cuisinière flamboyante'));
+  assert.ok(!STRUCTURES_ELECTRIQUES.has('Ferme'));
+  assert.ok(!STRUCTURES_ELECTRIQUES.has('Pépinière'));
+});
+
+test('estStructureElectrique : alias et insensible à la casse', () => {
+  assert.equal(estStructureElectrique('Four de cheminée'), true);
+  assert.equal(estStructureElectrique('four à cheminée'), true);
+  assert.equal(estStructureElectrique('Bocal à pickles'), true);
+  assert.equal(estStructureElectrique('établi de menuiserie'), true);
+  assert.equal(estStructureElectrique('Ferme'), false);
+  assert.equal(estStructureElectrique('Fournaise thermique'), false);
+  assert.equal(estStructureElectrique(null), false);
 });

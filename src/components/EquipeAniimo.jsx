@@ -23,7 +23,7 @@ function description(a) {
 }
 
 /** Onglet « Équipe » : couverture de la grille, suggestion, sélection filtrable des Aniimo. */
-export default function EquipeAniimo({ db, equipe, onChange, besoins, onAller, installations = [] }) {
+export default function EquipeAniimo({ db, equipe, onChange, besoins, onAller, installations = [], ezMode = false, level = 1 }) {
   const [recherche, setRecherche] = useState('');
   const [capacite, setCapacite] = useState('');
   const [element, setElement] = useState('');
@@ -36,7 +36,7 @@ export default function EquipeAniimo({ db, equipe, onChange, besoins, onAller, i
 
   const cov = useMemo(() => couverture(equipe, besoins, db), [equipe, besoins, db]);
   const suggestion = useMemo(() => suggererEquipe(equipe, besoins, db), [equipe, besoins, db]);
-  const plan = useMemo(() => planOptimal(installations, db, equipe, NIVEAUX), [installations, db, equipe]);
+  const plan = useMemo(() => planOptimal(installations, db, equipe, NIVEAUX, { ezMode }), [installations, db, equipe, ezMode]);
   const [voirTout, setVoirTout] = useState(false);
   const nbCouverts = cov.filter((b) => b.couvert).length;
 
@@ -99,6 +99,30 @@ export default function EquipeAniimo({ db, equipe, onChange, besoins, onAller, i
           )}
         </p>
       </header>
+
+      {/* Bannière EZ MODE */}
+      {ezMode ? (
+        <div className="p-3 bg-gradient-to-r from-amber-950/70 via-slate-900 to-slate-900 border border-amber-500/60 rounded-xl flex items-center gap-3 shadow-md">
+          <span className="text-2xl select-none">⚡</span>
+          <div className="text-xs sm:text-sm">
+            <span className="font-bold text-amber-300">EZ MODE Actif (Mode Électrique — Débloqué au Niv. 12) :</span>
+            <p className="text-slate-300 mt-0.5">
+              Vos 16 ateliers de fabrication tournent automatiquement <strong className="text-emerald-300">sans Aniimo dédié</strong> à 120 % de vitesse grâce au réseau électrique.
+              Un seul Aniimo Foudre est requis pour le Générateur crépitant.
+            </p>
+          </div>
+        </div>
+      ) : level < 12 ? (
+        <div className="p-3 bg-slate-900/60 border border-slate-700/80 rounded-xl flex items-center gap-3 text-xs text-slate-400">
+          <span className="text-xl opacity-60 select-none">🔒</span>
+          <div>
+            <span className="font-semibold text-slate-300">EZ MODE (Électricité) : Déblocage au Niveau 12</span>
+            <p className="text-slate-400 mt-0.5">
+              Dès le niveau 12 du camping-car, le réseau électrique automatisera vos ateliers sans nécessiter d'Aniimo dédié !
+            </p>
+          </div>
+        </div>
+      ) : null}
 
       {/* ---- Collection : sélection des Aniimo ---- */}
       <div className="space-y-3">
@@ -223,7 +247,10 @@ export default function EquipeAniimo({ db, equipe, onChange, besoins, onAller, i
                   <li key={b.structure} className={`flex items-start gap-2 text-sm rounded-lg px-2.5 py-1.5 border ${b.couvert ? 'border-emerald-700/50 bg-emerald-950/30' : 'border-amber-600/60 bg-amber-950/30'}`}>
                     <span aria-hidden="true">{b.couvert ? '✅' : '⚠️'}</span>
                     <span className="min-w-0">
-                      <span className="font-semibold text-white">{b.structure}</span>
+                      <span className="font-semibold text-white">
+                        {b.electrique && <span className="mr-1 text-amber-400">⚡</span>}
+                        {b.structure}
+                      </span>
                       <span className="text-slate-300"> ×{b.nombre} · {b.roles.map((r) => `${EMOJI_ELEMENT[r] || EMOJI_CAPACITE[r] || ''} ${r}`).join(' / ')}</span>
                       <span className="block text-xs text-slate-300 mt-0.5">
                         {b.couvert ? <Pastilles noms={b.membres} /> : 'Aucun Aniimo de votre équipe'}
@@ -278,6 +305,15 @@ export default function EquipeAniimo({ db, equipe, onChange, besoins, onAller, i
                   <> — soit <strong className="text-emerald-300">+{Math.round(plan.total - plan.naif)}</strong> par rapport à une affectation au premier venu ({Math.round(plan.naif)}).</>
                 )}
               </p>
+              {plan.electriques && plan.electriques.length > 0 && (
+                <div className="p-2.5 bg-amber-950/40 border border-amber-500/50 rounded-lg text-xs flex items-center justify-between text-amber-200">
+                  <span className="flex items-center gap-1.5">
+                    <span>⚡</span>
+                    <span><strong>{plan.electriques.length} atelier{plan.electriques.length > 1 ? 's' : ''} en mode électrique (EZ) :</strong> production autonome sans Aniimo (vitesse ×1,2).</span>
+                  </span>
+                  <span className="font-mono text-emerald-300 font-bold whitespace-nowrap ml-2">+{Math.round(plan.profitElectrique)} pièces/h</span>
+                </div>
+              )}
               <ul className="space-y-1 text-sm">
                 {(voirTout ? plan.affectations : plan.affectations.slice(0, 8)).map((x) => (
                   <li key={x.installation.cle} className="flex items-center gap-2 bg-slate-800/70 rounded px-2 py-1">

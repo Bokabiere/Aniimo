@@ -1,5 +1,6 @@
 // Équipe d'Aniimo : besoins de la grille, couverture par l'équipe, suggestion.
 // Logique pure (sans React), testée par `npm test`.
+import { estStructureElectrique } from './structures.js';
 
 export const EMOJI_ELEMENT = {
   Feu: '🔥', Eau: '🌊', Plante: '🌿', Terre: '🪨', Vent: '💨', Foudre: '⚡', Glace: '❄️', Obscurité: '🌑', Lumière: '✨',
@@ -39,12 +40,35 @@ export function structuresPosees(grid, recettes) {
 /**
  * Compétences requises par la grille. Une entrée par installation connue (rôles = au moins une de ces
  * compétences), plus un besoin global de transport (Porter) dès qu'il y a une installation.
+ * Si ezMode est activé (mode électrique, dès le niveau 12) :
+ * - Les 16 installations compatibles tournent sans Aniimo dédié.
+ * - Le réseau requiert 1 Aniimo Foudre pour le Générateur crépitant.
  */
-export function besoinsGrille(posees, roles) {
-  const besoins = Object.entries(posees)
-    .filter(([structure]) => roles[structure])
-    .map(([structure, nombre]) => ({ structure, nombre, roles: roles[structure].elements }))
-    .sort((a, b) => a.structure.localeCompare(b.structure, 'fr'));
+export function besoinsGrille(posees, roles, options = {}) {
+  const { ezMode = false } = options;
+  let aBesoinGenerateur = false;
+
+  const besoins = [];
+  for (const [structure, nombre] of Object.entries(posees)) {
+    if (!roles[structure]) continue;
+    if (ezMode && estStructureElectrique(structure)) {
+      aBesoinGenerateur = true;
+      continue;
+    }
+    besoins.push({ structure, nombre, roles: roles[structure].elements });
+  }
+
+  besoins.sort((a, b) => a.structure.localeCompare(b.structure, 'fr'));
+
+  if (ezMode && aBesoinGenerateur) {
+    besoins.unshift({
+      structure: 'Générateur crépitant (Réseau électrique)',
+      nombre: 1,
+      roles: ['Foudre'],
+      electrique: true,
+    });
+  }
+
   const total = Object.values(posees).reduce((t, n) => t + n, 0);
   if (total > 0) besoins.push({ structure: 'Transport des récoltes', nombre: total, roles: ['Porter'] });
   return besoins;
