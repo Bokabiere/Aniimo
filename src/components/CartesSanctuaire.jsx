@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PLANS from '../data/sanctuaire_plans.json';
+import { classer, empreinteDepuisSource } from '../lib/reconnaissance-plan.js';
 
 const BASE = (import.meta.env?.BASE_URL || '/').replace(/\/?$/, '/');
 const img = (chemin) => `${BASE}${chemin}`;
@@ -104,6 +105,51 @@ export default function CartesSanctuaire() {
   const plan = ouvert ? PLANS.find((p) => p.id === ouvert) : null;
   const choisirDifficulte = (id) => { setDifficulte(id); setDirection(null); };
 
+  // ----- Identification par capture d'écran -----
+  const [capture, setCapture] = useState(null);
+  const [resultats, setResultats] = useState(null);
+  const [analyse, setAnalyse] = useState(false);
+  const [erreur, setErreur] = useState(null);
+  const [survol, setSurvol] = useState(false);
+  const fichierRef = useRef(null);
+  const referencesRef = useRef(null);
+
+  const references = useCallback(async () => {
+    if (!referencesRef.current) {
+      referencesRef.current = Promise.all(
+        PLANS.map(async (p) => ({ id: p.id, empreinte: await empreinteDepuisSource(img(p.image)) })),
+      );
+    }
+    return referencesRef.current;
+  }, []);
+
+  const analyserFichier = useCallback(async (fichier) => {
+    if (!fichier || !fichier.type?.startsWith('image/')) { setErreur('Ce fichier n\'est pas une image.'); return; }
+    setErreur(null); setAnalyse(true); setResultats(null);
+    const url = URL.createObjectURL(fichier);
+    try {
+      setCapture(url);
+      const [refs, empreinte] = await Promise.all([references(), empreinteDepuisSource(url)]);
+      if (!empreinte) throw new Error('Aucune carte détectée dans cette image.');
+      setResultats(classer(empreinte, refs.filter((r) => r.empreinte)).slice(0, 3));
+    } catch (e) {
+      setErreur(e.message || 'Analyse impossible.');
+    } finally {
+      setAnalyse(false);
+    }
+  }, [references]);
+
+  useEffect(() => {
+    const surColler = (e) => {
+      const f = [...(e.clipboardData?.files || [])].find((x) => x.type.startsWith('image/'));
+      if (f) { e.preventDefault(); analyserFichier(f); }
+    };
+    document.addEventListener('paste', surColler);
+    return () => document.removeEventListener('paste', surColler);
+  }, [analyserFichier]);
+
+  const voirPlan = (p) => { setDifficulte(p.difficulte); setDirection(null); setOuvert(p.id); };
+
   return (
     <section className="bg-slate-800 p-4 sm:p-6 rounded-2xl shadow-lg border border-slate-700">
       <h2 className="text-2xl font-bold mb-1">🧭 Cartes du Sanctuaire perdu</h2>
@@ -111,6 +157,49 @@ export default function CartesSanctuaire() {
         Chasse aux œufs (mode équipe). Ouvrez la carte en jeu : la porte <b className="text-orange-400">orange</b> est l'entrée principale,
         la <b className="text-sky-400">bleue</b> l'entrée secondaire. Choisissez la direction de la porte bleue vue depuis l'orange.
       </p>
+
+      <div
+        className={`mb-5 rounded-xl border-2 border-dashed p-3 transition ${survol ? 'border-amber-400 bg-amber-500/10' : 'border-slate-600 bg-slate-900/60'}`}
+        onDragOver={(e) => { e.preventDefault(); setSurvol(true); }}
+        onDragLeave={() => setSurvol(false)}
+        onDrop={(e) => { e.preventDefault(); setSurvol(false); analyserFichier(e.dataTransfer.files?.[0]); }}
+      >
+        <div className="flex flex-wrap items-center gap-3">
+          <b className="text-sm">📸 Identifier mon plan</b>
+          <span className="text-xs text-slate-400">Collez (Ctrl+V) ou glissez une capture de la carte en jeu, ou</span>
+          <button type="button" onClick={() => fichierRef.current?.click()} className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold">Choisir une image</button>
+          <input ref={fichierRef} type="file" accept="image/*" className="hidden" onChange={(e) => { analyserFichier(e.target.files?.[0]); e.target.value = ''; }} />
+          {capture && <button type="button" onClick={() => { setCapture(null); setResultats(null); setErreur(null); }} className="ml-auto text-xs text-slate-400 hover:text-white underline">Effacer</button>}
+        </div>
+        {analyse && <p className="mt-2 text-xs text-slate-400">Analyse en cours…</p>}
+        {erreur && <p className="mt-2 text-xs text-red-400">{erreur}</p>}
+        {capture && resultats && (
+          <div className="mt-3 flex flex-col sm:flex-row gap-3">
+            <img src={capture} alt="Capture analysée" className="max-h-40 rounded-lg border border-slate-700 object-contain bg-slate-950 self-start" />
+            <div className="flex-1 grid gap-2 grid-cols-1 sm:grid-cols-3">
+              {resultats.map((r, i) => {
+                const p = PLANS.find((x) => x.id === r.id);
+                const pct = Math.round(r.score * 100);
+                const diff = DIFFICULTES.find((d) => d.id === p.difficulte);
+                return (
+                  <button key={r.id} type="button" onClick={() => voirPlan(p)}
+                    className={`text-left rounded-lg border p-2 hover:bg-slate-800 ${i === 0 ? 'border-amber-400 bg-slate-800' : 'border-slate-700 bg-slate-900'}`}>
+                    <Carte plan={p} />
+                    <div className="mt-1 flex items-center justify-between text-sm">
+                      <b>{i === 0 ? '🏆 ' : ''}Plan {p.numero}</b>
+                      <span className={pct >= 70 ? 'text-emerald-400 font-bold' : pct >= 50 ? 'text-amber-300' : 'text-slate-400'}>{pct} %</span>
+                    </div>
+                    <div className="text-[11px] text-slate-400">{diff?.label.replace('💀 ', '')} — porte bleue au {NOM_DIR[p.direction]}</div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+        {resultats && resultats[0].score < 0.5 && (
+          <p className="mt-2 text-xs text-amber-300">Correspondance faible : recadrez la capture sur la carte seule (sans interface) ou utilisez les filtres ci-dessous.</p>
+        )}
+      </div>
 
       <div className="flex flex-wrap gap-2 mb-2" role="group" aria-label="Difficulté">
         {DIFFICULTES.map((d) => (
