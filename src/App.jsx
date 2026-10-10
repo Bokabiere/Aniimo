@@ -18,6 +18,7 @@ import { filtrerRecettes, installations as listerInstallations, profitParHeure }
 import { formatCycle } from './lib/format.js';
 import { prochaineAction } from './lib/recommandation.js';
 import CartesSanctuaire from './components/CartesSanctuaire.jsx';
+import PlanDomaine from './components/PlanDomaine.jsx';
 
 const ONGLETS = [
   { id: 'grille', label: 'Grille', icone: '🗺️' },
@@ -3095,6 +3096,8 @@ function App() {
             
           </div>
         </section>
+
+        <PlanDomaine grid={grid} recettes={recettesDB} taille={GRID_SIZE} />
         </div>
 
         {showRecipeModal && (
