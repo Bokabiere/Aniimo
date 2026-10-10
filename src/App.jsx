@@ -17,6 +17,7 @@ import FiltresRecettes from './components/FiltresRecettes.jsx';
 import { filtrerRecettes, installations as listerInstallations, profitParHeure } from './lib/recettes-liste.js';
 import { formatCycle } from './lib/format.js';
 import { prochaineAction } from './lib/recommandation.js';
+import CartesSanctuaire from './components/CartesSanctuaire.jsx';
 
 const ONGLETS = [
   { id: 'grille', label: 'Grille', icone: '🗺️' },
@@ -25,6 +26,7 @@ const ONGLETS = [
   { id: 'niveaumax', label: 'Niveau max', icone: '⬆️' },
   { id: 'niveaux', label: 'Montée en niveau', icone: '📊' },
   { id: 'graines', label: 'Graines', icone: '🌱' },
+  { id: 'cartes', label: 'Cartes', icone: '🧭' },
 ];
 
 const GRID_SIZE = 10;
@@ -1796,6 +1798,12 @@ function App() {
         <ProchaineAction action={prochaine} onAller={allerA} ongletActif={tab} />
         <OngletsFoyer onglets={ONGLETS} actif={tab} onSelect={allerA} />
         <div id="panneau-principal" className="space-y-4">
+
+        {tab === 'cartes' && (
+          <div role="tabpanel" aria-labelledby="onglet-cartes">
+            <CartesSanctuaire />
+          </div>
+        )}
 
         <div role="tabpanel" aria-labelledby="onglet-grille" className={tab === 'grille' ? '' : 'hidden'}>
         <section className="bg-slate-800 p-6 rounded-2xl shadow-lg border border-slate-700">
