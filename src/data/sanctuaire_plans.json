@@ -2,6 +2,7 @@
   {
     "id": "20032",
     "numero": 32,
+    "difficulte": "cauchemar-chaos",
     "direction": "E",
     "libelle": "porte bleue à l’est",
     "rare": false,
@@ -63,6 +64,7 @@
   {
     "id": "20034",
     "numero": 34,
+    "difficulte": "cauchemar-chaos",
     "direction": "S",
     "libelle": "porte bleue au sud",
     "rare": false,
@@ -119,6 +121,7 @@
   {
     "id": "20035",
     "numero": 35,
+    "difficulte": "cauchemar-chaos",
     "direction": "NE",
     "libelle": "porte bleue au nord-est",
     "rare": false,
@@ -185,6 +188,7 @@
   {
     "id": "20036",
     "numero": 36,
+    "difficulte": "cauchemar-chaos",
     "direction": "W",
     "libelle": "porte bleue à l’ouest",
     "rare": true,
@@ -246,6 +250,7 @@
   {
     "id": "20037",
     "numero": 37,
+    "difficulte": "cauchemar-chaos",
     "direction": "SE",
     "libelle": "porte bleue au sud-est",
     "rare": false,
@@ -312,6 +317,7 @@
   {
     "id": "20039",
     "numero": 39,
+    "difficulte": "cauchemar-chaos",
     "direction": "N",
     "libelle": "porte bleue au nord",
     "rare": false,
@@ -383,6 +389,7 @@
   {
     "id": "20040",
     "numero": 40,
+    "difficulte": "cauchemar-chaos",
     "direction": "W",
     "libelle": "porte bleue à l’ouest",
     "rare": true,
@@ -444,6 +451,7 @@
   {
     "id": "20041",
     "numero": 41,
+    "difficulte": "difficile",
     "direction": "SE",
     "libelle": "porte bleue au sud-est",
     "rare": false,
@@ -500,6 +508,7 @@
   {
     "id": "20042",
     "numero": 42,
+    "difficulte": "difficile",
     "direction": "S",
     "libelle": "porte bleue au sud",
     "rare": false,
@@ -546,6 +555,7 @@
   {
     "id": "20045",
     "numero": 45,
+    "difficulte": "difficile",
     "direction": "N",
     "libelle": "porte bleue au nord",
     "rare": false,
@@ -592,6 +602,7 @@
   {
     "id": "20048",
     "numero": 48,
+    "difficulte": "difficile",
     "direction": "N",
     "libelle": "porte bleue au nord",
     "rare": false,
@@ -648,6 +659,7 @@
   {
     "id": "20049",
     "numero": 49,
+    "difficulte": "difficile",
     "direction": "S",
     "libelle": "porte bleue au sud",
     "rare": false,
@@ -709,6 +721,7 @@
   {
     "id": "20050",
     "numero": 50,
+    "difficulte": "difficile",
     "direction": "W",
     "libelle": "porte bleue à l’ouest",
     "rare": false,
@@ -750,6 +763,7 @@
   {
     "id": "20053",
     "numero": 53,
+    "difficulte": "debutant",
     "direction": "N",
     "libelle": "porte bleue au nord",
     "rare": false,
@@ -796,6 +810,7 @@
   {
     "id": "20054",
     "numero": 54,
+    "difficulte": "debutant",
     "direction": "S",
     "libelle": "porte bleue au sud",
     "rare": false,
@@ -857,6 +872,7 @@
   {
     "id": "20055",
     "numero": 55,
+    "difficulte": "debutant",
     "direction": "SE",
     "libelle": "porte bleue au sud-est",
     "rare": false,
@@ -903,6 +919,7 @@
   {
     "id": "20056",
     "numero": 56,
+    "difficulte": "debutant",
     "direction": "E",
     "libelle": "porte bleue à l’est",
     "rare": false,
@@ -964,6 +981,7 @@
   {
     "id": "20057",
     "numero": 57,
+    "difficulte": "debutant",
     "direction": "S",
     "libelle": "porte bleue au sud",
     "rare": false,
@@ -1010,6 +1028,7 @@
   {
     "id": "20058",
     "numero": 58,
+    "difficulte": "debutant",
     "direction": "E",
     "libelle": "porte bleue à l’est",
     "rare": false,
@@ -1056,6 +1075,7 @@
   {
     "id": "20059",
     "numero": 59,
+    "difficulte": "debutant",
     "direction": "NE",
     "libelle": "porte bleue au nord-est",
     "rare": false,
@@ -1107,6 +1127,7 @@
   {
     "id": "20060",
     "numero": 60,
+    "difficulte": "debutant",
     "direction": "E",
     "libelle": "porte bleue à l’est",
     "rare": false,

@@ -16,6 +16,12 @@ const DIRECTIONS = [
 ];
 const NOM_DIR = Object.fromEntries(DIRECTIONS.map((d) => [d.id, d.label.toLowerCase()]));
 
+const DIFFICULTES = [
+  { id: 'cauchemar-chaos', label: '💀 Cauchemar / Chaos', note: 'Cauchemar et Chaos tirent les mêmes plans ; seuls changent les chances, l\'obscurité, les monstres et le butin.' },
+  { id: 'difficile', label: 'Difficile', note: '6 plans possibles.' },
+  { id: 'debutant', label: 'Débutant', note: '8 plans possibles.' },
+];
+
 const LIBELLE_MARQUE = {
   nest: 'Nid d\'œufs',
   'key-gold': 'Clé dorée',
@@ -83,17 +89,20 @@ function Comptes({ comptes }) {
 
 /** Onglet « Cartes » : plans du Sanctuaire perdu (Chasse aux œufs), filtrables par direction de la porte bleue. */
 export default function CartesSanctuaire() {
+  const [difficulte, setDifficulte] = useState('cauchemar-chaos');
   const [direction, setDirection] = useState(null);
   const [ouvert, setOuvert] = useState(null);
 
-  const presentes = useMemo(() => new Set(PLANS.map((p) => p.direction)), []);
+  const duGroupe = useMemo(() => PLANS.filter((p) => p.difficulte === difficulte), [difficulte]);
+  const presentes = useMemo(() => new Set(duGroupe.map((p) => p.direction)), [duGroupe]);
   const compte = useMemo(() => {
     const c = {};
-    PLANS.forEach((p) => { c[p.direction] = (c[p.direction] || 0) + 1; });
+    duGroupe.forEach((p) => { c[p.direction] = (c[p.direction] || 0) + 1; });
     return c;
-  }, []);
-  const plans = direction ? PLANS.filter((p) => p.direction === direction) : PLANS;
+  }, [duGroupe]);
+  const plans = direction ? duGroupe.filter((p) => p.direction === direction) : duGroupe;
   const plan = ouvert ? PLANS.find((p) => p.id === ouvert) : null;
+  const choisirDifficulte = (id) => { setDifficulte(id); setDirection(null); };
 
   return (
     <section className="bg-slate-800 p-4 sm:p-6 rounded-2xl shadow-lg border border-slate-700">
@@ -102,6 +111,17 @@ export default function CartesSanctuaire() {
         Chasse aux œufs (mode équipe). Ouvrez la carte en jeu : la porte <b className="text-orange-400">orange</b> est l'entrée principale,
         la <b className="text-sky-400">bleue</b> l'entrée secondaire. Choisissez la direction de la porte bleue vue depuis l'orange.
       </p>
+
+      <div className="flex flex-wrap gap-2 mb-2" role="group" aria-label="Difficulté">
+        {DIFFICULTES.map((d) => (
+          <button key={d.id} type="button" aria-pressed={difficulte === d.id} onClick={() => choisirDifficulte(d.id)}
+            className={`px-3.5 py-2 rounded-xl text-sm font-bold border transition ${
+              difficulte === d.id ? 'bg-amber-500 text-slate-900 border-amber-300 shadow-lg' : 'bg-slate-900 border-slate-600 text-slate-300 hover:bg-slate-700'}`}>
+            {d.label} <span className="opacity-70">({PLANS.filter((p) => p.difficulte === d.id).length})</span>
+          </button>
+        ))}
+      </div>
+      <p className="text-xs text-slate-400 mb-4">{DIFFICULTES.find((d) => d.id === difficulte)?.note}</p>
 
       <div className="flex flex-col sm:flex-row gap-4 mb-5 items-start">
         <div className="grid grid-cols-3 gap-1.5" role="group" aria-label="Direction de la porte bleue">

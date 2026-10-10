@@ -28,13 +28,23 @@ def main():
     (DOSSIER_IMG / "maps").mkdir(parents=True, exist_ok=True)
     (DOSSIER_IMG / "marks").mkdir(parents=True, exist_ok=True)
 
+    # Galeries du site : 3 = Débutant, 4 = Difficile, 5 = Cauchemar / Chaos (mêmes 7 plans).
+    galeries = [(g.start(), g.group(1)) for g in re.finditer(r'data-gallery="(\d+)"', html)]
+    DIFFICULTE = {"3": "debutant", "4": "difficile", "5": "cauchemar-chaos"}
+
     plans = {}
+    pos = 0
     for bloc in re.split(r'<button type="button" class="ls-card"', html)[1:]:
+        pos = html.index(bloc[:200], pos)
         bloc = bloc.split("</button>")[0]
         m = re.match(r'\s*data-plan="(\d+)" data-dir="(\w+)"', bloc)
         if not m or m.group(1) in plans:
             continue
         pid, direction = m.group(1), m.group(2)
+        galerie = [g for p, g in galeries if p < pos]
+        difficulte = DIFFICULTE.get(galerie[-1]) if galerie else None
+        if difficulte is None:
+            continue
         numero = re.search(r"<b>Plan (\d+)</b>", bloc).group(1)
         libelle = re.search(r'ls-card__dir">([^<]*)<', bloc).group(1)
         rare = "plus rare" in bloc.lower() or "ls-card__rare" in bloc
@@ -59,6 +69,7 @@ def main():
         plans[pid] = {
             "id": pid,
             "numero": int(numero),
+            "difficulte": difficulte,
             "direction": direction,
             "libelle": libelle,
             "rare": bool(rare),
