@@ -6,7 +6,7 @@ import { classerParSalle, classerParCarte, vecteurPlan, libelleSorties } from '.
 import { preparerRef, positionDepuisCarte, RAYON_DISQUE } from '../lib/localisation.js';
 import { creerHypotheses, actualiserHypotheses, classerHypotheses, decision, elaguer } from '../lib/suivi.js';
 
-const INTERVALLE_AUTO_MS = 2000;
+const INTERVALLE_AUTO_MS = 350;
 const CLE_ZONE = 'aniimo_zone_minimap_v1';
 // Minimap du jeu : en haut à gauche de l'écran (fractions de l'image partagée), sauf zone dessinée par l'utilisateur.
 const ZONE_PAR_DEFAUT = { x: 0, y: 0, w: 0.25, h: 0.35 };
@@ -325,7 +325,14 @@ export default function CartesSanctuaire() {
     setResultats(null); setPlanDetecte(null); setSalle(null);
     setPhaseAuto(1); setPosition(null);
     const s = sessionRef.current;
-    if (s) { s.histo1 = []; s.histo2 = []; s.verrou = null; s.dernierStable = null; s.centre = null; s.tailleMM = null; s.hyps = null; s.courant = null; }
+    if (s) { s.histo1 = []; s.histo2 = []; s.verrou = null; s.dernierStable = null; s.centre = null; s.tailleMM = null; s.hyps = null; s.courant = null; s.force = null; }
+  };
+  const confirmerPlan = (id) => {
+    const s = sessionRef.current;
+    if (s) { s.force = id; const gardees = s.hyps ? s.hyps.filter((h) => h.id === id) : []; s.hyps = gardees.length ? gardees : null; }
+    setPlanDetecte(id);
+    const p = PLANS.find((x) => x.id === id);
+    if (p) voirPlan(p);
   };
   const choisirDiffReco = (id) => { diffRecoRef.current = id; setDiffReco(id); reinitialiserAuto(); };
   const choisirSource = (mode) => { modeRef.current = mode; setModeSource(mode); reinitialiserAuto(); };
@@ -339,7 +346,7 @@ export default function CartesSanctuaire() {
     const s = sessionRef.current;
     sessionRef.current = null;
     if (s) {
-      clearInterval(s.minuteur);
+      clearTimeout(s.minuteur);
       s.flux.getTracks().forEach((t) => t.stop());
       s.video.srcObject = null;
     }
@@ -360,7 +367,7 @@ export default function CartesSanctuaire() {
     video.muted = true;
     video.srcObject = flux;
     try { await video.play(); } catch { /* lecture auto bloquée : l'analyse attendra les images */ }
-    const session = { flux, video, minuteur: null, histo1: [], histo2: [], verrou: null, occupe: false, dernierStable: null, centre: null, tailleMM: null, hyps: null, courant: null };
+    const session = { flux, video, minuteur: null, histo1: [], histo2: [], verrou: null, occupe: false, dernierStable: null, centre: null, tailleMM: null, hyps: null, courant: null, force: null };
     sessionRef.current = session;
     flux.getVideoTracks()[0]?.addEventListener('ended', arreterAuto);
     setAuto(true); setPhaseAuto(1); setPlanDetecte(null); setResultats(null); setSalle(null); setPosition(null);
@@ -394,7 +401,7 @@ export default function CartesSanctuaire() {
           if (mm && mm.centre) { session.centre = { x: mm.centre.x / mm.w, y: mm.centre.y / mm.h }; session.tailleMM = 2 * mm.signature.demi + 1; }
           session.histo1.push(signature ? { id: signature.sorties || '-', score: 1 } : null);
           if (session.histo1.length > 20) session.histo1.shift();
-          const stable1 = planStable(session.histo1);
+          const stable1 = planStable(session.histo1, { fenetre: 4, minVotes: 2 });
           if (stable1) { session.verrou = stable1 === '-' ? '' : stable1; setPhaseAuto(2); }
         }
         // Phase 2 : suivi continu. La salle verrouillée reste le repère de départ ; la minimap et la carte sont lues à chaque image.
@@ -407,8 +414,8 @@ export default function CartesSanctuaire() {
           if (!session.hyps) session.hyps = creerHypotheses(candidats(refs));
           const centrePx = { x: session.centre.x * mm.w, y: session.centre.y * mm.h };
           actualiserHypotheses(session.hyps, refs, mm, centrePx, session.tailleMM);
-          session.hyps = elaguer(session.hyps);
-          session.courant = decision(session.hyps, { courant: session.courant });
+          session.hyps = elaguer(session.hyps, { ecart: 0.15, minTicks: 4, garder: 2 });
+          session.courant = decision(session.hyps, { courant: session.courant, marge: 0.04, minTicks: 3 });
           if (!carte) {
             const classees = classerHypotheses(session.hyps);
             resultat = { liste: classees.map((h) => ({ id: h.id, score: h.score })), exacts: resultat.exacts };
@@ -423,7 +430,7 @@ export default function CartesSanctuaire() {
         const tete = resultat.liste[0];
         const parCarte = carte && tete && tete.score >= 0.6 ? tete.id : null;
         const parSalle = !suiviPossible && !carte && resultat.exacts && resultat.exacts.length === 1 ? resultat.exacts[0] : null;
-        const decide = parCarte || session.courant || parSalle || null;
+        const decide = session.force || parCarte || session.courant || parSalle || null;
         setPlanDetecte(decide);
         if (decide && decide !== session.dernierStable) {
           session.dernierStable = decide;
@@ -468,8 +475,11 @@ export default function CartesSanctuaire() {
         session.occupe = false;
       }
     };
-    session.minuteur = setInterval(tick, INTERVALLE_AUTO_MS);
-    tick();
+    const boucle = async () => {
+      await tick();
+      if (sessionRef.current === session) session.minuteur = setTimeout(boucle, INTERVALLE_AUTO_MS);
+    };
+    boucle();
   }, [arreterAuto, references, classerAuto, afficher]);
 
   useEffect(() => arreterAuto, [arreterAuto]);
@@ -582,12 +592,13 @@ export default function CartesSanctuaire() {
           <div className="mt-3 flex flex-col sm:flex-row gap-3">
             <img src={capture} alt="Capture analysée" className="max-h-40 rounded-lg border border-slate-700 object-contain bg-slate-950 self-start" />
             <div className="flex-1 grid gap-2 grid-cols-1 sm:grid-cols-3">
+              {auto && <p className="sm:col-span-3 text-xs text-slate-400">Cliquez sur votre plan dès que vous le reconnaissez : il est alors verrouillé et votre position est suivie dessus.</p>}
               {resultats.map((r, i) => {
                 const p = PLANS.find((x) => x.id === r.id);
                 const pct = Math.round(r.score * 100);
                 const diff = DIFFICULTES.find((d) => d.id === p.difficulte);
                 return (
-                  <button key={r.id} type="button" onClick={() => voirPlan(p)}
+                  <button key={r.id} type="button" onClick={() => (auto ? confirmerPlan(r.id) : voirPlan(p))}
                     className={`text-left rounded-lg border p-2 hover:bg-slate-800 ${i === 0 ? 'border-amber-400 bg-slate-800' : 'border-slate-700 bg-slate-900'}`}>
                     <Carte plan={p} />
                     <div className="mt-1 flex items-center justify-between text-sm">
