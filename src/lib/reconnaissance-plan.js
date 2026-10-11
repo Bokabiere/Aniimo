@@ -84,9 +84,11 @@ export function classer(empreinte, references) {
 // ---------- Partie navigateur (canvas) ----------
 
 function rgbaDepuisImage(image, tailleMax = 640) {
-  const echelle = Math.min(1, tailleMax / Math.max(image.naturalWidth || image.width, image.naturalHeight || image.height));
-  const w = Math.max(1, Math.round((image.naturalWidth || image.width) * echelle));
-  const h = Math.max(1, Math.round((image.naturalHeight || image.height) * echelle));
+  const largeur = image.naturalWidth || image.videoWidth || image.width;
+  const hauteur = image.naturalHeight || image.videoHeight || image.height;
+  const echelle = Math.min(1, tailleMax / Math.max(largeur, hauteur));
+  const w = Math.max(1, Math.round(largeur * echelle));
+  const h = Math.max(1, Math.round(hauteur * echelle));
   const canvas = document.createElement('canvas');
   canvas.width = w; canvas.height = h;
   const ctx = canvas.getContext('2d', { willReadFrequently: true });
@@ -107,4 +109,28 @@ export async function empreinteDepuisSource(src, options) {
   const image = await chargerImage(src);
   const { rgba, w, h } = rgbaDepuisImage(image);
   return empreinteDepuisRGBA(rgba, w, h, options);
+}
+
+/** Empreinte de l'image courante d'un <video> (partage d'écran) ; null si la vidéo n'est pas prête ou sans carte. */
+export function empreinteDepuisVideo(video, options) {
+  if (!video || !video.videoWidth || !video.videoHeight) return null;
+  const { rgba, w, h } = rgbaDepuisImage(video);
+  return empreinteDepuisRGBA(rgba, w, h, options);
+}
+
+/**
+ * Plan « stable » pour la capture automatique : un plan est retenu s'il arrive en tête, avec un score
+ * ≥ `seuil`, dans au moins `minVotes` des `fenetre` dernières analyses. Évite le clignotement entre plans proches.
+ * `historique` : [{ id, score } | null] (null = aucune carte détectée sur cette image).
+ */
+export function planStable(historique, { fenetre = 5, minVotes = 3, seuil = 0.5 } = {}) {
+  const votes = {};
+  for (const h of historique.slice(-fenetre)) {
+    if (h && h.score >= seuil) votes[h.id] = (votes[h.id] || 0) + 1;
+  }
+  let meilleur = null;
+  for (const [id, n] of Object.entries(votes)) {
+    if (n >= minVotes && (!meilleur || n > meilleur.n)) meilleur = { id, n };
+  }
+  return meilleur ? meilleur.id : null;
 }

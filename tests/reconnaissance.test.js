@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { empreinteDepuisRGBA, similarite, classer } from '../src/lib/reconnaissance-plan.js';
+import { empreinteDepuisRGBA, similarite, classer, planStable } from '../src/lib/reconnaissance-plan.js';
 
 /** Image synthétique : fond sombre + rectangles clairs. */
 function image(w, h, rects, fond = 20, clair = 220) {
@@ -50,4 +50,20 @@ test('similarité : proportions très différentes → score pénalisé', () => 
   const a = emp(image(100, 100, [[10, 10, 90, 90]]));
   const b = emp(image(100, 100, [[10, 40, 90, 60]]));
   assert.ok(similarite(a, b) < 0.5);
+});
+
+test('planStable : exige un nombre de votes suffisant avec un bon score', () => {
+  const h = (id, score) => ({ id, score });
+  assert.equal(planStable([h('a', 0.8), h('a', 0.7)]), null);
+  assert.equal(planStable([h('a', 0.8), h('a', 0.7), h('a', 0.9)]), 'a');
+  assert.equal(planStable([h('a', 0.4), h('a', 0.4), h('a', 0.4)]), null);
+  assert.equal(planStable([h('a', 0.8), null, h('a', 0.7), h('b', 0.9), h('a', 0.6)]), 'a');
+});
+
+test('planStable : seules les dernières analyses comptent', () => {
+  const h = (id, score) => ({ id, score });
+  const ancien = Array.from({ length: 5 }, () => h('a', 0.9));
+  const recent = Array.from({ length: 5 }, () => h('b', 0.9));
+  assert.equal(planStable([...ancien, ...recent]), 'b');
+  assert.equal(planStable([]), null);
 });

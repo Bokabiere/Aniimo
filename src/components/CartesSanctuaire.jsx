@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PLANS from '../data/sanctuaire_plans.json';
-import { classer, empreinteDepuisSource } from '../lib/reconnaissance-plan.js';
+import { classer, empreinteDepuisSource, empreinteDepuisVideo, planStable } from '../lib/reconnaissance-plan.js';
+
+const INTERVALLE_AUTO_MS = 2000;
+const PARTAGE_ECRAN_DISPONIBLE = typeof navigator !== 'undefined' && !!navigator.mediaDevices?.getDisplayMedia;
 
 const BASE = (import.meta.env?.BASE_URL || '/').replace(/\/?$/, '/');
 const img = (chemin) => `${BASE}${chemin}`;
@@ -150,6 +153,76 @@ export default function CartesSanctuaire() {
 
   const voirPlan = (p) => { setDifficulte(p.difficulte); setDirection(null); setOuvert(p.id); };
 
+  // ----- Capture automatique (partage d'écran) -----
+  const [auto, setAuto] = useState(false);
+  const [planDetecte, setPlanDetecte] = useState(null);
+  const sessionRef = useRef(null); // { flux, video, minuteur, historique, occupe, dernierStable }
+
+  const arreterAuto = useCallback(() => {
+    const s = sessionRef.current;
+    sessionRef.current = null;
+    if (s) {
+      clearInterval(s.minuteur);
+      s.flux.getTracks().forEach((t) => t.stop());
+      s.video.srcObject = null;
+    }
+    setAuto(false);
+  }, []);
+
+  const lancerAuto = useCallback(async () => {
+    if (sessionRef.current) return;
+    setErreur(null);
+    let flux;
+    try {
+      flux = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 5 }, audio: false });
+    } catch {
+      setErreur('Partage d\'écran refusé ou annulé.');
+      return;
+    }
+    const video = document.createElement('video');
+    video.muted = true;
+    video.srcObject = flux;
+    try { await video.play(); } catch { /* lecture auto bloquée : l'analyse attendra les images */ }
+    const session = { flux, video, minuteur: null, historique: [], occupe: false, dernierStable: null };
+    sessionRef.current = session;
+    flux.getVideoTracks()[0]?.addEventListener('ended', arreterAuto);
+    setAuto(true); setPlanDetecte(null); setResultats(null);
+
+    const tick = async () => {
+      if (session.occupe || sessionRef.current !== session) return;
+      session.occupe = true;
+      try {
+        const [refs, empreinte] = await Promise.all([references(), Promise.resolve(empreinteDepuisVideo(video))]);
+        if (sessionRef.current !== session) return;
+        const top = empreinte ? classer(empreinte, refs.filter((r) => r.empreinte)).slice(0, 3) : null;
+        session.historique.push(top ? top[0] : null);
+        if (session.historique.length > 20) session.historique.shift();
+        if (top) {
+          const apercu = document.createElement('canvas');
+          apercu.width = 320; apercu.height = Math.round((320 * video.videoHeight) / video.videoWidth) || 180;
+          apercu.getContext('2d').drawImage(video, 0, 0, apercu.width, apercu.height);
+          setCapture(apercu.toDataURL('image/jpeg', 0.6));
+          setResultats(top);
+        }
+        const stable = planStable(session.historique);
+        setPlanDetecte(stable);
+        if (stable && stable !== session.dernierStable) {
+          session.dernierStable = stable;
+          const p = PLANS.find((x) => x.id === stable);
+          if (p) voirPlan(p);
+        }
+      } catch (e) {
+        setErreur(e.message || 'Analyse impossible.');
+      } finally {
+        session.occupe = false;
+      }
+    };
+    session.minuteur = setInterval(tick, INTERVALLE_AUTO_MS);
+    tick();
+  }, [arreterAuto, references]);
+
+  useEffect(() => arreterAuto, [arreterAuto]);
+
   return (
     <section className="bg-slate-800 p-4 sm:p-6 rounded-2xl shadow-lg border border-slate-700">
       <h2 className="text-2xl font-bold mb-1">🧭 Cartes du Sanctuaire perdu</h2>
@@ -169,8 +242,23 @@ export default function CartesSanctuaire() {
           <span className="text-xs text-slate-400">Collez (Ctrl+V) ou glissez une capture de la carte en jeu, ou</span>
           <button type="button" onClick={() => fichierRef.current?.click()} className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold">Choisir une image</button>
           <input ref={fichierRef} type="file" accept="image/*" className="hidden" onChange={(e) => { analyserFichier(e.target.files?.[0]); e.target.value = ''; }} />
-          {capture && <button type="button" onClick={() => { setCapture(null); setResultats(null); setErreur(null); }} className="ml-auto text-xs text-slate-400 hover:text-white underline">Effacer</button>}
+          {PARTAGE_ECRAN_DISPONIBLE && (
+            <button type="button" onClick={auto ? arreterAuto : lancerAuto}
+              className={`px-3 py-1.5 rounded-lg text-sm font-semibold ${auto ? 'bg-red-600 hover:bg-red-500' : 'bg-emerald-600 hover:bg-emerald-500'}`}
+              title="Partagez la fenêtre du jeu : le plan est identifié automatiquement, en local (rien n'est envoyé).">
+              {auto ? '⏹ Arrêter la capture auto' : '🎥 Capture automatique'}
+            </button>
+          )}
+          {capture && <button type="button" onClick={() => { setCapture(null); setResultats(null); setErreur(null); setPlanDetecte(null); }} className="ml-auto text-xs text-slate-400 hover:text-white underline">Effacer</button>}
         </div>
+        {auto && (
+          <p className="mt-2 text-xs text-emerald-300" role="status">
+            🔴 Capture en cours (une analyse toutes les {INTERVALLE_AUTO_MS / 1000} s).{' '}
+            {planDetecte
+              ? `Plan ${PLANS.find((x) => x.id === planDetecte)?.numero} détecté.`
+              : 'Ouvrez la carte du Sanctuaire en jeu : aucun plan stable pour l\'instant.'}
+          </p>
+        )}
         {analyse && <p className="mt-2 text-xs text-slate-400">Analyse en cours…</p>}
         {erreur && <p className="mt-2 text-xs text-red-400">{erreur}</p>}
         {capture && resultats && (
