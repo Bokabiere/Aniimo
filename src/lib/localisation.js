@@ -20,13 +20,14 @@ export function preparerRef(masque, w, h, marge) {
 
 /**
  * Échantillons du disque de la minimap : pour chaque (dx, dy) du disque (en pixels de la miniature), la valeur du masque de
- * la minimap autour du joueur. `echelle` = pixels miniature par pixel minimap ; `rayon` en pixels miniature.
+ * la minimap autour du joueur. `echelle` = pixels miniature par pixel minimap ; `rayon` en pixels miniature ;
+ * `pas` > 1 sous-échantillonne le disque (calcul plus rapide).
  */
-export function echantillonnerMinimap(plein, w, h, centre, echelle, rayon) {
+export function echantillonnerMinimap(plein, w, h, centre, echelle, rayon, pas = 1) {
   const r = Math.max(2, Math.round(rayon));
   const dx = [], dy = [], m = [];
-  for (let y = -r; y <= r; y++) {
-    for (let x = -r; x <= r; x++) {
+  for (let y = -r; y <= r; y += pas) {
+    for (let x = -r; x <= r; x += pas) {
       if (x * x + y * y > r * r) continue;
       const sx = Math.round(centre.x + x / echelle), sy = Math.round(centre.y + y / echelle);
       dx.push(x); dy.push(y);
@@ -38,10 +39,11 @@ export function echantillonnerMinimap(plein, w, h, centre, echelle, rayon) {
 
 /**
  * Cherche la position (x, y en pixels de la miniature) qui maximise la corrélation avec le disque échantillonné.
- * `autour` {x, y} + `rayon` : fenêtre de recherche (suivi) ; sans eux, tout le plan (pas de 2 puis affinage).
+ * `autour` {x, y} + `rayon` : fenêtre de recherche (suivi) ; sans eux, tout le plan. `pas` : 1 = exhaustif ;
+ * par défaut 1 pour un suivi et 2 (puis affinage) pour tout le plan.
  * Renvoie { x, y, corr } ou null (disque vide / uniforme). `ref.marge` doit être ≥ au rayon du disque + 1.
  */
-export function localiser(ech, ref, { autour = null, rayon = 0 } = {}) {
+export function localiser(ech, ref, { autour = null, rayon = 0, pas: pasDemande = 0 } = {}) {
   const n = ech.m.length;
   let sm = 0;
   for (let k = 0; k < n; k++) sm += ech.m[k];
@@ -72,7 +74,7 @@ export function localiser(ech, ref, { autour = null, rayon = 0 } = {}) {
     ? [Math.max(0, Math.round(autour.x - rayon)), Math.min(w - 1, Math.round(autour.x + rayon)),
        Math.max(0, Math.round(autour.y - rayon)), Math.min(h - 1, Math.round(autour.y + rayon))]
     : [0, w - 1, 0, h - 1];
-  const pas = autour ? 1 : 2;
+  const pas = pasDemande || (autour ? 1 : 2); // pas > 1 : recherche grossière puis affinage
   for (let cy = bornes[2]; cy <= bornes[3]; cy += pas) for (let cx = bornes[0]; cx <= bornes[1]; cx += pas) essayer(cx, cy);
   if (pas > 1) {
     const { x, y } = meilleur;
