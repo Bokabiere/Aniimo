@@ -66,9 +66,13 @@ export function localiser(ech, ref, { autour = null, rayon = 0, pas: pasDemande 
   };
 
   const meilleur = { x: 0, y: 0, corr: -2 };
+  let meilleurAjuste = -Infinity;
   const essayer = (cx, cy) => {
     const c = score(cx, cy);
-    if (c > meilleur.corr) { meilleur.x = cx; meilleur.y = cy; meilleur.corr = c; }
+    // En suivi, à corrélation quasi égale (couloir rectiligne : position ambiguë le long de l'axe) on préfère la position la plus proche
+    // de la précédente : pénalité très faible par pixel d'écart.
+    const aj = autour ? c - 0.0004 * Math.hypot(cx - autour.x, cy - autour.y) : c;
+    if (aj > meilleurAjuste) { meilleurAjuste = aj; meilleur.x = cx; meilleur.y = cy; meilleur.corr = c; }
   };
   const bornes = autour
     ? [Math.max(0, Math.round(autour.x - rayon)), Math.min(w - 1, Math.round(autour.x + rayon)),
@@ -80,7 +84,13 @@ export function localiser(ech, ref, { autour = null, rayon = 0, pas: pasDemande 
     const { x, y } = meilleur;
     for (let cy = Math.max(0, y - pas); cy <= Math.min(h - 1, y + pas); cy++) for (let cx = Math.max(0, x - pas); cx <= Math.min(w - 1, x + pas); cx++) essayer(cx, cy);
   }
-  return meilleur.corr > -2 ? meilleur : null;
+  if (meilleur.corr <= -2) return null;
+  // Affinage sous-pixel : parabole passant par le pic et ses voisins (axe par axe).
+  const { x, y, corr } = meilleur;
+  const sous = (m, c, p) => { const d = m - 2 * c + p; return d < -1e-9 ? Math.max(-0.5, Math.min(0.5, (0.5 * (m - p)) / d)) : 0; };
+  const fx = x > 0 && x < w - 1 ? x + sous(score(x - 1, y), corr, score(x + 1, y)) : x;
+  const fy = y > 0 && y < h - 1 ? y + sous(score(x, y - 1), corr, score(x, y + 1)) : y;
+  return { x, y, fx, fy, corr };
 }
 
 /**
@@ -90,4 +100,24 @@ export function localiser(ech, ref, { autour = null, rayon = 0, pas: pasDemande 
 export function positionDepuisCarte(obs, ref) {
   if (!obs || !obs.joueur || !ref || !ref.porteOrange || !ref.taille) return null;
   return { x: ref.porteOrange.x + obs.joueur.x * ref.taille, y: ref.porteOrange.y + obs.joueur.y * ref.taille };
+}
+
+/**
+ * Recalage sur un repère : une icône de porte vue sur la minimap (orange = porte principale, bleue = porte secondaire) donne la
+ * position du joueur sans ambiguïté : position = porte du plan − (icône − joueur) × échelle.
+ * `portes` { orange, bleu } et `centre` en pixels de la minimap ; `echelle` = pixels miniature par pixel minimap ;
+ * `pins` { main, side } en pixels de la miniature ; `pos` = position suivie. Une mesure à plus de `rayonMax` de `pos` est une
+ * fausse détection (décor, interface) et est ignorée. Renvoie { x, y, n } (moyenne des repères cohérents) ou null.
+ */
+export function recalageRepere({ portes, centre, echelle, pins, pos, rayonMax }) {
+  if (!portes || !centre || !pins || !pos || !echelle) return null;
+  const mesures = [];
+  for (const [blob, pin] of [[portes.orange, pins.main], [portes.bleu, pins.side]]) {
+    if (!blob || !pin) continue;
+    const x = pin.x - (blob.x - centre.x) * echelle;
+    const y = pin.y - (blob.y - centre.y) * echelle;
+    if (Math.hypot(x - pos.x, y - pos.y) <= rayonMax) mesures.push({ x, y });
+  }
+  if (!mesures.length) return null;
+  return { x: mesures.reduce((a, m) => a + m.x, 0) / mesures.length, y: mesures.reduce((a, m) => a + m.y, 0) / mesures.length, n: mesures.length };
 }

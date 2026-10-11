@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { preparerRef, RAYON_DISQUE } from '../src/lib/localisation.js';
-import { creerHypotheses, actualiserHypotheses, classerHypotheses, decision, elaguer } from '../src/lib/suivi.js';
+import { creerHypotheses, actualiserHypotheses, classerHypotheses, decision, elaguer, calibrerEchelle } from '../src/lib/suivi.js';
 
 const TAILLE = 30;
 
@@ -78,4 +78,37 @@ test('elaguer : écarte les hypothèses décrochées mais garde un minimum', () 
   assert.equal(elaguer(hyps, { garder: 1, ecart: 0.1 }).length, 1);
   const jeunes = hyps.map((h) => ({ ...h, ticks: 2 }));
   assert.equal(elaguer(jeunes).length, 5); // trop tôt pour écarter
+});
+
+test('suivi : précision de la position malgré une échelle de minimap mal estimée (+6 %)', () => {
+  const vrai = plan(false);
+  const refs = [reference('vrai', vrai)];
+  const hyps = creerHypotheses(refs);
+  const erreurs = [];
+  for (const [x, y] of TRAJET) {
+    actualiserHypotheses(hyps, refs, minimap(vrai, x, y), { x: 120, y: 120 }, TAILLE * 3 * 1.06);
+    erreurs.push(Math.hypot(hyps[0].pos.x - x, hyps[0].pos.y - y));
+  }
+  erreurs.sort((a, b) => a - b);
+  // Dans un couloir rectiligne la position reste ambiguë le long de l'axe (rien à recaler) : on tolère quelques écarts isolés.
+  assert.ok(erreurs[Math.floor(erreurs.length / 2)] <= 1, `médiane ${erreurs[Math.floor(erreurs.length / 2)]}`);
+  assert.ok(erreurs[erreurs.length - 1] <= 8, `max ${erreurs[erreurs.length - 1]}`);
+  assert.ok(Math.abs(hyps[0].facteur - 1.06) < 0.05, `facteur ${hyps[0].facteur}`);
+});
+
+test('calibrerEchelle : retrouve la taille de la salle de départ dans la minimap à partir d\'une position connue', () => {
+  const vrai = plan(false);
+  const r = reference('vrai', vrai);
+  const res = calibrerEchelle({ pos: { x: 96, y: 112 } }, r, minimap(vrai, 96, 112), { x: 120, y: 120 });
+  assert.ok(res, 'aucune échelle trouvée');
+  assert.ok(Math.abs(res.taille - TAILLE * 3) / (TAILLE * 3) < 0.08, `taille ${res.taille}`);
+});
+
+test('suivi : perdu, le plan validé est retrouvé sur tout le plan (globalPour)', () => {
+  const vrai = plan(false);
+  const refs = [reference('vrai', vrai)];
+  const hyps = [{ id: 'vrai', pos: { x: 25, y: 115 }, score: 0.8, corr: 0, ticks: 10, perdus: 5 }];
+  actualiserHypotheses(hyps, refs, minimap(vrai, 150, 40), { x: 120, y: 120 }, TAILLE * 3, { globalPour: 'vrai' });
+  assert.ok(Math.hypot(hyps[0].pos.x - 150, hyps[0].pos.y - 40) <= 3, JSON.stringify(hyps[0].pos));
+  assert.equal(hyps[0].perdus, 0);
 });

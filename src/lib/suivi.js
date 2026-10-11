@@ -25,14 +25,33 @@ export function creerHypotheses(refs) {
  * `mm` = { plein, w, h }, `centre` = joueur (px minimap), `tailleMM` = taille de la salle de départ dans la minimap (px).
  * Modifie et renvoie `hyps`.
  */
-export function actualiserHypotheses(hyps, refs, mm, centre, tailleMM, { pas = 2 } = {}) {
+export function actualiserHypotheses(hyps, refs, mm, centre, tailleMM, { pas = 2, globalPour = null } = {}) {
   const parId = new Map(refs.map((r) => [r.id, r]));
   for (const h of hyps) {
     const r = parId.get(h.id);
-    const ech = echantillonnerMinimap(mm.plein, mm.w, mm.h, centre, r.taille / tailleMM, RAYON_DISQUE * r.taille, pas);
-    const res = localiser(ech, r.refPad, { autour: h.pos, rayon: RAYON_SUIVI * r.taille, pas: 2 });
+    const f = h.facteur || 1;
+    const ech = echantillonnerMinimap(mm.plein, mm.w, mm.h, centre, (f * r.taille) / tailleMM, RAYON_DISQUE * r.taille, pas);
+    // Plan validé par le joueur et suivi perdu depuis quelques mesures : on cherche sur tout le plan (exigence de corrélation plus forte).
+    const reperdu = h.id === globalPour && h.perdus >= 4;
+    let res = reperdu
+      ? localiser(ech, r.refPad, { pas: 2 })
+      : localiser(ech, r.refPad, { autour: h.pos, rayon: RAYON_SUIVI * r.taille, pas: 2 });
+    if (reperdu && res && res.corr < 0.7) res = null;
+    if (res && res.corr >= CORR_MIN) {
+      // Précision : l'échelle de la minimap n'est connue qu'à ±1 px près. On l'affine (±6 %) et on resserre le disque (pas 1).
+      let meilleurF = f;
+      let meilleur = localiser(echantillonnerMinimap(mm.plein, mm.w, mm.h, centre, (f * r.taille) / tailleMM, RAYON_DISQUE * r.taille, 1), r.refPad, { autour: { x: res.x, y: res.y }, rayon: 3, pas: 1 }) || res;
+      for (const g of [0.94, 0.97, 1.03, 1.06]) {
+        const f2 = f * g;
+        const e2 = echantillonnerMinimap(mm.plein, mm.w, mm.h, centre, (f2 * r.taille) / tailleMM, RAYON_DISQUE * r.taille, 1);
+        const r2 = localiser(e2, r.refPad, { autour: { x: res.x, y: res.y }, rayon: 3, pas: 1 });
+        if (r2 && r2.corr > meilleur.corr + 0.003) { meilleur = r2; meilleurF = f2; }
+      }
+      h.facteur = Math.max(0.8, Math.min(1.25, 0.4 * f + 0.6 * meilleurF));
+      res = meilleur;
+    }
     const corr = res ? Math.max(0, res.corr) : 0;
-    if (res && res.corr >= CORR_MIN) { h.pos = { x: res.x, y: res.y }; h.perdus = 0; } else h.perdus++;
+    if (res && res.corr >= CORR_MIN) { h.pos = { x: res.fx ?? res.x, y: res.fy ?? res.y }; h.perdus = 0; } else h.perdus++;
     h.corr = corr;
     h.score = h.ticks === 0 ? corr : (1 - ALPHA) * h.score + ALPHA * corr;
     h.ticks++;
@@ -69,4 +88,24 @@ export function decision(hyps, { marge = 0.05, minTicks = 4, courant = null } = 
   }
   if (c.length === 1) return c[0].id;
   return c[0].score - c[1].score >= marge ? c[0].id : null;
+}
+
+/**
+ * Échelle de la minimap inconnue (suivi lancé en cours de partie, position donnée par le joueur) : on essaie plusieurs tailles de
+ * salle de départ (en pixels de minimap) autour de la position connue `h.pos` et on garde la meilleure corrélation.
+ * Renvoie { taille, corr } ou null si rien de convaincant (corr < 0,6).
+ */
+export function calibrerEchelle(h, r, mm, centre, { de = 20, a = 170 } = {}) {
+  const essais = [];
+  for (let t = de; t <= a; t *= 1.05) {
+    const ech = echantillonnerMinimap(mm.plein, mm.w, mm.h, centre, r.taille / t, RAYON_DISQUE * r.taille, 2);
+    const res = localiser(ech, r.refPad, { autour: h.pos, rayon: 4, pas: 1 });
+    if (res) essais.push({ taille: t, corr: res.corr });
+  }
+  if (!essais.length) return null;
+  const max = Math.max(...essais.map((e) => e.corr));
+  if (max < 0.6) return null;
+  // Plateau de corrélation (des masques binaires donnent plusieurs échelles quasi équivalentes) : on prend le milieu.
+  const plateau = essais.filter((e) => e.corr >= max - 0.01);
+  return { taille: plateau[Math.floor((plateau.length - 1) / 2)].taille, corr: max };
 }

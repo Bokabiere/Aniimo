@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { preparerRef, echantillonnerMinimap, localiser, positionDepuisCarte, RAYON_DISQUE } from '../src/lib/localisation.js';
+import { preparerRef, echantillonnerMinimap, localiser, positionDepuisCarte, recalageRepere, RAYON_DISQUE } from '../src/lib/localisation.js';
 
 /** Plan synthétique 200×140 : trois salles reliées par des couloirs, dessin asymétrique. */
 function plan() {
@@ -64,4 +64,15 @@ test('positionDepuisCarte : porte orange + vecteur × taille de salle', () => {
   assert.deepEqual(positionDepuisCarte({ joueur: { x: 0.5, y: -2 } }, ref), { x: 120, y: 120 });
   assert.equal(positionDepuisCarte({ joueur: null }, ref), null);
   assert.equal(positionDepuisCarte(null, ref), null);
+});
+
+test('recalageRepere : la porte vue sur la minimap donne la position, une fausse détection lointaine est ignorée', () => {
+  const pins = { main: { x: 40, y: 40 }, side: { x: 300, y: 200 } };
+  // joueur réel en (60, 50) : la porte orange (40,40) est à (-20,-10) px miniature = (-10,-5) px minimap (échelle 2)
+  const r = recalageRepere({ portes: { orange: { x: 90, y: 95 }, bleu: null }, centre: { x: 100, y: 100 }, echelle: 2, pins, pos: { x: 65, y: 55 }, rayonMax: 30 });
+  assert.ok(Math.abs(r.x - 60) < 1e-9 && Math.abs(r.y - 50) < 1e-9 && r.n === 1);
+  // icône bleue détectée au mauvais endroit (loin du plan suivi) : ignorée
+  const faux = recalageRepere({ portes: { orange: null, bleu: { x: 100, y: 100 } }, centre: { x: 100, y: 100 }, echelle: 2, pins, pos: { x: 65, y: 55 }, rayonMax: 30 });
+  assert.equal(faux, null);
+  assert.equal(recalageRepere({ portes: null, centre: { x: 1, y: 1 }, echelle: 2, pins, pos: { x: 0, y: 0 }, rayonMax: 5 }), null);
 });

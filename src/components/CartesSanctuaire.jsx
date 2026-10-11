@@ -2,14 +2,17 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PLANS from '../data/sanctuaire_plans.json';
 import { classer, empreinteDepuisSource, planStable, signatureDepuisSource, analyseMinimapVideo,
   observationCarteDepuisSource, observationCarteDepuisVideo } from '../lib/reconnaissance-plan.js';
-import { classerParSalle, classerParCarte, vecteurPlan, libelleSorties } from '../lib/salle-depart.js';
-import { preparerRef, positionDepuisCarte, RAYON_DISQUE } from '../lib/localisation.js';
-import { creerHypotheses, actualiserHypotheses, classerHypotheses, decision, elaguer } from '../lib/suivi.js';
+import { classerParSalle, classerParCarte, scoreCarte, vecteurPlan, libelleSorties } from '../lib/salle-depart.js';
+import { preparerRef, positionDepuisCarte, recalageRepere, RAYON_DISQUE } from '../lib/localisation.js';
+import { creerFiltre, mettreAJourFiltre } from '../lib/lissage.js';
+import { plusProche, estOeuf, estCle } from '../lib/objectifs.js';
+import { calibrerEchelle, creerHypotheses, actualiserHypotheses, classerHypotheses, decision, elaguer } from '../lib/suivi.js';
 
 const INTERVALLE_AUTO_MS = 350;
 const CLE_ZONE = 'aniimo_zone_minimap_v1';
 // Minimap du jeu : en haut à gauche de l'écran (fractions de l'image partagée), sauf zone dessinée par l'utilisateur.
 const ZONE_PAR_DEFAUT = { x: 0, y: 0, w: 0.25, h: 0.35 };
+const CLE_FAITS = 'aniimo_pins_faits_v1';
 const PARTAGE_ECRAN_DISPONIBLE = typeof navigator !== 'undefined' && !!navigator.mediaDevices?.getDisplayMedia;
 
 const BASE = (import.meta.env?.BASE_URL || '/').replace(/\/?$/, '/');
@@ -53,7 +56,7 @@ const LIBELLE_COMPTE = {
 const ICONE_COMPTE = (type) =>
   type === 'chest-gold' ? img('aniimo/sanctuaire/chest-gold.webp') : img(`aniimo/sanctuaire/marks/${type}.webp`);
 
-function Marqueur({ pin, taille = 18 }) {
+function Marqueur({ pin, taille = 18, fait = false, cible = false, onClick = null }) {
   const porte = pin.type.startsWith('door');
   const t = porte ? taille + 6 : taille;
   return (
@@ -64,25 +67,45 @@ function Marqueur({ pin, taille = 18 }) {
       width={t}
       height={t}
       style={{ position: 'absolute', left: `${pin.x}%`, top: `${pin.y}%`, width: t, height: t, transform: 'translate(-50%, -50%)' }}
-      className={porte ? 'z-20' : 'z-10 drop-shadow'}
+      onClick={onClick ? (e) => { e.stopPropagation(); onClick(); } : undefined}
+      className={`${porte ? 'z-20' : 'z-10 drop-shadow'} ${onClick && !porte ? 'cursor-pointer' : ''} ${fait ? 'opacity-30 grayscale' : ''} ${cible ? 'animate-pulse ring-2 ring-emerald-300 rounded-full bg-emerald-300/30' : ''}`}
     />
   );
 }
 
-function Carte({ plan, grande = false, onClick, joueur = null }) {
+function Carte({ plan, grande = false, onClick, joueur = null, faits = null, onBasculer = null, cible = null, onPlacer = null }) {
   const pins = plan.pins;
   const contenu = (
     <div
-      className="relative w-full bg-slate-950 rounded-lg overflow-hidden"
+      className={`relative w-full bg-slate-950 rounded-lg overflow-hidden ${onPlacer ? 'cursor-crosshair ring-2 ring-sky-400' : ''}`}
       style={{ aspectRatio: plan.ratio || 1.5 }}
+      onClick={onPlacer ? (e) => {
+        const r = e.currentTarget.getBoundingClientRect();
+        onPlacer(Math.min(100, Math.max(0, ((e.clientX - r.left) / r.width) * 100)), Math.min(100, Math.max(0, ((e.clientY - r.top) / r.height) * 100)));
+      } : undefined}
     >
       <img src={img(plan.image)} alt={`Plan ${plan.numero}`} className="absolute inset-0 w-full h-full object-contain" loading="lazy" />
-      {pins.map((p, i) => <Marqueur key={i} pin={p} taille={grande ? 26 : 16} />)}
+      {joueur && cible != null && plan.pins[cible] && (
+        <svg className="absolute inset-0 w-full h-full z-20 pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <line x1={joueur.x} y1={joueur.y} x2={plan.pins[cible].x} y2={plan.pins[cible].y} stroke="#6ee7b7" strokeWidth="2" strokeDasharray="4 3" vectorEffect="non-scaling-stroke" />
+        </svg>
+      )}
+      {pins.map((p, i) => (
+        <Marqueur key={i} pin={p} taille={grande ? 26 : 16} fait={!!faits && faits.has(i)} cible={cible === i}
+          onClick={onBasculer && !p.type.startsWith('door') ? () => onBasculer(i) : null} />
+      ))}
+      {joueur && joueur.rayon > 0 && (
+        <span
+          aria-hidden="true"
+          style={{ position: 'absolute', left: `${joueur.x}%`, top: `${joueur.y}%`, width: `${Math.min(60, joueur.rayon * 2)}%`, aspectRatio: '1', transform: 'translate(-50%, -50%)' }}
+          className="z-20 rounded-full border border-yellow-300/70 bg-yellow-300/15 pointer-events-none"
+        />
+      )}
       {joueur && (
         <span
           title="Ma position"
           style={{ position: 'absolute', left: `${joueur.x}%`, top: `${joueur.y}%`, transform: 'translate(-50%, -50%)' }}
-          className="z-30 block w-4 h-4 rounded-full bg-yellow-300 border-2 border-white shadow-[0_0_8px_3px_rgba(250,204,21,0.8)] animate-pulse pointer-events-none"
+          className={`z-30 block ${grande ? 'w-6 h-6' : 'w-4 h-4'} rounded-full bg-yellow-300 border-2 border-white shadow-[0_0_8px_3px_rgba(250,204,21,0.8)] animate-pulse pointer-events-none`}
         />
       )}
     </div>
@@ -169,6 +192,23 @@ export default function CartesSanctuaire() {
   const [difficulte, setDifficulte] = useState('cauchemar-chaos');
   const [direction, setDirection] = useState(null);
   const [ouvert, setOuvert] = useState(null);
+  // Éléments déjà récupérés (œufs, clés) cochés par le joueur : { [idPlan]: [indices de pins] }, conservés d'une visite à l'autre.
+  const [faitsParPlan, setFaitsParPlan] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(CLE_FAITS)) || {}; } catch { return {}; }
+  });
+  const faitsDe = (id) => new Set(faitsParPlan[id] || []);
+  const basculerFait = (id, i) => setFaitsParPlan((prec) => {
+    const cur = new Set(prec[id] || []);
+    if (cur.has(i)) cur.delete(i); else cur.add(i);
+    const suiv = { ...prec, [id]: [...cur] };
+    try { localStorage.setItem(CLE_FAITS, JSON.stringify(suiv)); } catch { /* stockage indisponible */ }
+    return suiv;
+  });
+  const viderFaits = (id) => setFaitsParPlan((prec) => {
+    const suiv = { ...prec, [id]: [] };
+    try { localStorage.setItem(CLE_FAITS, JSON.stringify(suiv)); } catch { /* stockage indisponible */ }
+    return suiv;
+  });
 
   const duGroupe = useMemo(() => PLANS.filter((p) => p.difficulte === difficulte), [difficulte]);
   const presentes = useMemo(() => new Set(duGroupe.map((p) => p.direction)), [duGroupe]);
@@ -207,9 +247,14 @@ export default function CartesSanctuaire() {
   const [apercu, setApercu] = useState(null); // image réduite de l'écran partagé, pour dessiner la zone
   const [salle, setSalle] = useState(null);   // { sorties, possibles: [ids] } : dernière salle d'arrivée lue
 
+  // Plans écartés par le joueur (« ce n'est pas celui-ci ») : ils ne sont plus proposés tant qu'on ne relance pas l'analyse.
+  const exclusRef = useRef(new Set());
+  const [exclus, setExclus] = useState([]);
+  const [verrouille, setVerrouille] = useState(null); // plan validé par le joueur : il ne change plus tant qu'on ne le déverrouille pas
+
   const candidats = useCallback((refs) => {
     const d = diffRecoRef.current;
-    return refs.filter((r) => !d || PLANS.find((p) => p.id === r.id)?.difficulte === d);
+    return refs.filter((r) => !exclusRef.current.has(r.id) && (!d || PLANS.find((p) => p.id === r.id)?.difficulte === d));
   }, []);
 
   /** Classement d'une observation { signature, empreinte } ; renvoie { liste: [{ id, score }], exacts: [ids] | null }. */
@@ -318,6 +363,7 @@ export default function CartesSanctuaire() {
   const [diag, setDiag] = useState(null);           // dernier état interne de l'analyse (panneau de diagnostic)
   const [apercuDiag, setApercuDiag] = useState(null); // minimap telle que l'outil la voit (salle, joueur, disque comparé)
   const [position, setPosition] = useState(null); // { id, x, y (en % du plan), source: 'minimap' | 'carte' }
+  const [enPause, setEnPause] = useState(false); // minimap non visible (inventaire, menu...) : analyse suspendue
   const [phaseAuto, setPhaseAuto] = useState(1); // 1 = lecture de la minimap ; 2 = suivi continu minimap + carte
   const sessionRef = useRef(null); // { flux, video, minuteur, histo1, histo2, verrou, occupe, dernierStable }
 
@@ -325,15 +371,106 @@ export default function CartesSanctuaire() {
     setResultats(null); setPlanDetecte(null); setSalle(null);
     setPhaseAuto(1); setPosition(null);
     const s = sessionRef.current;
-    if (s) { s.histo1 = []; s.histo2 = []; s.verrou = null; s.dernierStable = null; s.centre = null; s.tailleMM = null; s.hyps = null; s.courant = null; s.force = null; }
+    if (s) { s.histo1 = []; s.histo2 = []; s.verrou = null; s.dernierStable = null; s.centre = null; s.tailleMM = null; s.hyps = null; s.courant = null; s.force = null; s.manuel = false; s.filtre = null; }
+    exclusRef.current = new Set(); setExclus([]); setVerrouille(null);
   };
+  /** Le joueur valide le plan : il est verrouillé (plus de changement automatique), le suivi de position continue dessus. */
   const confirmerPlan = (id) => {
+    noterEvt({ evt: 'valide', plan: PLANS.find((x) => x.id === id)?.numero });
     const s = sessionRef.current;
-    if (s) { s.force = id; const gardees = s.hyps ? s.hyps.filter((h) => h.id === id) : []; s.hyps = gardees.length ? gardees : null; }
-    setPlanDetecte(id);
+    if (s) s.force = id;
+    setVerrouille(id); setPlanDetecte(id);
     const p = PLANS.find((x) => x.id === id);
     if (p) voirPlan(p);
   };
+  const deverrouiller = () => {
+    const s = sessionRef.current;
+    if (s) { s.force = null; s.manuel = false; }
+    setVerrouille(null);
+  };
+  /** Le joueur écarte ce plan : il n'est plus proposé, l'analyse continue sur les autres. */
+  const rejeterPlan = (id) => {
+    noterEvt({ evt: 'rejet', plan: PLANS.find((x) => x.id === id)?.numero });
+    exclusRef.current.add(id);
+    setExclus([...exclusRef.current]);
+    const s = sessionRef.current;
+    if (s) {
+      if (s.hyps) s.hyps = s.hyps.filter((h) => h.id !== id);
+      if (s.courant === id) s.courant = null;
+      if (s.force === id) s.force = null;
+      s.dernierStable = null;
+    }
+    setVerrouille((v) => (v === id ? null : v));
+    setPlanDetecte(null); setPosition(null);
+  };
+  const reintegrerPlans = () => {
+    exclusRef.current = new Set(); setExclus([]);
+    const s = sessionRef.current;
+    if (s) s.hyps = null;
+  };
+  // Placement manuel de la position : le joueur clique sur le plan, le suivi repart de ce point (minimap et carte).
+  const [placement, setPlacement] = useState(true); // un clic sur le plan place ma position (désactivable)
+  const placerPosition = async (planId, xPct, yPct) => {
+    const s = sessionRef.current;
+    if (!s) return;
+    const refs = await references();
+    const ref = refs.find((r) => r.id === planId);
+    if (!ref || !ref.refPad) return;
+    noterEvt({ evt: 'placement', plan: ref ? PLANS.find((x) => x.id === planId)?.numero : null, x: Math.round(xPct * 100) / 100, y: Math.round(yPct * 100) / 100 });
+    const pos = { x: (xPct / 100) * ref.largeur, y: (yPct / 100) * ref.hauteur };
+    exclusRef.current.delete(planId); setExclus([...exclusRef.current]);
+    s.filtre = null; s.force = planId; s.manuel = true; s.tailleMM = null; s.sansPos = 0; s.courant = planId; s.dernierStable = planId;
+    s.hyps = [{ id: planId, pos, score: 0.7, corr: 0, ticks: 10, perdus: 0 }];
+    setVerrouille(planId); setPlanDetecte(planId);
+    setPosition({ id: planId, x: xPct, y: yPct, source: 'manuel', dim: { largeur: ref.largeur, hauteur: ref.hauteur, taille: ref.taille } });
+  };
+  /** Bouton « placer ma position » (bascule le mode : le prochain clic sur le plan donne ma position). */
+  const boutonPlacer = () => (
+    <button type="button" onClick={() => setPlacement((v) => !v)}
+      className={`px-2.5 py-1 rounded-lg text-xs font-bold ${placement ? 'bg-sky-500 text-slate-900' : 'bg-slate-700 hover:bg-slate-600 text-white'}`}>
+      🎯 {placement ? 'Clic sur le plan = placer ma position' : 'Placement au clic désactivé'}
+    </button>
+  );
+
+  /** Boutons de validation d'un plan (verrouiller / écarter), réutilisés sur la carte, en fenêtre et en plein écran. */
+  const barreValidation = (id) => {
+    if (!id || !auto) return null;
+    const num = PLANS.find((x) => x.id === id)?.numero;
+    return verrouille === id ? (
+      <div className="flex flex-wrap items-center gap-2 text-xs">
+        <span className="px-2 py-1 rounded-lg bg-emerald-600/30 border border-emerald-400 text-emerald-200 font-bold">🔒 Plan {num} validé</span>
+        <button type="button" onClick={deverrouiller} className="px-2 py-1 rounded-lg bg-slate-700 hover:bg-slate-600">Déverrouiller</button>
+      </div>
+    ) : (
+      <div className="flex flex-wrap items-center gap-2 text-xs">
+        <span className="text-slate-300">Plan {num} :</span>
+        <button type="button" onClick={() => confirmerPlan(id)} className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold">✓ C'est le bon</button>
+        <button type="button" onClick={() => rejeterPlan(id)} className="px-2.5 py-1 rounded-lg bg-slate-700 hover:bg-red-700 text-white font-bold">✗ Ce n'est pas celui-ci</button>
+      </div>
+    );
+  };
+
+  // Mode plein écran : le plan (avec ma position, les objectifs et la validation) occupe tout l'écran.
+  const [plein, setPlein] = useState(false);
+  const pleinRef = useRef(null);
+  const [pleinId, setPleinId] = useState(null); // plan affiché en plein écran (sinon : plan suivi)
+  const ouvrirPlein = (id = null) => {
+    setPleinId(id); setPlein(true);
+    // La demande doit partir du geste de l'utilisateur (le clic) : on passe la page entière en plein écran, la surcouche la remplit.
+    try { document.documentElement.requestFullscreen?.().catch(() => {}); } catch { /* plein écran navigateur indisponible : l'affichage reste en surimpression */ }
+  };
+  const fermerPlein = () => {
+    setPlein(false); setPleinId(null);
+    try { if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {}); } catch { /* ignoré */ }
+  };
+  useEffect(() => {
+    const surChangement = () => { if (!document.fullscreenElement) { setPlein(false); setPleinId(null); } };
+    const surTouche = (e) => { if (e.key === 'Escape') setPlein(false); };
+    document.addEventListener('fullscreenchange', surChangement);
+    document.addEventListener('keydown', surTouche);
+    return () => { document.removeEventListener('fullscreenchange', surChangement); document.removeEventListener('keydown', surTouche); };
+  }, []);
+
   const choisirDiffReco = (id) => { diffRecoRef.current = id; setDiffReco(id); reinitialiserAuto(); };
   const choisirSource = (mode) => { modeRef.current = mode; setModeSource(mode); reinitialiserAuto(); };
   const changerPivote = (v) => { pivoteRef.current = v; setPivote(v); reinitialiserAuto(); };
@@ -342,16 +479,44 @@ export default function CartesSanctuaire() {
     try { if (z) localStorage.setItem(CLE_ZONE, JSON.stringify(z)); else localStorage.removeItem(CLE_ZONE); } catch { /* stockage indisponible */ }
   };
 
+  // Enregistrement d'un trajet : une image de la minimap par seconde + les positions calculées + vos validations/placements.
+  // Le fichier téléchargé permet de comprendre pourquoi le suivi a décroché et de régler l'analyse sur de vraies parties.
+  const enregRef = useRef(null);
+  const [enregistre, setEnregistre] = useState(false);
+  const [nbImages, setNbImages] = useState(0);
+  const noterEvt = (e) => { const r = enregRef.current; if (r) r.evts.push({ t: Math.round(performance.now() - r.debut), ...e }); };
+  const exporterEnreg = useCallback(() => {
+    const r = enregRef.current;
+    enregRef.current = null;
+    setEnregistre(false); setNbImages(0);
+    if (!r || (!r.images.length && !r.evts.length)) return;
+    const contenu = JSON.stringify({
+      version: 1, date: new Date().toISOString(), video: r.video, zone: r.zone, difficulte: r.difficulte,
+      images: r.images, evenements: r.evts,
+    });
+    const url = URL.createObjectURL(new Blob([contenu], { type: 'application/json' }));
+    const a = document.createElement('a');
+    a.href = url; a.download = `trajet-sanctuaire-${new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19)}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+  }, []);
+  const basculerEnreg = () => {
+    if (enregRef.current) { exporterEnreg(); return; }
+    enregRef.current = { debut: performance.now(), dernier: -1e9, images: [], evts: [], video: null, zone: null, difficulte: null };
+    setEnregistre(true); setNbImages(0);
+  };
+
   const arreterAuto = useCallback(() => {
     const s = sessionRef.current;
     sessionRef.current = null;
     if (s) {
       clearTimeout(s.minuteur);
+      if (enregRef.current) exporterEnreg();
       s.flux.getTracks().forEach((t) => t.stop());
       s.video.srcObject = null;
     }
-    setAuto(false); setApercu(null); setDiag(null); setApercuDiag(null);
-  }, []);
+    setAuto(false); setEnPause(false); setApercu(null); setDiag(null); setApercuDiag(null);
+  }, [exporterEnreg]);
 
   const lancerAuto = useCallback(async () => {
     if (sessionRef.current) return;
@@ -390,15 +555,32 @@ export default function CartesSanctuaire() {
         if (sessionRef.current !== session) return;
         const zoneMinimap = zoneRef.current || ZONE_PAR_DEFAUT;
         setApercu(dessiner(480, null));
-        const mm = analyseMinimapVideo(video, { zone: zoneMinimap });
+        const mmBrut = analyseMinimapVideo(video, { zone: zoneMinimap });
+        // Minimap réellement visible ? Une fois la flèche du joueur repérée, elle reste au même endroit de la minimap.
+        // Si elle n'y est plus (inventaire, menu, cinématique...), l'analyse est mise en pause pour ne pas fausser le suivi.
+        const flecheAttendue = !!session.centre;
+        const flecheOk = !!mmBrut && !!mmBrut.centre && (!flecheAttendue
+          || Math.hypot(mmBrut.centre.x / mmBrut.w - session.centre.x, mmBrut.centre.y / mmBrut.h - session.centre.y) <= 0.08);
+        const mmOk = !!mmBrut && (flecheAttendue ? flecheOk : true);
+        const mm = mmOk ? mmBrut : null;
         const signature = mm ? mm.signature : null;
         const observee = observationCarteDepuisVideo(video);
-        const carte = observee && observee.vecteur ? observee : null; // carte ouverte, les deux portes visibles
+        // Carte ouverte : les deux portes visibles ET un vecteur compatible avec au moins un plan candidat (sinon fausse détection :
+        // décor du jeu, minimap...).
+        const carte = observee && observee.vecteur && candidats(refs).some((r) => scoreCarte(observee, r) >= 0.6) ? observee : null;
 
+        if (!mm && flecheAttendue && !carte) {
+          setEnPause(true);
+          setDiag((d) => (d ? { ...d, pause: true } : d));
+          return;
+        }
+        setEnPause(false);
+        // La flèche du joueur reste au même endroit de la minimap : on retient sa position dès qu'elle est vue (même après le verrouillage).
+        if (mm && mm.centre) session.centre = { x: mm.centre.x / mm.w, y: mm.centre.y / mm.h };
         // Phase 1 : lecture de la minimap (en haut à gauche) jusqu'à une salle d'arrivée stable, qui est alors verrouillée.
         if (session.verrou === null) {
           // Le joueur est dans la salle d'arrivée : on retient sa flèche (centre fixe de la minimap) et la taille de la salle (échelle).
-          if (mm && mm.centre) { session.centre = { x: mm.centre.x / mm.w, y: mm.centre.y / mm.h }; session.tailleMM = 2 * mm.signature.demi + 1; }
+          if (mm && !session.manuel) session.tailleMM = 2 * mm.signature.demi + 1;
           session.histo1.push(signature ? { id: signature.sorties || '-', score: 1 } : null);
           if (session.histo1.length > 20) session.histo1.shift();
           const stable1 = planStable(session.histo1, { fenetre: 4, minVotes: 2 });
@@ -409,12 +591,25 @@ export default function CartesSanctuaire() {
         let resultat = classerAuto(refs, { sorties, carte });
 
         // Suivi multi-hypothèses : le joueur est suivi sur chaque plan candidat, seul le vrai plan continue à correspondre.
-        const suiviPossible = !pivoteRef.current && mm && session.centre && session.tailleMM && session.verrou !== null;
+        // Position donnée à la main sans échelle connue (analyse lancée en cours de partie) : on la déduit de la minimap autour du point.
+        if (session.manuel && !session.tailleMM && mm && mm.centre && session.hyps) {
+          const hm = session.hyps.find((x) => x.id === session.force);
+          const rm = refs.find((x) => x.id === session.force);
+          if (hm && rm && rm.refPad) {
+            const c = calibrerEchelle(hm, rm, mm, { x: mm.centre.x, y: mm.centre.y });
+            if (c) session.tailleMM = c.taille;
+          }
+        }
+        const suiviPossible = !pivoteRef.current && mm && session.centre && session.tailleMM && (session.verrou !== null || !!session.force);
         if (suiviPossible) {
           if (!session.hyps) session.hyps = creerHypotheses(candidats(refs));
           const centrePx = { x: session.centre.x * mm.w, y: session.centre.y * mm.h };
-          actualiserHypotheses(session.hyps, refs, mm, centrePx, session.tailleMM);
+          actualiserHypotheses(session.hyps, refs, mm, centrePx, session.tailleMM, { globalPour: session.force });
+          const avant = session.hyps;
           session.hyps = elaguer(session.hyps, { ecart: 0.15, minTicks: 4, garder: 2 });
+          // Le plan validé par le joueur n'est jamais écarté : on continue à le suivre pour afficher la position.
+          const valide = session.force && avant.find((h) => h.id === session.force);
+          if (valide && !session.hyps.includes(valide)) session.hyps.push(valide);
           session.courant = decision(session.hyps, { courant: session.courant, marge: 0.04, minTicks: 3 });
           if (!carte) {
             const classees = classerHypotheses(session.hyps);
@@ -438,22 +633,46 @@ export default function CartesSanctuaire() {
           if (p) voirPlan(p);
         }
 
-        // Position en direct sur le plan décidé : flèche de la carte si elle est ouverte, sinon position suivie par la minimap.
+        // Position en direct sur le plan décidé. Mesures, de la plus précise à la moins précise :
+        // flèche de la carte ouverte > icône de porte vue sur la minimap (repère) > recalage de la minimap sur le plan.
+        // Elles sont fondues dans un filtre (vitesse, incertitude) qui lisse le point et le fait avancer entre deux mesures.
         const ref = decide ? refs.find((r) => r.id === decide) : null;
+        let sourcePos = null;
+        let posEnreg = null;
         if (ref && ref.refPad) {
-          let pos = null;
-          if (carte && carte.joueur) {
+          let mesure = null; // { x, y (px miniature), c (qualité 0..1), source }
+          const h = session.hyps && session.hyps.find((x) => x.id === decide);
+          const norme = ref.vecteur ? Math.max(1, Math.hypot(ref.vecteur.x, ref.vecteur.y)) : 0;
+          const carteCoherente = carte && carte.vecteur && ref.vecteur && Math.hypot(carte.vecteur.x - ref.vecteur.x, carte.vecteur.y - ref.vecteur.y) / norme <= 0.25;
+          if (carteCoherente && carte.joueur) {
             const p = positionDepuisCarte(carte, ref);
-            if (p) pos = { ...p, source: 'carte' };
-            const h = session.hyps && session.hyps.find((x) => x.id === decide);
-            if (h && p) h.pos = { x: p.x, y: p.y }; // la carte recale le suivi
+            if (p) { mesure = { x: p.x, y: p.y, c: 1, source: 'carte' }; if (h) h.pos = { x: p.x, y: p.y }; } // la carte recale aussi le suivi
           }
-          if (!pos && session.hyps) {
-            const h = session.hyps.find((x) => x.id === decide);
-            if (h && h.perdus === 0) pos = { x: h.pos.x, y: h.pos.y, source: 'minimap' };
+          if (!mesure && h && h.perdus === 0) mesure = { x: h.pos.x, y: h.pos.y, c: Math.max(0.3, h.corr), source: 'minimap' };
+          // Repère : une porte (orange / bleue) visible sur la minimap, compatible avec la position suivie.
+          if (!(mesure && mesure.source === 'carte') && h && mm && mm.centre && mm.portes && session.tailleMM) {
+            const pinPx = (type) => { const q = PLANS.find((x) => x.id === decide)?.pins.find((y) => y.type === type); return q ? { x: (q.x / 100) * ref.largeur, y: (q.y / 100) * ref.hauteur } : null; };
+            const rr = recalageRepere({
+              portes: mm.portes, centre: mm.centre, echelle: ((h.facteur || 1) * ref.taille) / session.tailleMM,
+              pins: { main: pinPx('door-main'), side: pinPx('door-side') }, pos: h.pos, rayonMax: 1.5 * ref.taille,
+            });
+            if (rr) { h.pos = { x: rr.x, y: rr.y }; mesure = { x: rr.x, y: rr.y, c: 1, source: 'repere' }; }
           }
-          if (pos) setPosition({ id: ref.id, x: (pos.x / ref.largeur) * 100, y: (pos.y / ref.hauteur) * 100, source: pos.source });
+          if (!session.filtre || session.filtre.planId !== ref.id) { session.filtre = creerFiltre(ref.taille); session.filtre.planId = ref.id; }
+          const lisse = mettreAJourFiltre(session.filtre, mesure, performance.now() / 1000);
+          sourcePos = mesure ? mesure.source : (lisse.init ? 'estimee' : null);
+          session.sansPos = mesure ? 0 : (session.sansPos || 0) + 1;
+          if (lisse.init && session.sansPos <= 6) {
+            posEnreg = { x: +lisse.x.toFixed(1), y: +lisse.y.toFixed(1), rayon: +lisse.rayon.toFixed(1), source: sourcePos, mesure: mesure ? { x: +mesure.x.toFixed(1), y: +mesure.y.toFixed(1), c: +mesure.c.toFixed(2) } : null };
+            setPosition({
+              id: ref.id, x: (lisse.x / ref.largeur) * 100, y: (lisse.y / ref.hauteur) * 100, source: sourcePos,
+              rayon: (lisse.rayon / ref.largeur) * 100, dim: { largeur: ref.largeur, hauteur: ref.hauteur, taille: ref.taille },
+            });
+          }
         }
+
+        // Pas de position fiable depuis un moment : on efface l'ancien point plutôt que d'afficher un point faux.
+        if (!ref || !ref.refPad || (session.sansPos || 0) > 6) setPosition(null);
 
         // Diagnostic : ce que l'outil lit réellement (pour comprendre une erreur).
         setDiag({
@@ -463,12 +682,35 @@ export default function CartesSanctuaire() {
           zonePersonnalisee: !!zoneRef.current,
           minimap: mm ? { sorties: mm.signature.sorties, tailleSalle: 2 * mm.signature.demi + 1, joueurTrouve: !!mm.centre, centre: mm.centre } : null,
           verrou: session.verrou,
-          carte: observee ? { sorties: observee.sorties, vecteur: observee.vecteur, joueur: observee.joueur } : null,
+          calibrage: { tailleDepart: session.tailleMM, centreFleche: session.centre },
+          suiviPossible: !!suiviPossible,
+          carte: observee ? { sorties: observee.sorties, vecteur: observee.vecteur, joueur: observee.joueur, acceptee: !!carte } : null,
           hypotheses: session.hyps ? classerHypotheses(session.hyps).slice(0, 5).map((h) => ({ plan: PLANS.find((x) => x.id === h.id)?.numero, score: +h.score.toFixed(2), corr: +h.corr.toFixed(2), perdus: h.perdus, ticks: h.ticks })) : null,
           restantes: session.hyps ? session.hyps.length : null,
           decide: decide ? PLANS.find((x) => x.id === decide)?.numero : null,
+          position: sourcePos,
         });
         if (mm) setApercuDiag(dessinerDiagnostic(video, zoneMinimap, mm, session.tailleMM));
+
+        // Enregistrement du trajet (1 image / s, 300 images au plus).
+        const enr = enregRef.current;
+        if (enr && enr.images.length < 300 && performance.now() - enr.dernier >= 1000) {
+          enr.dernier = performance.now();
+          enr.video = enr.video || `${video.videoWidth}x${video.videoHeight}`;
+          enr.zone = zoneMinimap; enr.difficulte = diffRecoRef.current;
+          enr.images.push({
+            t: Math.round(performance.now() - enr.debut),
+            minimap: dessiner(240, zoneMinimap),
+            carte: carte ? dessiner(320, null) : null,
+            plan: decide ? PLANS.find((x) => x.id === decide)?.numero : null,
+            verrouille: !!session.force,
+            position: posEnreg,
+            suivi: session.hyps ? classerHypotheses(session.hyps).slice(0, 3).map((h) => ({ plan: PLANS.find((x) => x.id === h.id)?.numero, score: +h.score.toFixed(2), corr: +h.corr.toFixed(2), perdus: h.perdus })) : null,
+            echelle: session.tailleMM, flecheTrouvee: !!(mm && mm.centre), repere: mm && mm.portes ? { orange: !!mm.portes.orange, bleu: !!mm.portes.bleu } : null,
+            pause: !mm,
+          });
+          setNbImages(enr.images.length);
+        }
       } catch (e) {
         setErreur(e.message || 'Analyse impossible.');
       } finally {
@@ -552,20 +794,65 @@ export default function CartesSanctuaire() {
             🔴 Capture en cours, <b>phase {phaseAuto}/2</b> — {phaseAuto === 1
               ? 'lecture de la minimap (en haut à gauche) : placez-vous dans la salle d\'arrivée.'
               : 'suivi continu de la minimap et de la carte (ouvrez la carte pour affiner).'}{' '}
+            {enPause && <b className="text-amber-300"> ⏸ Analyse en pause : minimap non visible (inventaire, menu…). Elle reprend toute seule au retour en jeu.</b>}{' '}
             {planDetecte
               ? `Plan ${PLANS.find((x) => x.id === planDetecte)?.numero} détecté.`
               : 'Aucun plan unique pour l\'instant.'}
             <button type="button" onClick={reinitialiserAuto} className="ml-2 underline text-slate-400 hover:text-white">Relancer l'analyse</button>
+            <button type="button" onClick={basculerEnreg} className={`ml-3 px-2 py-0.5 rounded-lg font-bold ${enregistre ? 'bg-red-600 text-white' : 'bg-slate-700 text-slate-200 hover:bg-slate-600'}`}
+              title="Enregistre une image de la minimap par seconde et les positions calculées dans un fichier à me transmettre">
+              {enregistre ? `⏹ Arrêter et télécharger (${nbImages} images)` : '⏺ Enregistrer un trajet'}
+            </button>
           </p>
         )}
-        {auto && position && (() => {
-          const planPos = PLANS.find((x) => x.id === position.id);
+        {auto && (planDetecte || exclus.length > 0) && (
+          <div className="mt-2 flex flex-wrap items-center gap-2 text-xs" role="group" aria-label="Validation du plan">
+            {barreValidation(planDetecte)}
+            {exclus.length > 0 && (
+              <span className="text-slate-400">
+                Écartés : {exclus.map((id) => PLANS.find((x) => x.id === id)?.numero).join(', ')}
+                <button type="button" onClick={reintegrerPlans} className="ml-2 underline hover:text-white">Les réintégrer</button>
+              </span>
+            )}
+          </div>
+        )}
+        {auto && (position || planDetecte) && (() => {
+          const planPos = PLANS.find((x) => x.id === (position ? position.id : planDetecte));
           return planPos ? (
-            <div className="mt-3 max-w-md">
+            <div className="mt-3 max-w-2xl">
               <p className="text-xs text-yellow-200 mb-1" role="status">
-                📍 Ma position — plan {planPos.numero} ({position.source === 'carte' ? 'lue sur la carte ouverte' : 'recalée par la minimap'})
+                📍 Ma position — plan {planPos.numero} ({position && position.source === 'carte' ? 'lue sur la carte ouverte' : position && position.source === 'repere' ? 'recalée sur une porte vue sur la minimap' : position && position.source === 'manuel' ? 'placée par vous, puis recalée par la minimap' : position && position.source === 'estimee' ? 'estimée : minimap peu lisible' : 'recalée par la minimap'})
               </p>
-              <Carte plan={planPos} joueur={position} />
+              {(() => {
+                const faits = faitsDe(planPos.id);
+                const ici = position && position.id === planPos.id ? position : null;
+                const oeuf = ici ? plusProche(planPos, ici, faits, ici.dim, estOeuf) : null;
+                const cle = ici ? plusProche(planPos, ici, faits, ici.dim, estCle) : null;
+                const txt = (o) => `${o.fleche} ${o.salles !== null ? `à environ ${o.salles} salle${o.salles >= 2 ? 's' : ''}` : ''}`;
+                return (
+                  <>
+                    <div className="mb-2 flex flex-wrap items-center gap-2">
+                      {barreValidation(planPos.id)}
+                      {boutonPlacer()}
+                      <button type="button" onClick={() => ouvrirPlein()} className="ml-auto px-2.5 py-1 rounded-lg bg-sky-700 hover:bg-sky-600 text-white text-xs font-bold">⛶ Plein écran</button>
+                    </div>
+                    <Carte plan={planPos} joueur={ici} faits={faits} cible={oeuf ? oeuf.i : null} onBasculer={(i) => basculerFait(planPos.id, i)}
+                      onPlacer={placement ? (x, y) => placerPosition(planPos.id, x, y) : null} />
+                    <div className="mt-2 text-xs text-slate-200 space-y-1">
+                      <p>
+                        {oeuf ? <>🥚 Nid d'œufs le plus proche : <b>{txt(oeuf)}</b></> : '🥚 Tous les nids sont cochés.'}
+                        {cle && <> — 🔑 {LIBELLE_MARQUE[cle.pin.type]} : <b>{txt(cle)}</b></>}
+                      </p>
+                      <Comptes comptes={planPos.comptes} />
+                      <p className="text-slate-400">
+                        Cliquez sur un nid ou une clé du plan pour le cocher une fois récupéré.
+                        {(faitsParPlan[planPos.id] || []).length > 0 && <button type="button" onClick={() => viderFaits(planPos.id)} className="ml-2 underline hover:text-white">Tout décocher</button>}
+                      </p>
+                      <p className="text-slate-500">Boss et élites : pas d'emplacement fixe. Coffres et salles de défi : seuls les nombres sont publiés, pas leurs positions.</p>
+                    </div>
+                  </>
+                );
+              })()}
             </div>
           ) : null;
         })()}
@@ -578,7 +865,7 @@ export default function CartesSanctuaire() {
                 <p>Écran partagé : {diag.video} — zone minimap {diag.zonePersonnalisee ? 'dessinée' : 'par défaut'} ({Math.round(diag.zone.x * 100)} %, {Math.round(diag.zone.y * 100)} %, {Math.round(diag.zone.w * 100)} × {Math.round(diag.zone.h * 100)} %)</p>
                 <p>Minimap : {diag.minimap ? `salle trouvée, ${diag.minimap.sorties ? libelleSorties(diag.minimap.sorties) : 'aucune sortie'}, taille ${diag.minimap.tailleSalle} px, flèche du joueur ${diag.minimap.joueurTrouve ? 'trouvée' : 'NON trouvée'}` : 'aucune salle détectée (zone mal placée ?)'}</p>
                 <p>Salle verrouillée : {diag.verrou === null ? 'pas encore' : libelleSorties(diag.verrou)}</p>
-                <p>Carte entière : {diag.carte ? `porte orange trouvée, porte bleue ${diag.carte.vecteur ? 'trouvée' : 'non'}, joueur ${diag.carte.joueur ? 'trouvé' : 'non'}` : 'non détectée (carte fermée)'}</p>
+                <p>Carte entière : {diag.carte ? `porte orange trouvée, porte bleue ${diag.carte.vecteur ? 'trouvée' : 'non'}, joueur ${diag.carte.joueur ? 'trouvé' : 'non'}` : 'non détectée (carte fermée)'}{diag.carte && !diag.carte.acceptee ? ' — ignorée (incohérente avec les plans)' : ''}</p>
                 <p>Suivi : {diag.hypotheses ? `${diag.restantes} plan(s) en lice` : 'pas encore lancé'}{diag.decide ? ` — décidé : plan ${diag.decide}` : ''} — analyse en {diag.ms} ms</p>
                 {diag.hypotheses && <p className="text-slate-400">Meilleurs : {diag.hypotheses.map((h) => `plan ${h.plan} (${Math.round(h.score * 100)} %)`).join(', ')}</p>}
                 <button type="button" onClick={() => navigator.clipboard?.writeText(JSON.stringify(diag, null, 2))} className="mt-1 underline text-slate-400 hover:text-white">Copier le diagnostic</button>
@@ -693,11 +980,50 @@ export default function CartesSanctuaire() {
               <h3 className="text-xl font-bold">Plan {plan.numero} <span className="text-sm font-normal text-slate-400">— porte bleue au {NOM_DIR[plan.direction]}</span></h3>
               <button type="button" onClick={() => setOuvert(null)} className="px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 font-bold" aria-label="Fermer">✕</button>
             </div>
-            <Carte plan={plan} grande joueur={position && position.id === plan.id ? position : null} />
+            {auto && (
+              <div className="flex flex-wrap items-center gap-2">
+                {barreValidation(plan.id)}
+                {boutonPlacer()}
+                <button type="button" onClick={() => ouvrirPlein(plan.id)} className="ml-auto px-2.5 py-1 rounded-lg bg-sky-700 hover:bg-sky-600 text-white text-xs font-bold">⛶ Plein écran</button>
+              </div>
+            )}
+            <Carte plan={plan} grande joueur={position && position.id === plan.id ? position : null} faits={faitsDe(plan.id)} onBasculer={(i) => basculerFait(plan.id, i)}
+              onPlacer={auto && placement ? (x, y) => placerPosition(plan.id, x, y) : null} />
             <Comptes comptes={plan.comptes} />
           </div>
         </div>
       )}
+      {plein && (() => {
+        const idPlein = pleinId || (position && position.id) || planDetecte;
+        const planPlein = PLANS.find((x) => x.id === idPlein);
+        if (!planPlein) return null;
+        const faits = faitsDe(planPlein.id);
+        const joueur = position && position.id === planPlein.id ? position : null;
+        const oeuf = joueur ? plusProche(planPlein, joueur, faits, position.dim, estOeuf) : null;
+        const cle = joueur ? plusProche(planPlein, joueur, faits, position.dim, estCle) : null;
+        const txt = (o) => `${o.fleche} ${o.salles !== null ? `~${o.salles} salle${o.salles >= 2 ? 's' : ''}` : ''}`;
+        return (
+          <div ref={pleinRef} className="fixed inset-0 z-[60] bg-slate-950 flex flex-col p-3 gap-2" role="dialog" aria-modal="true" aria-label={`Plan ${planPlein.numero} en plein écran`}>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <h3 className="text-lg font-bold">Plan {planPlein.numero} <span className="text-xs font-normal text-slate-400">— porte bleue au {NOM_DIR[planPlein.direction]}</span></h3>
+              {barreValidation(planPlein.id)}
+              {boutonPlacer()}
+              {joueur && (
+                <span className="text-sm text-slate-200">
+                  {oeuf ? <>🥚 <b>{txt(oeuf)}</b></> : '🥚 tous cochés'}{cle && <> · 🔑 <b>{txt(cle)}</b></>}
+                </span>
+              )}
+              <button type="button" onClick={fermerPlein} className="ml-auto px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 font-bold text-sm" aria-label="Quitter le plein écran">✕ Quitter (Échap)</button>
+            </div>
+            <div className="flex-1 min-h-0 flex items-center justify-center">
+              <div style={{ width: `min(100%, calc((100vh - 5rem) * ${planPlein.ratio || 1.5}))` }}>
+                <Carte plan={planPlein} grande joueur={joueur} faits={faits} cible={oeuf ? oeuf.i : null} onBasculer={(i) => basculerFait(planPlein.id, i)}
+                  onPlacer={placement ? (x, y) => placerPosition(planPlein.id, x, y) : null} />
+              </div>
+            </div>
+          </div>
+        );
+      })()}
       <p className="mt-5 text-[11px] text-slate-500">Données des plans : AniimoTools (aniimotools.dev), utilisées avec l'accord de l'auteur, usage personnel.</p>
     </section>
   );

@@ -297,14 +297,45 @@ export function centreJoueur(rgba, w, h, boite) {
 }
 
 /**
- * Analyse d'une image de minimap : { signature, plein (masque sans trous), w, h, centre } ou null.
- * `centre` = flèche du joueur (utile au début de partie, quand le joueur est dans la salle d'arrivée).
+ * Seuil de luminosité adapté à l'image : la minimap est plus ou moins sombre selon la zone et les effets de lumière.
+ * On part de 72 % du 90e centile de luminosité des pixels peu saturés (le sol éclairé), borné à [105 ; lumMax] : le seuil ne
+ * dépasse jamais celui par défaut, il baisse seulement quand l'image est terne.
  */
+export function lumMinAdaptative(rgba, w, h, { lumMax = 140, satMax = 40, plancher = 105 } = {}) {
+  const hist = new Uint32Array(256);
+  let n = 0;
+  for (let i = 0; i < w * h; i++) {
+    const r = rgba[i * 4], g = rgba[i * 4 + 1], b = rgba[i * 4 + 2];
+    if (rgba[i * 4 + 3] < 128 || Math.max(r, g, b) - Math.min(r, g, b) > satMax) continue;
+    hist[Math.round((r + g + b) / 3)]++; n++;
+  }
+  if (n < 50) return lumMax;
+  let cumul = 0, p90 = 255;
+  for (let v = 0; v < 256; v++) { cumul += hist[v]; if (cumul >= 0.9 * n) { p90 = v; break; } }
+  return Math.max(plancher, Math.min(lumMax, Math.round(0.72 * p90)));
+}
+
+/**
+ * Icônes de portes visibles sur la minimap (orange = entrée principale, bleue = entrée secondaire), chacune indépendamment :
+ * { orange: {x, y} | null, bleu: {x, y} | null } en pixels de la minimap. Sert de repère pour recaler la position.
+ */
+export function reperesMinimap(rgba, w, h) {
+  const orange = plusGrandeTache(rgba, w, h, (t, s, v) => t >= 15 && t <= 45 && s > 0.5 && v > 0.6);
+  const bleu = plusGrandeTache(rgba, w, h, (t, s, v) => t >= 200 && t <= 235 && s > 0.35 && v > 0.7);
+  const minAire = Math.max(20, w * h * 0.0003);
+  return {
+    orange: orange && orange.aire >= minAire ? { x: orange.x, y: orange.y } : null,
+    bleu: bleu && bleu.aire >= minAire ? { x: bleu.x, y: bleu.y } : null,
+  };
+}
+
+/** Analyse de la minimap : { signature, plein, w, h, centre, portes } (seuil de luminosité adapté à l'image). */
 export function analyserMinimap(rgba, w, h) {
-  const masque = masqueClair(rgba, w, h, SEUILS.minimap);
+  const lumMin = Math.min(SEUILS.minimap.lumMin, lumMinAdaptative(rgba, w, h, { lumMax: SEUILS.minimap.lumMin, satMax: SEUILS.minimap.satMax }));
+  const masque = masqueClair(rgba, w, h, { ...SEUILS.minimap, lumMin });
   const signature = signatureSalle(masque, w, h);
   if (!signature) return null;
-  return { signature, plein: remplirTrous(masque, w, h), w, h, centre: centreJoueur(rgba, w, h, signature.boite) };
+  return { signature, plein: remplirTrous(masque, w, h), w, h, centre: centreJoueur(rgba, w, h, signature.boite), portes: reperesMinimap(rgba, w, h), lumMin };
 }
 
 /**
