@@ -6,7 +6,7 @@
  * (similarité cosinus × pénalité de proportions). Tout se fait localement, dans le navigateur.
  */
 
-import { signatureDepuisRGBA } from './salle-depart.js';
+import { signatureDepuisRGBA, observerCarte, analyserMinimap, masqueClair, remplirTrous, SEUILS } from './salle-depart.js';
 
 export const TAILLE_EMPREINTE = 48;
 
@@ -149,7 +149,25 @@ export function planStable(historique, { fenetre = 5, minVotes = 3, seuil = 0.5 
 export async function signatureDepuisSource(src, { ancre = null, zone = null } = {}) {
   const image = await chargerImage(src);
   const { rgba, w, h } = rgbaDepuisImage(image, 640, zone);
-  return signatureDepuisRGBA(rgba, w, h, { ancre: ancre ? { x: (ancre.x / 100) * w, y: (ancre.y / 100) * h } : null });
+  const sig = signatureDepuisRGBA(rgba, w, h, { ancre: ancre ? { x: (ancre.x / 100) * w, y: (ancre.y / 100) * h } : null });
+  if (!sig) return null;
+  // Miniature : masque des zones praticables (petits trous comblés), pour situer le joueur sur le plan.
+  const masque = ancre ? remplirTrous(masqueClair(rgba, w, h, SEUILS.miniature), w, h, Math.max(3, Math.round(0.04 * Math.max(w, h)))) : null;
+  return { ...sig, largeur: w, hauteur: h, masque };
+}
+
+/** Observation d'une capture de la carte entière (sorties de la salle de départ + vecteur entre les deux portes). */
+export async function observationCarteDepuisSource(src) {
+  const image = await chargerImage(src);
+  const { rgba, w, h } = rgbaDepuisImage(image, 640);
+  return observerCarte(rgba, w, h);
+}
+
+/** Idem pour l'image courante d'un <video> (partage d'écran). */
+export function observationCarteDepuisVideo(video) {
+  if (!video || !video.videoWidth || !video.videoHeight) return null;
+  const { rgba, w, h } = rgbaDepuisImage(video, 640);
+  return observerCarte(rgba, w, h);
 }
 
 /** Idem pour l'image courante d'un <video> (partage d'écran) ; null si la vidéo n'est pas prête. */
@@ -157,4 +175,11 @@ export function signatureDepuisVideo(video, { zone = null } = {}) {
   if (!video || !video.videoWidth || !video.videoHeight) return null;
   const { rgba, w, h } = rgbaDepuisImage(video, 640, zone);
   return signatureDepuisRGBA(rgba, w, h);
+}
+
+/** Analyse de la minimap sur l'image courante d'un <video> : { signature, plein, w, h, centre } ou null. */
+export function analyseMinimapVideo(video, { zone = null } = {}) {
+  if (!video || !video.videoWidth || !video.videoHeight) return null;
+  const { rgba, w, h } = rgbaDepuisImage(video, 640, zone);
+  return analyserMinimap(rgba, w, h);
 }

@@ -1,10 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PLANS from '../data/sanctuaire_plans.json';
-import { classer, empreinteDepuisSource, empreinteDepuisVideo, planStable, signatureDepuisSource, signatureDepuisVideo } from '../lib/reconnaissance-plan.js';
-import { classerParSalle, libelleSorties } from '../lib/salle-depart.js';
+import { classer, empreinteDepuisSource, planStable, signatureDepuisSource, analyseMinimapVideo,
+  observationCarteDepuisSource, observationCarteDepuisVideo } from '../lib/reconnaissance-plan.js';
+import { classerParSalle, classerParCarte, vecteurPlan, libelleSorties } from '../lib/salle-depart.js';
+import { preparerRef, echantillonnerMinimap, localiser, positionDepuisCarte, RAYON_DISQUE } from '../lib/localisation.js';
 
 const INTERVALLE_AUTO_MS = 2000;
 const CLE_ZONE = 'aniimo_zone_minimap_v1';
+// Minimap du jeu : en haut à gauche de l'écran (fractions de l'image partagée), sauf zone dessinée par l'utilisateur.
+const ZONE_PAR_DEFAUT = { x: 0, y: 0, w: 0.25, h: 0.35 };
 const PARTAGE_ECRAN_DISPONIBLE = typeof navigator !== 'undefined' && !!navigator.mediaDevices?.getDisplayMedia;
 
 const BASE = (import.meta.env?.BASE_URL || '/').replace(/\/?$/, '/');
@@ -64,7 +68,7 @@ function Marqueur({ pin, taille = 18 }) {
   );
 }
 
-function Carte({ plan, grande = false, onClick }) {
+function Carte({ plan, grande = false, onClick, joueur = null }) {
   const pins = plan.pins;
   const contenu = (
     <div
@@ -73,6 +77,13 @@ function Carte({ plan, grande = false, onClick }) {
     >
       <img src={img(plan.image)} alt={`Plan ${plan.numero}`} className="absolute inset-0 w-full h-full object-contain" loading="lazy" />
       {pins.map((p, i) => <Marqueur key={i} pin={p} taille={grande ? 26 : 16} />)}
+      {joueur && (
+        <span
+          title="Ma position"
+          style={{ position: 'absolute', left: `${joueur.x}%`, top: `${joueur.y}%`, transform: 'translate(-50%, -50%)' }}
+          className="z-30 block w-4 h-4 rounded-full bg-yellow-300 border-2 border-white shadow-[0_0_8px_3px_rgba(250,204,21,0.8)] animate-pulse pointer-events-none"
+        />
+      )}
     </div>
   );
   return onClick ? (
@@ -94,7 +105,7 @@ function Comptes({ comptes }) {
 }
 
 /** Aperçu de l'écran partagé sur lequel on dessine à la souris la zone de la minimap (fractions 0..1). */
-function ZoneMinimap({ apercu, zone, onChange }) {
+function ZoneMinimap({ apercu, zone, personnalisee, onChange }) {
   const [debut, setDebut] = useState(null);
   const [courante, setCourante] = useState(null);
   const point = (e) => {
@@ -106,8 +117,10 @@ function ZoneMinimap({ apercu, zone, onChange }) {
   return (
     <div className="mt-2">
       <p className="text-xs text-slate-300 mb-1">
-        Zone de la minimap : <b>dessinez un rectangle</b> autour de la minimap sur l'aperçu de votre écran
-        {zone && <button type="button" onClick={() => onChange(null)} className="ml-2 underline text-slate-400 hover:text-white">Effacer la zone</button>}
+        Zone de la minimap : <b>dessinez un rectangle</b> autour d'elle sur l'aperçu si elle n'est pas en haut à gauche
+        {personnalisee
+          ? <button type="button" onClick={() => onChange(null)} className="ml-2 underline text-slate-400 hover:text-white">Revenir à la zone par défaut (haut gauche)</button>
+          : <span className="ml-2 text-slate-500">(par défaut : haut gauche de l'écran)</span>}
       </p>
       <div
         className="relative inline-block max-w-full touch-none cursor-crosshair select-none rounded-lg overflow-hidden border border-slate-600"
@@ -179,8 +192,11 @@ export default function CartesSanctuaire() {
   }, []);
 
   /** Classement d'une observation { signature, empreinte } ; renvoie { liste: [{ id, score }], exacts: [ids] | null }. */
-  const classerObservation = useCallback((refs, { signature, empreinte }) => {
+  const classerObservation = useCallback((refs, { signature, empreinte, carte }) => {
     const c = candidats(refs);
+    if (carte) {
+      return { liste: classerParCarte(carte, c), exacts: null };
+    }
     if (modeRef.current === 'minimap' && signature) {
       const empreintes = empreinte ? new Map(classer(empreinte, c).map((r) => [r.id, r.score])) : null;
       const liste = classerParSalle(signature, c, { pivote: pivoteRef.current })
@@ -191,14 +207,47 @@ export default function CartesSanctuaire() {
     return { liste: empreinte ? classer(empreinte, c) : [], exacts: null };
   }, [candidats]);
 
+  /**
+   * Capture automatique : combine la salle d'arrivée (minimap, verrouillée en phase 1) et la carte entière (vecteur entre les portes).
+   * Score = 30 % salle + 70 % carte quand les deux sont connues ; `exacts` = plans compatibles avec la seule salle.
+   */
+  const classerAuto = useCallback((refs, { sorties, carte }) => {
+    const c = candidats(refs);
+    const parSalle = sorties !== null ? new Map(classerParSalle({ sorties }, c, { pivote: pivoteRef.current }).map((r) => [r.id, r.score])) : null;
+    const parCarte = carte ? new Map(classerParCarte(carte, c).map((r) => [r.id, r.score])) : null;
+    const liste = c.map((r) => {
+      const ps = parSalle ? parSalle.get(r.id) || 0 : 0;
+      const pc = parCarte ? parCarte.get(r.id) || 0 : 0;
+      return { id: r.id, score: parSalle && parCarte ? 0.3 * ps + 0.7 * pc : parCarte ? pc : ps };
+    }).sort((a, b) => b.score - a.score);
+    const exacts = !parCarte && parSalle ? liste.filter((r) => r.score >= 0.999).map((r) => r.id) : null;
+    return { liste, exacts };
+  }, [candidats]);
+
   const references = useCallback(async () => {
     if (!referencesRef.current) {
       referencesRef.current = Promise.all(
-        PLANS.map(async (p) => ({
-          id: p.id,
-          empreinte: await empreinteDepuisSource(img(p.image)),
-          signature: await signatureDepuisSource(img(p.image), { ancre: p.depart }),
-        })),
+        PLANS.map(async (p) => {
+          const signature = await signatureDepuisSource(img(p.image), { ancre: p.depart });
+          // Vecteur porte principale → porte secondaire, en tailles de salle de départ (indépendant du zoom).
+          const pin = (type) => p.pins.find((x) => x.type === type);
+          const [pm, ps] = [pin('door-main'), pin('door-side')];
+          const px = (q) => (q && signature ? { x: (q.x / 100) * signature.largeur, y: (q.y / 100) * signature.hauteur } : null);
+          const taille = signature ? 2 * signature.demi + 1 : 0;
+          return {
+            id: p.id,
+            empreinte: await empreinteDepuisSource(img(p.image)),
+            signature,
+            vecteur: signature ? vecteurPlan(px(pm), px(ps), taille) : null,
+            // Pour situer le joueur : taille de la salle de départ, porte orange, départ et masque préparé (en pixels de la miniature).
+            taille,
+            largeur: signature ? signature.largeur : 0,
+            hauteur: signature ? signature.hauteur : 0,
+            porteOrange: px(pm),
+            depart: px(p.depart),
+            refPad: signature && signature.masque ? preparerRef(signature.masque, signature.largeur, signature.hauteur, Math.ceil(RAYON_DISQUE * taille) + 2) : null,
+          };
+        }),
       );
     }
     return referencesRef.current;
@@ -215,13 +264,15 @@ export default function CartesSanctuaire() {
     const url = URL.createObjectURL(fichier);
     try {
       setCapture(url);
-      const minimap = modeRef.current === 'minimap';
-      const [refs, empreinte, signature] = await Promise.all([
-        references(), empreinteDepuisSource(url), minimap ? signatureDepuisSource(url) : null,
+      const [refs, empreinte, signature, carte] = await Promise.all([
+        references(), empreinteDepuisSource(url), signatureDepuisSource(url), observationCarteDepuisSource(url),
       ]);
-      const resultat = classerObservation(refs, { signature, empreinte });
+      // Une image où les deux portes (orange et bleue) sont visibles est une carte entière, quel que soit le mode choisi.
+      const parCarte = !!carte && (modeRef.current === 'carte' || !!carte.vecteur);
+      const minimap = !parCarte && modeRef.current === 'minimap';
+      const resultat = classerObservation(refs, { signature: minimap ? signature : null, empreinte, carte: parCarte ? carte : null });
       if (!resultat.liste.length) throw new Error(minimap ? 'Aucune salle d\'arrivée détectée : recadrez la capture sur la minimap.' : 'Aucune carte détectée dans cette image.');
-      afficher(resultat, signature);
+      afficher(resultat, minimap ? signature : null);
     } catch (e) {
       setErreur(e.message || 'Analyse impossible.');
     } finally {
@@ -243,11 +294,15 @@ export default function CartesSanctuaire() {
   // ----- Capture automatique (partage d'écran) -----
   const [auto, setAuto] = useState(false);
   const [planDetecte, setPlanDetecte] = useState(null);
-  const sessionRef = useRef(null); // { flux, video, minuteur, historique, occupe, dernierStable }
+  const [position, setPosition] = useState(null); // { id, x, y (en % du plan), source: 'minimap' | 'carte' }
+  const [phaseAuto, setPhaseAuto] = useState(1); // 1 = lecture de la minimap ; 2 = suivi continu minimap + carte
+  const sessionRef = useRef(null); // { flux, video, minuteur, histo1, histo2, verrou, occupe, dernierStable }
 
   const reinitialiserAuto = () => {
     setResultats(null); setPlanDetecte(null); setSalle(null);
-    if (sessionRef.current) { sessionRef.current.historique = []; sessionRef.current.dernierStable = null; }
+    setPhaseAuto(1); setPosition(null);
+    const s = sessionRef.current;
+    if (s) { s.histo1 = []; s.histo2 = []; s.verrou = null; s.dernierStable = null; s.centre = null; s.tailleMM = null; s.pos = null; s.perdus = 0; }
   };
   const choisirDiffReco = (id) => { diffRecoRef.current = id; setDiffReco(id); reinitialiserAuto(); };
   const choisirSource = (mode) => { modeRef.current = mode; setModeSource(mode); reinitialiserAuto(); };
@@ -282,10 +337,10 @@ export default function CartesSanctuaire() {
     video.muted = true;
     video.srcObject = flux;
     try { await video.play(); } catch { /* lecture auto bloquée : l'analyse attendra les images */ }
-    const session = { flux, video, minuteur: null, historique: [], occupe: false, dernierStable: null };
+    const session = { flux, video, minuteur: null, histo1: [], histo2: [], verrou: null, occupe: false, dernierStable: null, centre: null, tailleMM: null, pos: null, perdus: 0 };
     sessionRef.current = session;
     flux.getVideoTracks()[0]?.addEventListener('ended', arreterAuto);
-    setAuto(true); setPlanDetecte(null); setResultats(null); setSalle(null);
+    setAuto(true); setPhaseAuto(1); setPlanDetecte(null); setResultats(null); setSalle(null); setPosition(null);
 
     const dessiner = (largeur, z) => {
       const vw = video.videoWidth, vh = video.videoHeight;
@@ -302,39 +357,62 @@ export default function CartesSanctuaire() {
       try {
         const refs = await references();
         if (sessionRef.current !== session) return;
-        const minimap = modeRef.current === 'minimap';
-        if (minimap) {
-          setApercu(dessiner(480, null));
-          const signature = signatureDepuisVideo(video, { zone: zoneRef.current });
-          session.historique.push(signature ? { id: signature.sorties || '-', score: 1 } : null);
-          if (session.historique.length > 20) session.historique.shift();
-          if (signature) {
-            setCapture(dessiner(240, zoneRef.current));
-            afficher(classerObservation(refs, { signature }), signature);
+        const zoneMinimap = zoneRef.current || ZONE_PAR_DEFAUT;
+        setApercu(dessiner(480, null));
+        const mm = analyseMinimapVideo(video, { zone: zoneMinimap });
+        const signature = mm ? mm.signature : null;
+        const observee = observationCarteDepuisVideo(video);
+        const carte = observee && observee.vecteur ? observee : null; // carte ouverte, les deux portes visibles
+
+        // Phase 1 : lecture de la minimap (en haut à gauche) jusqu'à une salle d'arrivée stable, qui est alors verrouillée.
+        if (session.verrou === null) {
+          // Le joueur est dans la salle d'arrivée : on retient sa flèche (centre fixe de la minimap) et la taille de la salle (échelle).
+          if (mm && mm.centre) { session.centre = { x: mm.centre.x / mm.w, y: mm.centre.y / mm.h }; session.tailleMM = 2 * mm.signature.demi + 1; }
+          session.histo1.push(signature ? { id: signature.sorties || '-', score: 1 } : null);
+          if (session.histo1.length > 20) session.histo1.shift();
+          const stable1 = planStable(session.histo1);
+          if (stable1) { session.verrou = stable1 === '-' ? '' : stable1; setPhaseAuto(2); }
+        }
+        // Phase 2 : suivi continu. La salle verrouillée reste le repère de départ ; la minimap et la carte sont lues à chaque image.
+        const sorties = session.verrou !== null ? session.verrou : (signature ? signature.sorties : null);
+        const resultat = classerAuto(refs, { sorties, carte });
+        if (signature || carte) {
+          setCapture(carte ? dessiner(320, null) : dessiner(240, zoneMinimap));
+          afficher(resultat, sorties !== null ? { sorties } : null);
+        }
+        const tete = resultat.liste[0];
+        const sur = tete && (carte ? tete.score >= 0.6 : resultat.exacts && resultat.exacts.length === 1);
+        session.histo2.push(sur ? { id: tete.id, score: tete.score } : null);
+        if (session.histo2.length > 20) session.histo2.shift();
+        const stable = planStable(session.histo2);
+        setPlanDetecte(stable);
+        if (stable && stable !== session.dernierStable) {
+          session.dernierStable = stable;
+          const p = PLANS.find((x) => x.id === stable);
+          if (p) voirPlan(p);
+        }
+
+        // Position en direct sur le plan identifié : flèche de la carte si elle est ouverte, sinon recalage de la minimap.
+        const ref = stable ? refs.find((r) => r.id === stable) : null;
+        if (ref && ref.refPad) {
+          let pos = null;
+          if (carte && carte.joueur) {
+            const p = positionDepuisCarte(carte, ref);
+            if (p) pos = { ...p, source: 'carte' };
           }
-          const stable = planStable(session.historique);
-          if (stable && stable !== session.dernierStable && signature) {
-            session.dernierStable = stable;
-            const { exacts } = classerObservation(refs, { signature });
-            const unique = exacts && exacts.length === 1 ? PLANS.find((x) => x.id === exacts[0]) : null;
-            setPlanDetecte(unique ? unique.id : null);
-            if (unique) voirPlan(unique);
-          } else if (!stable) {
-            setPlanDetecte(null);
+          if (!pos && mm && session.centre && session.tailleMM && !pivoteRef.current) {
+            const ech = echantillonnerMinimap(
+              mm.plein, mm.w, mm.h, { x: session.centre.x * mm.w, y: session.centre.y * mm.h },
+              ref.taille / session.tailleMM, RAYON_DISQUE * ref.taille,
+            );
+            const autour = session.pos && session.pos.id === ref.id ? session.pos : ref.depart;
+            // Suivi local autour de la dernière position ; après 3 échecs de suite, recherche sur tout le plan.
+            const r = localiser(ech, ref.refPad, session.perdus >= 3 || !autour ? {} : { autour, rayon: 2.5 * ref.taille });
+            if (r && r.corr >= 0.5) { pos = { x: r.x, y: r.y, source: 'minimap' }; session.perdus = 0; } else session.perdus++;
           }
-        } else {
-          const empreinte = empreinteDepuisVideo(video);
-          const resultat = classerObservation(refs, { empreinte });
-          const top = resultat.liste.slice(0, 3);
-          session.historique.push(top.length ? top[0] : null);
-          if (session.historique.length > 20) session.historique.shift();
-          if (top.length) { setCapture(dessiner(320, null)); setResultats(top); }
-          const stable = planStable(session.historique);
-          setPlanDetecte(stable);
-          if (stable && stable !== session.dernierStable) {
-            session.dernierStable = stable;
-            const p = PLANS.find((x) => x.id === stable);
-            if (p) voirPlan(p);
+          if (pos) {
+            session.pos = { id: ref.id, x: pos.x, y: pos.y };
+            setPosition({ id: ref.id, x: (pos.x / ref.largeur) * 100, y: (pos.y / ref.hauteur) * 100, source: pos.source });
           }
         }
       } catch (e) {
@@ -345,7 +423,7 @@ export default function CartesSanctuaire() {
     };
     session.minuteur = setInterval(tick, INTERVALLE_AUTO_MS);
     tick();
-  }, [arreterAuto, references, classerObservation, afficher]);
+  }, [arreterAuto, references, classerAuto, afficher]);
 
   useEffect(() => arreterAuto, [arreterAuto]);
 
@@ -402,7 +480,7 @@ export default function CartesSanctuaire() {
           ))}
           <span className="text-[11px] text-slate-500">Choisir la difficulté écarte les plans des autres modes et fiabilise la détection.</span>
         </div>
-        {auto && modeSource === 'minimap' && apercu && <ZoneMinimap apercu={apercu} zone={zone} onChange={definirZone} />}
+        {auto && apercu && <ZoneMinimap apercu={apercu} zone={zone || ZONE_PAR_DEFAUT} personnalisee={!!zone} onChange={definirZone} />}
         {salle && (
           <p className="mt-2 text-xs text-sky-300" role="status">
             Salle d'arrivée lue : <b>{libelleSorties(salle.sorties)}</b> — {salle.possibles.length === 0
@@ -414,14 +492,26 @@ export default function CartesSanctuaire() {
         )}
         {auto && (
           <p className="mt-2 text-xs text-emerald-300" role="status">
-            🔴 Capture en cours (une analyse toutes les {INTERVALLE_AUTO_MS / 1000} s).{' '}
+            🔴 Capture en cours, <b>phase {phaseAuto}/2</b> — {phaseAuto === 1
+              ? 'lecture de la minimap (en haut à gauche) : placez-vous dans la salle d\'arrivée.'
+              : 'suivi continu de la minimap et de la carte (ouvrez la carte pour affiner).'}{' '}
             {planDetecte
               ? `Plan ${PLANS.find((x) => x.id === planDetecte)?.numero} détecté.`
-              : modeSource === 'minimap'
-                ? 'Placez-vous dans la salle d\'arrivée, minimap visible : aucun plan unique pour l\'instant.'
-                : 'Ouvrez la carte du Sanctuaire en jeu : aucun plan stable pour l\'instant.'}
+              : 'Aucun plan unique pour l\'instant.'}
+            <button type="button" onClick={reinitialiserAuto} className="ml-2 underline text-slate-400 hover:text-white">Relancer l'analyse</button>
           </p>
         )}
+        {auto && position && (() => {
+          const planPos = PLANS.find((x) => x.id === position.id);
+          return planPos ? (
+            <div className="mt-3 max-w-md">
+              <p className="text-xs text-yellow-200 mb-1" role="status">
+                📍 Ma position — plan {planPos.numero} ({position.source === 'carte' ? 'lue sur la carte ouverte' : 'recalée par la minimap'})
+              </p>
+              <Carte plan={planPos} joueur={position} />
+            </div>
+          ) : null;
+        })()}
         {analyse && <p className="mt-2 text-xs text-slate-400">Analyse en cours…</p>}
         {erreur && <p className="mt-2 text-xs text-red-400">{erreur}</p>}
         {capture && resultats && (
@@ -528,7 +618,7 @@ export default function CartesSanctuaire() {
               <h3 className="text-xl font-bold">Plan {plan.numero} <span className="text-sm font-normal text-slate-400">— porte bleue au {NOM_DIR[plan.direction]}</span></h3>
               <button type="button" onClick={() => setOuvert(null)} className="px-3 py-1 rounded-lg bg-slate-700 hover:bg-slate-600 font-bold" aria-label="Fermer">✕</button>
             </div>
-            <Carte plan={plan} grande />
+            <Carte plan={plan} grande joueur={position && position.id === plan.id ? position : null} />
             <Comptes comptes={plan.comptes} />
           </div>
         </div>

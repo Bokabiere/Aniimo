@@ -220,6 +220,7 @@ export function classerParSalle(observee, references, options) {
 export const SEUILS = {
   miniature: { lumMin: 140, satMax: 40 },
   minimap: { lumMin: 140, satMax: 30 },
+  carte: { lumMin: 90, satMax: 40 }, // carte plein écran : sol plus sombre que sur la minimap
 };
 
 /** Signature depuis des pixels RGBA. `ancre` {x, y} pour une miniature, absente pour une minimap en jeu. */
@@ -237,4 +238,131 @@ export function libelleSorties(sorties) {
   const prep = (n) => (n === 'est' || n === 'ouest' ? `à l'${n}` : `au ${n}`);
   if (noms.length === 1) return `sortie ${prep(noms[0])}`;
   return `sorties ${noms.slice(0, -1).map(prep).join(', ')} et ${prep(noms[noms.length - 1])}`;
+}
+
+/** Teinte (0..360), saturation et valeur (0..1) d'un pixel RGB. */
+function hsv(r, g, b) {
+  const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+  let t = 0;
+  if (d) {
+    if (max === r) t = ((g - b) / d + 6) % 6;
+    else if (max === g) t = (b - r) / d + 2;
+    else t = (r - g) / d + 4;
+  }
+  return { t: t * 60, s: max ? d / max : 0, v: max / 255 };
+}
+
+/** Taches de pixels vérifiant `test(teinte, saturation, valeur)` : [{ x, y, aire }] (centres en pixels), par aire décroissante. */
+function taches(rgba, w, h, test) {
+  const masque = new Uint8Array(w * h);
+  for (let i = 0; i < w * h; i++) {
+    const c = hsv(rgba[i * 4], rgba[i * 4 + 1], rgba[i * 4 + 2]);
+    if (rgba[i * 4 + 3] >= 128 && test(c.t, c.s, c.v)) masque[i] = 1;
+  }
+  const demi = Math.max(1, Math.round(Math.max(w, h) / 400)); // relie les pixels d'une même icône
+  const relie = boite(masque, w, h, demi, 'd');
+  const vu = new Uint8Array(w * h);
+  const out = [];
+  for (let depart = 0; depart < w * h; depart++) {
+    if (!relie[depart] || vu[depart]) continue;
+    const pile = [depart];
+    vu[depart] = 1;
+    let aire = 0, sx = 0, sy = 0;
+    while (pile.length) {
+      const i = pile.pop();
+      const x = i % w, y = (i / w) | 0;
+      if (masque[i]) { aire++; sx += x; sy += y; }
+      for (const j of [x > 0 ? i - 1 : -1, x < w - 1 ? i + 1 : -1, y > 0 ? i - w : -1, y < h - 1 ? i + w : -1]) {
+        if (j >= 0 && relie[j] && !vu[j]) { vu[j] = 1; pile.push(j); }
+      }
+    }
+    if (aire) out.push({ x: sx / aire, y: sy / aire, aire });
+  }
+  return out.sort((a, b) => b.aire - a.aire);
+}
+
+const plusGrandeTache = (rgba, w, h, test) => taches(rgba, w, h, test)[0] || null;
+
+/** Test de couleur de la flèche jaune du joueur (carte et minimap). */
+const estJauneJoueur = (t, s, v) => t >= 48 && t <= 62 && s > 0.35 && v > 0.85;
+
+/**
+ * Centre du joueur sur une image de minimap : la flèche jaune située dans la salle `boite` {x0,x1,y0,y1}
+ * (l'icône de soleil, jaune aussi, est hors de la salle). null si introuvable.
+ */
+export function centreJoueur(rgba, w, h, boite) {
+  const t = taches(rgba, w, h, estJauneJoueur)
+    .filter((c) => !boite || (c.x >= boite.x0 && c.x <= boite.x1 && c.y >= boite.y0 && c.y <= boite.y1));
+  return t.length ? { x: t[0].x, y: t[0].y } : null;
+}
+
+/**
+ * Analyse d'une image de minimap : { signature, plein (masque sans trous), w, h, centre } ou null.
+ * `centre` = flèche du joueur (utile au début de partie, quand le joueur est dans la salle d'arrivée).
+ */
+export function analyserMinimap(rgba, w, h) {
+  const masque = masqueClair(rgba, w, h, SEUILS.minimap);
+  const signature = signatureSalle(masque, w, h);
+  if (!signature) return null;
+  return { signature, plein: remplirTrous(masque, w, h), w, h, centre: centreJoueur(rgba, w, h, signature.boite) };
+}
+
+/**
+ * Repères des portes sur une capture de la carte en jeu : icône ORANGE (entrée principale / départ) et icône BLEUE
+ * (entrée secondaire, seulement si déjà découverte). Renvoie { orange: {x, y} | null, bleu: {x, y} | null }.
+ */
+export function reperesPortes(rgba, w, h) {
+  const orange = plusGrandeTache(rgba, w, h, (t, s, v) => t >= 15 && t <= 45 && s > 0.5 && v > 0.6);
+  const bleu = plusGrandeTache(rgba, w, h, (t, s, v) => t >= 200 && t <= 235 && s > 0.35 && v > 0.7);
+  const minAire = Math.max(6, w * h * 0.00004);
+  return {
+    orange: orange && orange.aire >= minAire ? { x: orange.x, y: orange.y } : null,
+    // une icône bleue bien plus petite que l'orange est un parasite (interface, reflet)
+    bleu: bleu && orange && bleu.aire >= 0.4 * orange.aire && bleu.aire >= minAire ? { x: bleu.x, y: bleu.y } : null,
+  };
+}
+
+/**
+ * Observation d'une capture de la CARTE : sorties de la salle de départ + vecteurs porte orange → porte bleue et
+ * porte orange → joueur, exprimés en « tailles de salle de départ » (indépendants du zoom). null sans porte orange.
+ */
+export function observerCarte(rgba, w, h) {
+  const { orange, bleu } = reperesPortes(rgba, w, h);
+  if (!orange) return null;
+  const sig = signatureSalle(masqueClair(rgba, w, h, SEUILS.carte), w, h, { ancre: orange });
+  if (!sig) return null;
+  const taille = 2 * sig.demi + 1;
+  const fleche = plusGrandeTache(rgba, w, h, estJauneJoueur);
+  const rel = (p) => ({ x: (p.x - orange.x) / taille, y: (p.y - orange.y) / taille });
+  return {
+    sorties: sig.sorties,
+    taille,
+    vecteur: bleu ? rel(bleu) : null,
+    joueur: fleche && fleche.aire >= Math.max(6, w * h * 0.00004) ? rel(fleche) : null, // flèche jaune du joueur
+  };
+}
+
+/** Vecteur porte principale → porte secondaire d'un plan, en tailles de salle de départ (pixels de la miniature). */
+export function vecteurPlan(principale, secondaire, taille) {
+  if (!principale || !secondaire || !taille) return null;
+  return { x: (secondaire.x - principale.x) / taille, y: (secondaire.y - principale.y) / taille };
+}
+
+/**
+ * Score 0..1 d'une observation de carte face à un plan : vecteur entre les portes (75 %) + sorties de la salle
+ * de départ (25 %). Sans porte bleue découverte, seules les sorties comptent (score plafonné à 0.6).
+ */
+export function scoreCarte(obs, ref) {
+  if (!obs || !ref || !ref.signature) return 0;
+  const ss = scoreSorties(obs.sorties, ref.signature.sorties);
+  if (!obs.vecteur || !ref.vecteur) return ss * 0.6;
+  const norme = Math.max(1, Math.hypot(ref.vecteur.x, ref.vecteur.y));
+  const e = Math.hypot(obs.vecteur.x - ref.vecteur.x, obs.vecteur.y - ref.vecteur.y) / norme;
+  return 0.75 * Math.max(0, 1 - e / 0.5) + 0.25 * ss;
+}
+
+/** Classe les plans selon une observation de carte. `references` : [{ id, signature, vecteur }]. */
+export function classerParCarte(obs, references) {
+  if (!obs) return [];
+  return references.map((r) => ({ id: r.id, score: scoreCarte(obs, r) })).sort((a, b) => b.score - a.score);
 }
