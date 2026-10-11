@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import PLANS from '../data/sanctuaire_plans.json';
-import { classer, empreinteDepuisSource, empreinteDepuisVideo, planStable } from '../lib/reconnaissance-plan.js';
+import { classer, empreinteDepuisSource, empreinteDepuisVideo, planStable, signatureDepuisSource, signatureDepuisVideo } from '../lib/reconnaissance-plan.js';
+import { classerParSalle, libelleSorties } from '../lib/salle-depart.js';
 
 const INTERVALLE_AUTO_MS = 2000;
+const CLE_ZONE = 'aniimo_zone_minimap_v1';
 const PARTAGE_ECRAN_DISPONIBLE = typeof navigator !== 'undefined' && !!navigator.mediaDevices?.getDisplayMedia;
 
 const BASE = (import.meta.env?.BASE_URL || '/').replace(/\/?$/, '/');
@@ -91,6 +93,43 @@ function Comptes({ comptes }) {
   );
 }
 
+/** Aperçu de l'écran partagé sur lequel on dessine à la souris la zone de la minimap (fractions 0..1). */
+function ZoneMinimap({ apercu, zone, onChange }) {
+  const [debut, setDebut] = useState(null);
+  const [courante, setCourante] = useState(null);
+  const point = (e) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    return { x: Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)), y: Math.min(1, Math.max(0, (e.clientY - r.top) / r.height)) };
+  };
+  const rect = (a, b) => ({ x: Math.min(a.x, b.x), y: Math.min(a.y, b.y), w: Math.abs(a.x - b.x), h: Math.abs(a.y - b.y) });
+  const affichee = courante || zone;
+  return (
+    <div className="mt-2">
+      <p className="text-xs text-slate-300 mb-1">
+        Zone de la minimap : <b>dessinez un rectangle</b> autour de la minimap sur l'aperçu de votre écran
+        {zone && <button type="button" onClick={() => onChange(null)} className="ml-2 underline text-slate-400 hover:text-white">Effacer la zone</button>}
+      </p>
+      <div
+        className="relative inline-block max-w-full touch-none cursor-crosshair select-none rounded-lg overflow-hidden border border-slate-600"
+        onPointerDown={(e) => { e.currentTarget.setPointerCapture(e.pointerId); const p = point(e); setDebut(p); setCourante({ ...p, w: 0, h: 0 }); }}
+        onPointerMove={(e) => { if (debut) setCourante(rect(debut, point(e))); }}
+        onPointerUp={(e) => {
+          if (!debut) return;
+          const r = rect(debut, point(e));
+          setDebut(null); setCourante(null);
+          if (r.w > 0.02 && r.h > 0.02) onChange(r);
+        }}
+      >
+        <img src={apercu} alt="Aperçu de l'écran partagé" draggable={false} className="block max-h-56" />
+        {affichee && (
+          <div className="absolute border-2 border-amber-400 bg-amber-400/10 pointer-events-none"
+            style={{ left: `${affichee.x * 100}%`, top: `${affichee.y * 100}%`, width: `${affichee.w * 100}%`, height: `${affichee.h * 100}%` }} />
+        )}
+      </div>
+    </div>
+  );
+}
+
 /** Onglet « Cartes » : plans du Sanctuaire perdu (Chasse aux œufs), filtrables par direction de la porte bleue. */
 export default function CartesSanctuaire() {
   const [difficulte, setDifficulte] = useState('cauchemar-chaos');
@@ -115,45 +154,80 @@ export default function CartesSanctuaire() {
   const [erreur, setErreur] = useState(null);
   const [survol, setSurvol] = useState(false);
   const fichierRef = useRef(null);
+  const referencesRef = useRef(null);
+
   // Difficulté de la partie en cours (null = toutes) : restreint les plans candidats à la reconnaissance.
   const [diffReco, setDiffReco] = useState(null);
   const diffRecoRef = useRef(null);
+  // Source : 'minimap' = salle d'arrivée de la minimap en jeu (début de partie) ; 'carte' = carte entière (silhouette).
+  const [modeSource, setModeSource] = useState('minimap');
+  const modeRef = useRef('minimap');
+  // La minimap pivote-t-elle avec la caméra ? (sinon le nord est fixe en haut)
+  const [pivote, setPivote] = useState(false);
+  const pivoteRef = useRef(false);
+  // Zone de la minimap dans l'écran partagé (fractions 0..1), mémorisée dans le navigateur.
+  const [zone, setZone] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(CLE_ZONE)) || null; } catch { return null; }
+  });
+  const zoneRef = useRef(zone);
+  const [apercu, setApercu] = useState(null); // image réduite de l'écran partagé, pour dessiner la zone
+  const [salle, setSalle] = useState(null);   // { sorties, possibles: [ids] } : dernière salle d'arrivée lue
+
   const candidats = useCallback((refs) => {
     const d = diffRecoRef.current;
-    return refs.filter((r) => r.empreinte && (!d || PLANS.find((p) => p.id === r.id)?.difficulte === d));
+    return refs.filter((r) => !d || PLANS.find((p) => p.id === r.id)?.difficulte === d);
   }, []);
-  const choisirDiffReco = (id) => {
-    diffRecoRef.current = id;
-    setDiffReco(id);
-    setResultats(null); setPlanDetecte(null);
-    if (sessionRef.current) { sessionRef.current.historique = []; sessionRef.current.dernierStable = null; }
-  };
-  const referencesRef = useRef(null);
+
+  /** Classement d'une observation { signature, empreinte } ; renvoie { liste: [{ id, score }], exacts: [ids] | null }. */
+  const classerObservation = useCallback((refs, { signature, empreinte }) => {
+    const c = candidats(refs);
+    if (modeRef.current === 'minimap' && signature) {
+      const empreintes = empreinte ? new Map(classer(empreinte, c).map((r) => [r.id, r.score])) : null;
+      const liste = classerParSalle(signature, c, { pivote: pivoteRef.current })
+        .sort((a, b) => b.score - a.score || (empreintes ? (empreintes.get(b.id) || 0) - (empreintes.get(a.id) || 0) : 0));
+      const exacts = liste.filter((r) => r.score >= 0.999).map((r) => r.id);
+      return { liste, exacts };
+    }
+    return { liste: empreinte ? classer(empreinte, c) : [], exacts: null };
+  }, [candidats]);
 
   const references = useCallback(async () => {
     if (!referencesRef.current) {
       referencesRef.current = Promise.all(
-        PLANS.map(async (p) => ({ id: p.id, empreinte: await empreinteDepuisSource(img(p.image)) })),
+        PLANS.map(async (p) => ({
+          id: p.id,
+          empreinte: await empreinteDepuisSource(img(p.image)),
+          signature: await signatureDepuisSource(img(p.image), { ancre: p.depart }),
+        })),
       );
     }
     return referencesRef.current;
   }, []);
 
+  const afficher = useCallback(({ liste, exacts }, signature) => {
+    setResultats(liste.slice(0, exacts && exacts.length > 3 ? 6 : 3));
+    setSalle(signature && exacts ? { sorties: signature.sorties, possibles: exacts } : null);
+  }, []);
+
   const analyserFichier = useCallback(async (fichier) => {
     if (!fichier || !fichier.type?.startsWith('image/')) { setErreur('Ce fichier n\'est pas une image.'); return; }
-    setErreur(null); setAnalyse(true); setResultats(null);
+    setErreur(null); setAnalyse(true); setResultats(null); setSalle(null);
     const url = URL.createObjectURL(fichier);
     try {
       setCapture(url);
-      const [refs, empreinte] = await Promise.all([references(), empreinteDepuisSource(url)]);
-      if (!empreinte) throw new Error('Aucune carte détectée dans cette image.');
-      setResultats(classer(empreinte, candidats(refs)).slice(0, 3));
+      const minimap = modeRef.current === 'minimap';
+      const [refs, empreinte, signature] = await Promise.all([
+        references(), empreinteDepuisSource(url), minimap ? signatureDepuisSource(url) : null,
+      ]);
+      const resultat = classerObservation(refs, { signature, empreinte });
+      if (!resultat.liste.length) throw new Error(minimap ? 'Aucune salle d\'arrivée détectée : recadrez la capture sur la minimap.' : 'Aucune carte détectée dans cette image.');
+      afficher(resultat, signature);
     } catch (e) {
       setErreur(e.message || 'Analyse impossible.');
     } finally {
       setAnalyse(false);
     }
-  }, [references, candidats]);
+  }, [references, classerObservation, afficher]);
 
   useEffect(() => {
     const surColler = (e) => {
@@ -171,6 +245,18 @@ export default function CartesSanctuaire() {
   const [planDetecte, setPlanDetecte] = useState(null);
   const sessionRef = useRef(null); // { flux, video, minuteur, historique, occupe, dernierStable }
 
+  const reinitialiserAuto = () => {
+    setResultats(null); setPlanDetecte(null); setSalle(null);
+    if (sessionRef.current) { sessionRef.current.historique = []; sessionRef.current.dernierStable = null; }
+  };
+  const choisirDiffReco = (id) => { diffRecoRef.current = id; setDiffReco(id); reinitialiserAuto(); };
+  const choisirSource = (mode) => { modeRef.current = mode; setModeSource(mode); reinitialiserAuto(); };
+  const changerPivote = (v) => { pivoteRef.current = v; setPivote(v); reinitialiserAuto(); };
+  const definirZone = (z) => {
+    zoneRef.current = z; setZone(z); reinitialiserAuto();
+    try { if (z) localStorage.setItem(CLE_ZONE, JSON.stringify(z)); else localStorage.removeItem(CLE_ZONE); } catch { /* stockage indisponible */ }
+  };
+
   const arreterAuto = useCallback(() => {
     const s = sessionRef.current;
     sessionRef.current = null;
@@ -179,7 +265,7 @@ export default function CartesSanctuaire() {
       s.flux.getTracks().forEach((t) => t.stop());
       s.video.srcObject = null;
     }
-    setAuto(false);
+    setAuto(false); setApercu(null);
   }, []);
 
   const lancerAuto = useCallback(async () => {
@@ -199,30 +285,57 @@ export default function CartesSanctuaire() {
     const session = { flux, video, minuteur: null, historique: [], occupe: false, dernierStable: null };
     sessionRef.current = session;
     flux.getVideoTracks()[0]?.addEventListener('ended', arreterAuto);
-    setAuto(true); setPlanDetecte(null); setResultats(null);
+    setAuto(true); setPlanDetecte(null); setResultats(null); setSalle(null);
+
+    const dessiner = (largeur, z) => {
+      const vw = video.videoWidth, vh = video.videoHeight;
+      const sx = z ? z.x * vw : 0, sy = z ? z.y * vh : 0, sw = z ? z.w * vw : vw, sh = z ? z.h * vh : vh;
+      const c = document.createElement('canvas');
+      c.width = largeur; c.height = Math.max(1, Math.round((largeur * sh) / sw));
+      c.getContext('2d').drawImage(video, sx, sy, sw, sh, 0, 0, c.width, c.height);
+      return c.toDataURL('image/jpeg', 0.6);
+    };
 
     const tick = async () => {
-      if (session.occupe || sessionRef.current !== session) return;
+      if (session.occupe || sessionRef.current !== session || !video.videoWidth) return;
       session.occupe = true;
       try {
-        const [refs, empreinte] = await Promise.all([references(), Promise.resolve(empreinteDepuisVideo(video))]);
+        const refs = await references();
         if (sessionRef.current !== session) return;
-        const top = empreinte ? classer(empreinte, candidats(refs)).slice(0, 3) : null;
-        session.historique.push(top ? top[0] : null);
-        if (session.historique.length > 20) session.historique.shift();
-        if (top) {
-          const apercu = document.createElement('canvas');
-          apercu.width = 320; apercu.height = Math.round((320 * video.videoHeight) / video.videoWidth) || 180;
-          apercu.getContext('2d').drawImage(video, 0, 0, apercu.width, apercu.height);
-          setCapture(apercu.toDataURL('image/jpeg', 0.6));
-          setResultats(top);
-        }
-        const stable = planStable(session.historique);
-        setPlanDetecte(stable);
-        if (stable && stable !== session.dernierStable) {
-          session.dernierStable = stable;
-          const p = PLANS.find((x) => x.id === stable);
-          if (p) voirPlan(p);
+        const minimap = modeRef.current === 'minimap';
+        if (minimap) {
+          setApercu(dessiner(480, null));
+          const signature = signatureDepuisVideo(video, { zone: zoneRef.current });
+          session.historique.push(signature ? { id: signature.sorties || '-', score: 1 } : null);
+          if (session.historique.length > 20) session.historique.shift();
+          if (signature) {
+            setCapture(dessiner(240, zoneRef.current));
+            afficher(classerObservation(refs, { signature }), signature);
+          }
+          const stable = planStable(session.historique);
+          if (stable && stable !== session.dernierStable && signature) {
+            session.dernierStable = stable;
+            const { exacts } = classerObservation(refs, { signature });
+            const unique = exacts && exacts.length === 1 ? PLANS.find((x) => x.id === exacts[0]) : null;
+            setPlanDetecte(unique ? unique.id : null);
+            if (unique) voirPlan(unique);
+          } else if (!stable) {
+            setPlanDetecte(null);
+          }
+        } else {
+          const empreinte = empreinteDepuisVideo(video);
+          const resultat = classerObservation(refs, { empreinte });
+          const top = resultat.liste.slice(0, 3);
+          session.historique.push(top.length ? top[0] : null);
+          if (session.historique.length > 20) session.historique.shift();
+          if (top.length) { setCapture(dessiner(320, null)); setResultats(top); }
+          const stable = planStable(session.historique);
+          setPlanDetecte(stable);
+          if (stable && stable !== session.dernierStable) {
+            session.dernierStable = stable;
+            const p = PLANS.find((x) => x.id === stable);
+            if (p) voirPlan(p);
+          }
         }
       } catch (e) {
         setErreur(e.message || 'Analyse impossible.');
@@ -232,7 +345,7 @@ export default function CartesSanctuaire() {
     };
     session.minuteur = setInterval(tick, INTERVALLE_AUTO_MS);
     tick();
-  }, [arreterAuto, references, candidats]);
+  }, [arreterAuto, references, classerObservation, afficher]);
 
   useEffect(() => arreterAuto, [arreterAuto]);
 
@@ -264,6 +377,21 @@ export default function CartesSanctuaire() {
           )}
           {capture && <button type="button" onClick={() => { setCapture(null); setResultats(null); setErreur(null); setPlanDetecte(null); }} className="ml-auto text-xs text-slate-400 hover:text-white underline">Effacer</button>}
         </div>
+        <div className="mt-2 flex flex-wrap items-center gap-1.5" role="group" aria-label="Ce que je capture">
+          <span className="text-xs text-slate-400">Je capture :</span>
+          {[{ id: 'minimap', label: '🧭 La minimap (début de partie)' }, { id: 'carte', label: '🗺️ La carte entière' }].map((m) => (
+            <button key={m.id} type="button" aria-pressed={modeSource === m.id} onClick={() => choisirSource(m.id)}
+              className={`px-2.5 py-1 rounded-lg text-xs font-bold border transition ${modeSource === m.id ? 'bg-amber-500 text-slate-900 border-amber-300' : 'bg-slate-900 border-slate-600 text-slate-300 hover:bg-slate-700'}`}>
+              {m.label}
+            </button>
+          ))}
+          {modeSource === 'minimap' && (
+            <label className="ml-2 flex items-center gap-1.5 text-xs text-slate-300 cursor-pointer" title="À cocher si la minimap tourne quand vous tournez la caméra (le N de la boussole bouge).">
+              <input type="checkbox" checked={pivote} onChange={(e) => changerPivote(e.target.checked)} />
+              La minimap pivote avec la caméra
+            </label>
+          )}
+        </div>
         <div className="mt-2 flex flex-wrap items-center gap-1.5" role="group" aria-label="Difficulté de ma partie">
           <span className="text-xs text-slate-400">Difficulté de ma partie :</span>
           {[{ id: null, label: 'Toutes' }, ...DIFFICULTES].map((d) => (
@@ -274,12 +402,24 @@ export default function CartesSanctuaire() {
           ))}
           <span className="text-[11px] text-slate-500">Choisir la difficulté écarte les plans des autres modes et fiabilise la détection.</span>
         </div>
+        {auto && modeSource === 'minimap' && apercu && <ZoneMinimap apercu={apercu} zone={zone} onChange={definirZone} />}
+        {salle && (
+          <p className="mt-2 text-xs text-sky-300" role="status">
+            Salle d'arrivée lue : <b>{libelleSorties(salle.sorties)}</b> — {salle.possibles.length === 0
+              ? 'aucun plan ne correspond exactement (vérifiez la difficulté, la case « pivote » ou la zone).'
+              : salle.possibles.length === 1
+                ? `plan ${PLANS.find((x) => x.id === salle.possibles[0])?.numero}.`
+                : `${salle.possibles.length} plans possibles : ${salle.possibles.map((id) => PLANS.find((x) => x.id === id)?.numero).join(', ')}. Choisissez votre difficulté pour réduire la liste.`}
+          </p>
+        )}
         {auto && (
           <p className="mt-2 text-xs text-emerald-300" role="status">
             🔴 Capture en cours (une analyse toutes les {INTERVALLE_AUTO_MS / 1000} s).{' '}
             {planDetecte
               ? `Plan ${PLANS.find((x) => x.id === planDetecte)?.numero} détecté.`
-              : 'Ouvrez la carte du Sanctuaire en jeu : aucun plan stable pour l\'instant.'}
+              : modeSource === 'minimap'
+                ? 'Placez-vous dans la salle d\'arrivée, minimap visible : aucun plan unique pour l\'instant.'
+                : 'Ouvrez la carte du Sanctuaire en jeu : aucun plan stable pour l\'instant.'}
           </p>
         )}
         {analyse && <p className="mt-2 text-xs text-slate-400">Analyse en cours…</p>}
@@ -307,8 +447,12 @@ export default function CartesSanctuaire() {
             </div>
           </div>
         )}
-        {resultats && resultats[0].score < 0.5 && (
-          <p className="mt-2 text-xs text-amber-300">Correspondance faible : recadrez la capture sur la carte seule (sans interface) ou utilisez les filtres ci-dessous.</p>
+        {resultats && resultats[0] && resultats[0].score < 0.5 && (
+          <p className="mt-2 text-xs text-amber-300">
+            {modeSource === 'minimap'
+              ? 'Correspondance faible : cadrez la minimap seule, faites la capture dans la salle d\'arrivée, ou cochez « La minimap pivote ».'
+              : 'Correspondance faible : recadrez la capture sur la carte seule (sans interface) ou utilisez les filtres ci-dessous.'}
+          </p>
         )}
       </div>
 

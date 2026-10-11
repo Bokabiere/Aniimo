@@ -6,6 +6,8 @@
  * (similarité cosinus × pénalité de proportions). Tout se fait localement, dans le navigateur.
  */
 
+import { signatureDepuisRGBA } from './salle-depart.js';
+
 export const TAILLE_EMPREINTE = 48;
 
 const luminance = (r, g, b) => 0.299 * r + 0.587 * g + 0.114 * b;
@@ -83,16 +85,21 @@ export function classer(empreinte, references) {
 
 // ---------- Partie navigateur (canvas) ----------
 
-function rgbaDepuisImage(image, tailleMax = 640) {
+/** Pixels RGBA d'une image ou d'un <video>, éventuellement recadrés sur `zone` {x, y, w, h} (fractions 0..1). */
+function rgbaDepuisImage(image, tailleMax = 640, zone = null) {
   const largeur = image.naturalWidth || image.videoWidth || image.width;
   const hauteur = image.naturalHeight || image.videoHeight || image.height;
-  const echelle = Math.min(1, tailleMax / Math.max(largeur, hauteur));
-  const w = Math.max(1, Math.round(largeur * echelle));
-  const h = Math.max(1, Math.round(hauteur * echelle));
+  const sx = zone ? Math.round(zone.x * largeur) : 0;
+  const sy = zone ? Math.round(zone.y * hauteur) : 0;
+  const sw = Math.max(1, zone ? Math.round(zone.w * largeur) : largeur);
+  const sh = Math.max(1, zone ? Math.round(zone.h * hauteur) : hauteur);
+  const echelle = Math.min(1, tailleMax / Math.max(sw, sh));
+  const w = Math.max(1, Math.round(sw * echelle));
+  const h = Math.max(1, Math.round(sh * echelle));
   const canvas = document.createElement('canvas');
   canvas.width = w; canvas.height = h;
   const ctx = canvas.getContext('2d', { willReadFrequently: true });
-  ctx.drawImage(image, 0, 0, w, h);
+  ctx.drawImage(image, sx, sy, sw, sh, 0, 0, w, h);
   return { rgba: ctx.getImageData(0, 0, w, h).data, w, h };
 }
 
@@ -133,4 +140,21 @@ export function planStable(historique, { fenetre = 5, minVotes = 3, seuil = 0.5 
     if (n >= minVotes && (!meilleur || n > meilleur.n)) meilleur = { id, n };
   }
   return meilleur ? meilleur.id : null;
+}
+
+/**
+ * Signature de la salle d'arrivée (sorties N/E/S/O) d'une image : `ancre` {x, y} en % pour une miniature de plan,
+ * `zone` pour recadrer la minimap en jeu. Voir salle-depart.js.
+ */
+export async function signatureDepuisSource(src, { ancre = null, zone = null } = {}) {
+  const image = await chargerImage(src);
+  const { rgba, w, h } = rgbaDepuisImage(image, 640, zone);
+  return signatureDepuisRGBA(rgba, w, h, { ancre: ancre ? { x: (ancre.x / 100) * w, y: (ancre.y / 100) * h } : null });
+}
+
+/** Idem pour l'image courante d'un <video> (partage d'écran) ; null si la vidéo n'est pas prête. */
+export function signatureDepuisVideo(video, { zone = null } = {}) {
+  if (!video || !video.videoWidth || !video.videoHeight) return null;
+  const { rgba, w, h } = rgbaDepuisImage(video, 640, zone);
+  return signatureDepuisRGBA(rgba, w, h);
 }
