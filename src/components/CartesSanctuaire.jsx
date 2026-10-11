@@ -115,6 +115,19 @@ export default function CartesSanctuaire() {
   const [erreur, setErreur] = useState(null);
   const [survol, setSurvol] = useState(false);
   const fichierRef = useRef(null);
+  // Difficulté de la partie en cours (null = toutes) : restreint les plans candidats à la reconnaissance.
+  const [diffReco, setDiffReco] = useState(null);
+  const diffRecoRef = useRef(null);
+  const candidats = useCallback((refs) => {
+    const d = diffRecoRef.current;
+    return refs.filter((r) => r.empreinte && (!d || PLANS.find((p) => p.id === r.id)?.difficulte === d));
+  }, []);
+  const choisirDiffReco = (id) => {
+    diffRecoRef.current = id;
+    setDiffReco(id);
+    setResultats(null); setPlanDetecte(null);
+    if (sessionRef.current) { sessionRef.current.historique = []; sessionRef.current.dernierStable = null; }
+  };
   const referencesRef = useRef(null);
 
   const references = useCallback(async () => {
@@ -134,13 +147,13 @@ export default function CartesSanctuaire() {
       setCapture(url);
       const [refs, empreinte] = await Promise.all([references(), empreinteDepuisSource(url)]);
       if (!empreinte) throw new Error('Aucune carte détectée dans cette image.');
-      setResultats(classer(empreinte, refs.filter((r) => r.empreinte)).slice(0, 3));
+      setResultats(classer(empreinte, candidats(refs)).slice(0, 3));
     } catch (e) {
       setErreur(e.message || 'Analyse impossible.');
     } finally {
       setAnalyse(false);
     }
-  }, [references]);
+  }, [references, candidats]);
 
   useEffect(() => {
     const surColler = (e) => {
@@ -194,7 +207,7 @@ export default function CartesSanctuaire() {
       try {
         const [refs, empreinte] = await Promise.all([references(), Promise.resolve(empreinteDepuisVideo(video))]);
         if (sessionRef.current !== session) return;
-        const top = empreinte ? classer(empreinte, refs.filter((r) => r.empreinte)).slice(0, 3) : null;
+        const top = empreinte ? classer(empreinte, candidats(refs)).slice(0, 3) : null;
         session.historique.push(top ? top[0] : null);
         if (session.historique.length > 20) session.historique.shift();
         if (top) {
@@ -219,7 +232,7 @@ export default function CartesSanctuaire() {
     };
     session.minuteur = setInterval(tick, INTERVALLE_AUTO_MS);
     tick();
-  }, [arreterAuto, references]);
+  }, [arreterAuto, references, candidats]);
 
   useEffect(() => arreterAuto, [arreterAuto]);
 
@@ -250,6 +263,16 @@ export default function CartesSanctuaire() {
             </button>
           )}
           {capture && <button type="button" onClick={() => { setCapture(null); setResultats(null); setErreur(null); setPlanDetecte(null); }} className="ml-auto text-xs text-slate-400 hover:text-white underline">Effacer</button>}
+        </div>
+        <div className="mt-2 flex flex-wrap items-center gap-1.5" role="group" aria-label="Difficulté de ma partie">
+          <span className="text-xs text-slate-400">Difficulté de ma partie :</span>
+          {[{ id: null, label: 'Toutes' }, ...DIFFICULTES].map((d) => (
+            <button key={d.id ?? 'toutes'} type="button" aria-pressed={diffReco === d.id} onClick={() => choisirDiffReco(d.id)}
+              className={`px-2.5 py-1 rounded-lg text-xs font-bold border transition ${diffReco === d.id ? 'bg-amber-500 text-slate-900 border-amber-300' : 'bg-slate-900 border-slate-600 text-slate-300 hover:bg-slate-700'}`}>
+              {d.label}
+            </button>
+          ))}
+          <span className="text-[11px] text-slate-500">Choisir la difficulté écarte les plans des autres modes et fiabilise la détection.</span>
         </div>
         {auto && (
           <p className="mt-2 text-xs text-emerald-300" role="status">
