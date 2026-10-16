@@ -18,29 +18,31 @@ export function rayonMesure(c, taille) {
 
 /**
  * Intègre une mesure `{ x, y, c }` (c = qualité 0..1) à l'instant `t` (secondes), ou `null` si aucune mesure n'est disponible.
- * Renvoie { x, y, rayon, init } (position lissée). Une mesure à plus de 3 tailles de salle de la position prédite est un saut
+ * Renvoie { x, y, vx, vy, rayon, init } (position lissée ; vitesse en px/s, pour extrapoler l'affichage entre deux mesures). Une mesure à plus de 3 tailles de salle de la position prédite est un saut
  * (téléportation, re-localisation, repositionnement manuel) : le filtre repart de la mesure.
  */
 export function mettreAJourFiltre(f, mesure, t) {
   const dt = f.t === null ? 0 : Math.max(0.001, Math.min(1, t - f.t));
   f.t = t;
   if (!f.init) {
-    if (!mesure) return { x: f.x, y: f.y, rayon: f.rayon, init: false };
+    if (!mesure) return { x: f.x, y: f.y, vx: 0, vy: 0, rayon: f.rayon, init: false };
     Object.assign(f, { x: mesure.x, y: mesure.y, vx: 0, vy: 0, rayon: rayonMesure(mesure.c, f.taille), init: true });
-    return { x: f.x, y: f.y, rayon: f.rayon, init: true };
+    return { x: f.x, y: f.y, vx: f.vx, vy: f.vy, rayon: f.rayon, init: true };
   }
   // prédiction
   const px = f.x + f.vx * dt, py = f.y + f.vy * dt;
   if (!mesure) {
     f.x = px; f.y = py;
-    f.vx *= 0.7; f.vy *= 0.7;
+    // Amortissement de la vitesse selon le temps écoulé (et non par appel : la cadence des mesures varie). exp(-0,4 / 1,1) ≈ 0,7.
+    const amorti = Math.exp(-dt / 1.1);
+    f.vx *= amorti; f.vy *= amorti;
     f.rayon = Math.min(3 * f.taille, f.rayon + 0.25 * f.taille * Math.max(dt, 0.1));
-    return { x: f.x, y: f.y, rayon: f.rayon, init: true };
+    return { x: f.x, y: f.y, vx: f.vx, vy: f.vy, rayon: f.rayon, init: true };
   }
   const ex = mesure.x - px, ey = mesure.y - py;
   if (Math.hypot(ex, ey) > 3 * f.taille) {
     Object.assign(f, { x: mesure.x, y: mesure.y, vx: 0, vy: 0, rayon: rayonMesure(mesure.c, f.taille) });
-    return { x: f.x, y: f.y, rayon: f.rayon, init: true };
+    return { x: f.x, y: f.y, vx: f.vx, vy: f.vy, rayon: f.rayon, init: true };
   }
   const q = Math.max(0, Math.min(1, mesure.c));
   const alpha = 0.25 + 0.6 * q; // mesure fiable : on la suit presque telle quelle ; douteuse : on lisse davantage
@@ -51,5 +53,29 @@ export function mettreAJourFiltre(f, mesure, t) {
   const v = Math.hypot(f.vx, f.vy);
   if (v > vmax) { f.vx *= vmax / v; f.vy *= vmax / v; }
   f.rayon = 0.7 * f.rayon + 0.3 * rayonMesure(mesure.c, f.taille);
-  return { x: f.x, y: f.y, rayon: f.rayon, init: true };
+  return { x: f.x, y: f.y, vx: f.vx, vy: f.vy, rayon: f.rayon, init: true };
+}
+
+/** Constante de temps (s) de l'amortissement de la vitesse quand on extrapole sans mesure. */
+export const TAU_EXTRAPOLATION = 0.5;
+
+/**
+ * Position affichée `dt` secondes après l'état lissé `e` ({ x, y, vx, vy }) : le point continue sur sa lancée, la vitesse
+ * s'amortissant (constante `tau`) pour ne pas partir loin si les mesures tardent. Déplacement borné à vitesse × tau.
+ * Logique pure : sert à l'animation à chaque image de l'écran, entre deux mesures.
+ */
+export function extrapoler(e, dt, tau = TAU_EXTRAPOLATION) {
+  if (!e) return null;
+  const d = Math.max(0, Number.isFinite(dt) ? dt : 0);
+  const k = tau * (1 - Math.exp(-d / tau));
+  return { x: e.x + (e.vx || 0) * k, y: e.y + (e.vy || 0) * k };
+}
+
+/**
+ * Qualité 0..1 d'une corrélation de recalage de la minimap. La corrélation n'est acceptée qu'à partir de `corrMin` : on étale
+ * donc [corrMin ; 1] sur [0,1] pour qu'un recalage tout juste accepté pèse peu dans le filtre et qu'un recalage net le domine.
+ */
+export function qualiteCorrelation(corr, corrMin = 0.5) {
+  if (!(corr > corrMin)) return 0;
+  return Math.min(1, (corr - corrMin) / (1 - corrMin));
 }

@@ -4,11 +4,22 @@ import { classer, empreinteDepuisSource, planStable, signatureDepuisSource, anal
   observationCarteDepuisSource, observationCarteDepuisVideo } from '../lib/reconnaissance-plan.js';
 import { classerParSalle, classerParCarte, scoreCarte, vecteurPlan, libelleSorties } from '../lib/salle-depart.js';
 import { preparerRef, positionDepuisCarte, recalageRepere, RAYON_DISQUE } from '../lib/localisation.js';
-import { creerFiltre, mettreAJourFiltre } from '../lib/lissage.js';
+import { creerFiltre, mettreAJourFiltre, extrapoler, qualiteCorrelation } from '../lib/lissage.js';
+import { creerSuiviAsync } from '../lib/suivi-async.js';
 import { plusProche, estOeuf, estCle } from '../lib/objectifs.js';
-import { calibrerEchelle, creerHypotheses, actualiserHypotheses, classerHypotheses, decision, elaguer } from '../lib/suivi.js';
+import { calibrerEchelle, creerHypotheses, classerHypotheses, decision, elaguer, CORR_MIN } from '../lib/suivi.js';
 
-const INTERVALLE_AUTO_MS = 350;
+// Cadence de l'analyse : au plus une image toutes les 60 ms (≈ 15 images/s demandées au partage d'écran), sans attendre un délai fixe
+// après le calcul : l'analyse suit les images de la vidéo. Le point, lui, est animé à chaque image de l'écran (PointJoueur).
+const INTERVALLE_AUTO_MS = 60;
+// Si le partage d'écran n'envoie plus d'image (écran fixe), on analyse quand même au bout de ce délai.
+const CHIEN_DE_GARDE_MS = 700;
+// Rafraîchissement des aperçus et du diagnostic (coûteux : JPEG + rendu), indépendant de la cadence de l'analyse.
+const INTERVALLE_UI_S = 0.5;
+// Rafraîchissement maximal de la position affichée (l'animation comble entre deux mises à jour).
+const INTERVALLE_POSITION_S = 0.08;
+// Sans mesure depuis ce délai, le point est retiré plutôt que de montrer une position fausse.
+const SANS_MESURE_MAX_S = 2.5;
 const CLE_ZONE = 'aniimo_zone_minimap_v1';
 // Minimap du jeu : en haut à gauche de l'écran (fractions de l'image partagée), sauf zone dessinée par l'utilisateur.
 const ZONE_PAR_DEFAUT = { x: 0, y: 0, w: 0.25, h: 0.35 };
@@ -73,6 +84,58 @@ function Marqueur({ pin, taille = 18, fait = false, cible = false, onClick = nul
   );
 }
 
+/**
+ * Point du joueur animé. À chaque image de l'écran il est placé sur la position lissée prolongée par la vitesse (extrapolation
+ * amortie, qui compense aussi le temps de calcul), puis rapproché en douceur de cette cible : plus de saut à chaque mesure.
+ * Le déplacement passe directement par le DOM (aucun rendu React entre deux mesures).
+ */
+function PointJoueur({ joueur, grande }) {
+  const point = useRef(null);
+  const halo = useRef(null);
+  const cible = useRef(joueur);
+  cible.current = joueur;
+  useEffect(() => {
+    let raf = 0;
+    let dernier = performance.now();
+    let a = null; // position affichée { id, x, y } (% du plan)
+    const boucle = (now) => {
+      const j = cible.current;
+      if (j && point.current && halo.current) {
+        const c = extrapoler({ x: j.x, y: j.y, vx: j.vx || 0, vy: j.vy || 0 }, (now - (j.t ?? now)) / 1000);
+        if (!a || a.id !== j.id) a = { id: j.id, x: c.x, y: c.y };
+        else {
+          const k = 1 - Math.exp(-Math.max(0, now - dernier) / 1000 / 0.06);
+          a.x += (c.x - a.x) * k; a.y += (c.y - a.y) * k;
+        }
+        point.current.style.left = `${a.x}%`; point.current.style.top = `${a.y}%`; point.current.style.visibility = 'visible';
+        halo.current.style.left = `${a.x}%`; halo.current.style.top = `${a.y}%`;
+        halo.current.style.width = `${Math.min(60, (j.rayon || 0) * 2)}%`;
+        halo.current.style.visibility = j.rayon > 0 ? 'visible' : 'hidden';
+      }
+      dernier = now;
+      raf = requestAnimationFrame(boucle);
+    };
+    raf = requestAnimationFrame(boucle);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  return (
+    <>
+      <span
+        ref={halo}
+        aria-hidden="true"
+        style={{ position: 'absolute', visibility: 'hidden', aspectRatio: '1', transform: 'translate(-50%, -50%)' }}
+        className="z-20 rounded-full border border-yellow-300/70 bg-yellow-300/15 pointer-events-none"
+      />
+      <span
+        ref={point}
+        title="Ma position"
+        style={{ position: 'absolute', visibility: 'hidden', transform: 'translate(-50%, -50%)' }}
+        className={`z-30 block ${grande ? 'w-6 h-6' : 'w-4 h-4'} rounded-full bg-yellow-300 border-2 border-white shadow-[0_0_8px_3px_rgba(250,204,21,0.8)] animate-pulse pointer-events-none`}
+      />
+    </>
+  );
+}
+
 function Carte({ plan, grande = false, onClick, joueur = null, faits = null, onBasculer = null, cible = null, onPlacer = null }) {
   const pins = plan.pins;
   const contenu = (
@@ -94,20 +157,7 @@ function Carte({ plan, grande = false, onClick, joueur = null, faits = null, onB
         <Marqueur key={i} pin={p} taille={grande ? 26 : 16} fait={!!faits && faits.has(i)} cible={cible === i}
           onClick={onBasculer && !p.type.startsWith('door') ? () => onBasculer(i) : null} />
       ))}
-      {joueur && joueur.rayon > 0 && (
-        <span
-          aria-hidden="true"
-          style={{ position: 'absolute', left: `${joueur.x}%`, top: `${joueur.y}%`, width: `${Math.min(60, joueur.rayon * 2)}%`, aspectRatio: '1', transform: 'translate(-50%, -50%)' }}
-          className="z-20 rounded-full border border-yellow-300/70 bg-yellow-300/15 pointer-events-none"
-        />
-      )}
-      {joueur && (
-        <span
-          title="Ma position"
-          style={{ position: 'absolute', left: `${joueur.x}%`, top: `${joueur.y}%`, transform: 'translate(-50%, -50%)' }}
-          className={`z-30 block ${grande ? 'w-6 h-6' : 'w-4 h-4'} rounded-full bg-yellow-300 border-2 border-white shadow-[0_0_8px_3px_rgba(250,204,21,0.8)] animate-pulse pointer-events-none`}
-        />
-      )}
+      {joueur && <PointJoueur joueur={joueur} grande={grande} />}
     </div>
   );
   return onClick ? (
@@ -371,7 +421,7 @@ export default function CartesSanctuaire() {
     setResultats(null); setPlanDetecte(null); setSalle(null);
     setPhaseAuto(1); setPosition(null);
     const s = sessionRef.current;
-    if (s) { s.histo1 = []; s.histo2 = []; s.verrou = null; s.dernierStable = null; s.centre = null; s.tailleMM = null; s.hyps = null; s.courant = null; s.force = null; s.manuel = false; s.filtre = null; }
+    if (s) { s.histo1 = []; s.histo2 = []; s.verrou = null; s.dernierStable = null; s.centre = null; s.tailleMM = null; s.hyps = null; s.courant = null; s.force = null; s.manuel = false; s.filtre = null; s.tHisto1 = null; s.tMesure = null; s.tDerniereMesure = null; s.tPos = null; }
     exclusRef.current = new Set(); setExclus([]); setVerrouille(null);
   };
   /** Le joueur valide le plan : il est verrouillé (plus de changement automatique), le suivi de position continue dessus. */
@@ -419,7 +469,7 @@ export default function CartesSanctuaire() {
     noterEvt({ evt: 'placement', plan: ref ? PLANS.find((x) => x.id === planId)?.numero : null, x: Math.round(xPct * 100) / 100, y: Math.round(yPct * 100) / 100 });
     const pos = { x: (xPct / 100) * ref.largeur, y: (yPct / 100) * ref.hauteur };
     exclusRef.current.delete(planId); setExclus([...exclusRef.current]);
-    s.filtre = null; s.force = planId; s.manuel = true; s.tailleMM = null; s.sansPos = 0; s.courant = planId; s.dernierStable = planId;
+    s.filtre = null; s.force = planId; s.manuel = true; s.tailleMM = null; s.tDerniereMesure = performance.now() / 1000; s.tMesure = null; s.courant = planId; s.dernierStable = planId;
     s.hyps = [{ id: planId, pos, score: 0.7, corr: 0, ticks: 10, perdus: 0 }];
     setVerrouille(planId); setPlanDetecte(planId);
     setPosition({ id: planId, x: xPct, y: yPct, source: 'manuel', dim: { largeur: ref.largeur, hauteur: ref.hauteur, taille: ref.taille } });
@@ -511,6 +561,8 @@ export default function CartesSanctuaire() {
     sessionRef.current = null;
     if (s) {
       clearTimeout(s.minuteur);
+      if (s.rvfc != null && s.video.cancelVideoFrameCallback) s.video.cancelVideoFrameCallback(s.rvfc);
+      if (s.suiviAsync) s.suiviAsync.fermer();
       if (enregRef.current) exporterEnreg();
       s.flux.getTracks().forEach((t) => t.stop());
       s.video.srcObject = null;
@@ -523,7 +575,7 @@ export default function CartesSanctuaire() {
     setErreur(null);
     let flux;
     try {
-      flux = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 5 }, audio: false });
+      flux = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: { ideal: 15 } }, audio: false });
     } catch {
       setErreur('Partage d\'écran refusé ou annulé.');
       return;
@@ -532,7 +584,8 @@ export default function CartesSanctuaire() {
     video.muted = true;
     video.srcObject = flux;
     try { await video.play(); } catch { /* lecture auto bloquée : l'analyse attendra les images */ }
-    const session = { flux, video, minuteur: null, histo1: [], histo2: [], verrou: null, occupe: false, dernierStable: null, centre: null, tailleMM: null, hyps: null, courant: null, force: null };
+    const suiviAsync = creerSuiviAsync();
+    const session = { flux, video, suiviAsync, minuteur: null, rvfc: null, dernierDebut: -1e9, tMesure: null, tUI: null, tPos: null, tHisto1: null, tDerniereMesure: null, histo1: [], histo2: [], verrou: null, occupe: false, dernierStable: null, centre: null, tailleMM: null, hyps: null, courant: null, force: null };
     sessionRef.current = session;
     flux.getVideoTracks()[0]?.addEventListener('ended', arreterAuto);
     setAuto(true); setPhaseAuto(1); setPlanDetecte(null); setResultats(null); setSalle(null); setPosition(null);
@@ -546,15 +599,18 @@ export default function CartesSanctuaire() {
       return c.toDataURL('image/jpeg', 0.6);
     };
 
-    const tick = async () => {
+    const tick = async (tSec) => {
       if (session.occupe || sessionRef.current !== session || !video.videoWidth) return;
       session.occupe = true;
       const debut = performance.now();
+      // Aperçus et diagnostic : rafraîchis à ~2 Hz seulement (l'analyse tourne bien plus vite).
+      const majUI = session.tUI === null || tSec - session.tUI >= INTERVALLE_UI_S;
+      if (majUI) session.tUI = tSec;
       try {
         const refs = await references();
         if (sessionRef.current !== session) return;
         const zoneMinimap = zoneRef.current || ZONE_PAR_DEFAUT;
-        setApercu(dessiner(480, null));
+        if (majUI) setApercu(dessiner(480, null));
         const mmBrut = analyseMinimapVideo(video, { zone: zoneMinimap });
         // Minimap réellement visible ? Une fois la flèche du joueur repérée, elle reste au même endroit de la minimap.
         // Si elle n'y est plus (inventaire, menu, cinématique...), l'analyse est mise en pause pour ne pas fausser le suivi.
@@ -581,10 +637,14 @@ export default function CartesSanctuaire() {
         if (session.verrou === null) {
           // Le joueur est dans la salle d'arrivée : on retient sa flèche (centre fixe de la minimap) et la taille de la salle (échelle).
           if (mm && !session.manuel) session.tailleMM = 2 * mm.signature.demi + 1;
-          session.histo1.push(signature ? { id: signature.sorties || '-', score: 1 } : null);
-          if (session.histo1.length > 20) session.histo1.shift();
-          const stable1 = planStable(session.histo1, { fenetre: 4, minVotes: 2 });
-          if (stable1) { session.verrou = stable1 === '-' ? '' : stable1; setPhaseAuto(2); }
+          // Vote de stabilité : un échantillon toutes les ~0,35 s (le réglage fenêtre 4 / 2 votes date d'une analyse à 2,5 images/s).
+          if (session.tHisto1 === null || tSec - session.tHisto1 >= 0.35) {
+            session.tHisto1 = tSec;
+            session.histo1.push(signature ? { id: signature.sorties || '-', score: 1 } : null);
+            if (session.histo1.length > 20) session.histo1.shift();
+            const stable1 = planStable(session.histo1, { fenetre: 4, minVotes: 2 });
+            if (stable1) { session.verrou = stable1 === '-' ? '' : stable1; setPhaseAuto(2); }
+          }
         }
         // Phase 2 : suivi continu. La salle verrouillée reste le repère de départ ; la minimap et la carte sont lues à chaque image.
         const sorties = session.verrou !== null ? session.verrou : (signature ? signature.sorties : null);
@@ -604,7 +664,15 @@ export default function CartesSanctuaire() {
         if (suiviPossible) {
           if (!session.hyps) session.hyps = creerHypotheses(candidats(refs));
           const centrePx = { x: session.centre.x * mm.w, y: session.centre.y * mm.h };
-          actualiserHypotheses(session.hyps, refs, mm, centrePx, session.tailleMM, { globalPour: session.force });
+          // Le recalage (partie la plus coûteuse) tourne dans un Web Worker. `dt` : temps écoulé depuis le recalage précédent, pour
+          // prédire la position (fenêtre de recherche centrée sur l'endroit attendu) et garder des compteurs indépendants de la cadence.
+          const dtMes = session.tMesure === null ? 0 : Math.max(0.001, Math.min(1, tSec - session.tMesure));
+          session.tMesure = tSec;
+          const envoyees = session.hyps;
+          const maj = await suiviAsync.actualiser(envoyees, refs, mm, centrePx, session.tailleMM, { globalPour: session.force, dt: dtMes });
+          if (sessionRef.current !== session) return;
+          // Si le joueur a replacé sa position (ou changé de plan) pendant le calcul, ce résultat est périmé : on le jette.
+          if (session.hyps === envoyees) session.hyps = maj;
           const avant = session.hyps;
           session.hyps = elaguer(session.hyps, { ecart: 0.15, minTicks: 4, garder: 2 });
           // Le plan validé par le joueur n'est jamais écarté : on continue à le suivre pour afficher la position.
@@ -616,7 +684,7 @@ export default function CartesSanctuaire() {
             resultat = { liste: classees.map((h) => ({ id: h.id, score: h.score })), exacts: resultat.exacts };
           }
         }
-        if (signature || carte) {
+        if ((signature || carte) && majUI) {
           setCapture(carte ? dessiner(320, null) : dessiner(240, zoneMinimap));
           afficher(resultat, sorties !== null ? { sorties } : null);
         }
@@ -648,7 +716,7 @@ export default function CartesSanctuaire() {
             const p = positionDepuisCarte(carte, ref);
             if (p) { mesure = { x: p.x, y: p.y, c: 1, source: 'carte' }; if (h) h.pos = { x: p.x, y: p.y }; } // la carte recale aussi le suivi
           }
-          if (!mesure && h && h.perdus === 0) mesure = { x: h.pos.x, y: h.pos.y, c: Math.max(0.3, h.corr), source: 'minimap' };
+          if (!mesure && h && h.perdus === 0) mesure = { x: h.pos.x, y: h.pos.y, c: 0.3 + 0.7 * qualiteCorrelation(h.corr, CORR_MIN), source: 'minimap' };
           // Repère : une porte (orange / bleue) visible sur la minimap, compatible avec la position suivie.
           if (!(mesure && mesure.source === 'carte') && h && mm && mm.centre && mm.portes && session.tailleMM) {
             const pinPx = (type) => { const q = PLANS.find((x) => x.id === decide)?.pins.find((y) => y.type === type); return q ? { x: (q.x / 100) * ref.largeur, y: (q.y / 100) * ref.hauteur } : null; };
@@ -659,23 +727,30 @@ export default function CartesSanctuaire() {
             if (rr) { h.pos = { x: rr.x, y: rr.y }; mesure = { x: rr.x, y: rr.y, c: 1, source: 'repere' }; }
           }
           if (!session.filtre || session.filtre.planId !== ref.id) { session.filtre = creerFiltre(ref.taille); session.filtre.planId = ref.id; }
-          const lisse = mettreAJourFiltre(session.filtre, mesure, performance.now() / 1000);
+          const lisse = mettreAJourFiltre(session.filtre, mesure, tSec);
           sourcePos = mesure ? mesure.source : (lisse.init ? 'estimee' : null);
-          session.sansPos = mesure ? 0 : (session.sansPos || 0) + 1;
-          if (lisse.init && session.sansPos <= 6) {
+          if (mesure) session.tDerniereMesure = tSec;
+          const sansMesureS = session.tDerniereMesure === null ? Infinity : tSec - session.tDerniereMesure;
+          if (lisse.init && sansMesureS <= SANS_MESURE_MAX_S) {
             posEnreg = { x: +lisse.x.toFixed(1), y: +lisse.y.toFixed(1), rayon: +lisse.rayon.toFixed(1), source: sourcePos, mesure: mesure ? { x: +mesure.x.toFixed(1), y: +mesure.y.toFixed(1), c: +mesure.c.toFixed(2) } : null };
-            setPosition({
-              id: ref.id, x: (lisse.x / ref.largeur) * 100, y: (lisse.y / ref.hauteur) * 100, source: sourcePos,
-              rayon: (lisse.rayon / ref.largeur) * 100, dim: { largeur: ref.largeur, hauteur: ref.hauteur, taille: ref.taille },
-            });
+            // vx, vy (% du plan par seconde) et t (ms) : l'affichage prolonge le point entre deux mises à jour (PointJoueur).
+            if (session.tPos === null || tSec - session.tPos >= INTERVALLE_POSITION_S) {
+              session.tPos = tSec;
+              setPosition({
+                id: ref.id, x: (lisse.x / ref.largeur) * 100, y: (lisse.y / ref.hauteur) * 100, source: sourcePos,
+                vx: (lisse.vx / ref.largeur) * 100, vy: (lisse.vy / ref.hauteur) * 100, t: tSec * 1000,
+                rayon: (lisse.rayon / ref.largeur) * 100, dim: { largeur: ref.largeur, hauteur: ref.hauteur, taille: ref.taille },
+              });
+            }
           }
         }
 
         // Pas de position fiable depuis un moment : on efface l'ancien point plutôt que d'afficher un point faux.
-        if (!ref || !ref.refPad || (session.sansPos || 0) > 6) setPosition(null);
+        const sansMesure = session.tDerniereMesure === null ? Infinity : tSec - session.tDerniereMesure;
+        if (!ref || !ref.refPad || sansMesure > SANS_MESURE_MAX_S) setPosition(null);
 
         // Diagnostic : ce que l'outil lit réellement (pour comprendre une erreur).
-        setDiag({
+        if (majUI) setDiag({
           ms: Math.round(performance.now() - debut),
           video: `${video.videoWidth}×${video.videoHeight}`,
           zone: zoneMinimap,
@@ -690,7 +765,7 @@ export default function CartesSanctuaire() {
           decide: decide ? PLANS.find((x) => x.id === decide)?.numero : null,
           position: sourcePos,
         });
-        if (mm) setApercuDiag(dessinerDiagnostic(video, zoneMinimap, mm, session.tailleMM));
+        if (mm && majUI) setApercuDiag(dessinerDiagnostic(video, zoneMinimap, mm, session.tailleMM));
 
         // Enregistrement du trajet (1 image / s, 300 images au plus).
         const enr = enregRef.current;
@@ -717,11 +792,31 @@ export default function CartesSanctuaire() {
         session.occupe = false;
       }
     };
-    const boucle = async () => {
-      await tick();
-      if (sessionRef.current === session) session.minuteur = setTimeout(boucle, INTERVALLE_AUTO_MS);
+    // Planification : on suit les images de la vidéo (requestVideoFrameCallback) au lieu d'un délai fixe après chaque calcul ;
+    // une image qui arrive trop tôt, ou pendant un calcul, est ignorée. Sans cette API, ou si l'écran est fixe (plus d'images
+    // envoyées), un minuteur prend le relais.
+    const planifier = () => {
+      if (sessionRef.current !== session) return;
+      let lance = false;
+      const declencher = (tMs) => {
+        if (lance || sessionRef.current !== session) return;
+        lance = true;
+        clearTimeout(session.minuteur);
+        if (session.rvfc !== null && video.cancelVideoFrameCallback) video.cancelVideoFrameCallback(session.rvfc);
+        session.rvfc = null;
+        const maintenant = performance.now();
+        if (maintenant - session.dernierDebut < INTERVALLE_AUTO_MS) { planifier(); return; }
+        session.dernierDebut = maintenant;
+        tick(tMs / 1000).finally(planifier);
+      };
+      if (typeof video.requestVideoFrameCallback === 'function') {
+        session.rvfc = video.requestVideoFrameCallback((now) => declencher(now));
+        session.minuteur = setTimeout(() => declencher(performance.now()), CHIEN_DE_GARDE_MS);
+      } else {
+        session.minuteur = setTimeout(() => declencher(performance.now()), Math.max(0, INTERVALLE_AUTO_MS - (performance.now() - session.dernierDebut)));
+      }
     };
-    boucle();
+    planifier();
   }, [arreterAuto, references, classerAuto, afficher]);
 
   useEffect(() => arreterAuto, [arreterAuto]);
